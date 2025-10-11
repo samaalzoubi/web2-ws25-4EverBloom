@@ -54,7 +54,7 @@ By combining **technology, creativity, and community**, BLÜMEO supports both cu
 | **Anastasiia Kulyani** | *[Role]* | *[Responsibilities]* |
 | **Akanksha Vijayvergiya** | *[Role]* | *[Responsibilities]* |
 | **Averest Osman** | *[Role]* | *[Responsibilities]* |
-| **Sama Alzoubi** | *[Role]* | *[Responsibilities]* |
+| **Sama Al Zou'bi** | *[Role]* | *[Responsibilities]* |
 
 
 ## 7. Functionalities / Features
