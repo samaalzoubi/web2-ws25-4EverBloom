@@ -1,4 +1,4 @@
-# 🌸 BLÜMEO – Project Documentation
+# 💐 BLÜMEO – Project Documentation
 
 ## 1. Project Title & Tagline
 - **Project Name:** BLÜMEO  
