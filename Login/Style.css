@@ -1,0 +1,88 @@
+ * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ffe5ec, #ffc8dd, #bde0fe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: white;
+      width: 400px;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    h2 {
+      color: #7f5539;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #ffafcc;
+    }
+
+    button {
+      background-color: #ffafcc;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #f78fb3;
+    }
+
+    .toggle-text {
+      margin-top: 15px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .toggle-text span {
+      color: #ff69b4;
+      cursor: pointer;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-text span:hover {
+      color: #d63384;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .logo {
+      font-size: 26px;
+      color: #ff69b4;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
