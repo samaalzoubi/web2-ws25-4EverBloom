@@ -3,46 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4EverBloom Bot</title>
+<title>Blümeo Bot</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+    :root {
+        --color-header-background: #ff85a2;
+        --color-background: #fafafa;
+        --color-user: #ffd1dc;
+        --color-bot: #e1f7d5;
+        --color-button: #ff85a2;
+        --color-button-hover: #ff61c5;
+    }
+
     body {
         font-family: 'Poppins', sans-serif;
         margin: 0;
         padding: 0;
         height: 100vh;
         width: 100vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #ffe6f0, #fff1f7);
+        background: linear-gradient(135deg, #f2e4f9, #d4bdf0);
     }
 
-    /* Slim chat container */
+    /* Floating Chat Button */
+    .chat-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--color-button);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: transform 0.3s;
+        z-index: 1000;
+    }
+
+    .chat-btn:hover {
+        transform: scale(1.1);
+    }
+
+    /* Chat Container (pop-up) */
     .chat-container {
-        display: flex;
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 350px;
+        max-height: 500px;
+        display: none;
         flex-direction: column;
-        height: 70%;
-        width: 80%;
-        max-width: 500px;
-        background-color: #ffffff;
         border-radius: 20px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         overflow: hidden;
+        background-color: #ffffff;
+        animation: slideUp 0.3s ease;
+        z-index: 1000;
     }
 
-    /* Header with chatbot name */
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Header */
     .chat-header {
         padding: 15px 20px;
-        background-color: #ff85a2;
+        background-color: var(--color-header-background);
         color: white;
         font-size: 18px;
         font-weight: 600;
-        border-radius: 20px 20px 0 0;
-        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    /* Chat messages area */
+    .chat-header span {
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    /* Chat Messages Area */
     .chat-box {
         flex: 1;
         overflow-y: auto;
@@ -50,7 +91,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
-        background-color: #fafafa;
+        background-color: var(--color-background);
     }
 
     .user, .bot {
@@ -64,16 +105,16 @@
     }
 
     .user {
-        background-color: #ffd1dc;
+        background-color: var(--color-user);
         align-self: flex-end;
     }
 
     .bot {
-        background-color: #e1f7d5;
+        background-color: var(--color-bot);
         align-self: flex-start;
     }
 
-    /* Input area at bottom */
+    /* Input Area */
     .input-container {
         display: flex;
         border-top: 1px solid #eee;
@@ -93,7 +134,7 @@
     button {
         width: 50px;
         border: none;
-        background-color: #ff85a2;
+        background-color: var(--color-button);
         color: white;
         cursor: pointer;
         border-radius: 0 20px 20px 0;
@@ -104,10 +145,15 @@
     }
 
     button:hover {
-        background-color: #ff6188;
+        background-color: var(--color-button-hover);
     }
 
-    
+    .send-icon {
+        width: 20px;
+        height: 20px;
+        fill: white;
+    }
+
     .chat-box::-webkit-scrollbar {
         width: 6px;
     }
@@ -115,23 +161,23 @@
         background-color: rgba(0,0,0,0.1);
         border-radius: 3px;
     }
-
-    /* Send icon */
-    .send-icon {
-        width: 20px;
-        height: 20px;
-        fill: white;
-    }
 </style>
 </head>
 <body>
-<div class="chat-container">
-    <div class="chat-header">4EverBloom Bot 🌸</div>
-    <div class="chat-box" id="chat-box"></div>
+
+<!-- Floating Chat Button -->
+<div class="chat-btn" id="chatBtn">💬 Chat</div>
+
+<!-- Chat Container -->
+<div class="chat-container" id="chatContainer">
+    <div class="chat-header">
+        Blümeo Bot 🌸
+        <span id="closeBtn">✖</span>
+    </div>
+    <div class="chat-box" id="chatBox"></div>
     <div class="input-container">
-        <input type="text" id="user-input" placeholder="Type your message..." />
+        <input type="text" id="userInput" placeholder="Type your message..." />
         <button onclick="sendMessage()">
-            <!-- Send icon SVG -->
             <svg class="send-icon" viewBox="0 0 24 24">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
             </svg>
@@ -140,27 +186,40 @@
 </div>
 
 <script>
-    const chatBox = document.getElementById('chat-box');
-    const userInputField = document.getElementById('user-input');
+    const chatBtn = document.getElementById('chatBtn');
+    const chatContainer = document.getElementById('chatContainer');
+    const closeBtn = document.getElementById('closeBtn');
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
 
+    // Toggle chat visibility
+    chatBtn.addEventListener('click', () => {
+        chatContainer.style.display = chatContainer.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        chatContainer.style.display = 'none';
+    });
+
+    // Send message
     function sendMessage() {
-        const userInput = userInputField.value.trim();
-        if(userInput === "") return;
+        const input = userInput.value.trim();
+        if(input === "") return;
 
-        appendMessage(userInput, 'user');
-        userInputField.value = '';
+        appendMessage(input, 'user');
+        userInput.value = '';
 
         setTimeout(() => {
-            const botResponse = getBotResponse(userInput);
+            const botResponse = getBotResponse(input);
             appendMessage(botResponse, 'bot');
         }, 500);
     }
 
     function appendMessage(message, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add(sender);
-        messageDiv.textContent = message;
-        chatBox.appendChild(messageDiv);
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add(sender);
+        msgDiv.textContent = message;
+        chatBox.appendChild(msgDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
@@ -168,19 +227,26 @@
         input = input.toLowerCase();
         if(input.includes('hello') || input.includes('hi')) {
             return "Hello! Welcome to 4EverBloom 🌸 How can I help you today?";
-        } else if(input.includes('flowers') || input.includes('bouquet')) {
+        } 
+        else if (input.includes('can i ask you a question') || input.includes('i have a question')) {
+            return "Yes of course, what is your question?";
+        }
+        else if(input.includes('flowers') || input.includes('bouquet')) {
             return "We have a variety of flowers! Roses, lilies, tulips, and more. Would you like to see our bestsellers?";
-        } else if(input.includes('price') || input.includes('cost')) {
+        } 
+        else if(input.includes('price') || input.includes('cost')) {
             return "Our prices vary depending on the bouquet. Most start from $20. Do you want details on a specific flower?";
-        } else if(input.includes('thanks') || input.includes('thank you')) {
+        } 
+        else if(input.includes('thanks') || input.includes('thank you')) {
             return "You're welcome! Happy to help 🌷";
-        } else {
+        } 
+        else {
             return "I'm sorry, I didn't understand that. Could you please rephrase?";
         }
     }
 
-    
-    userInputField.addEventListener('keypress', function(e) {
+    // Enter key sends message
+    userInput.addEventListener('keypress', function(e) {
         if(e.key === 'Enter') {
             sendMessage();
             e.preventDefault();
