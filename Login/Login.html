@@ -4,21 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blumeo | Login & Register</title>
+    <link rel="stylesheet" href="../Style.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <!-- Navigation -->
-    <header>
-      <div class="logo">
-        <h1>BLÜMEO</h1>
-      </div>
-      <nav>
-        <a href="#">Home</a>
-        <a href="#">Shop</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-      </nav>
-    </header>
+       <div id="header"></div>
 
     <!-- Main Content -->
     <main>
@@ -127,6 +118,13 @@
           alert("Invalid email or password. Please try again.");
         }
       });
+
+         fetch("../Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("header").innerHTML = data;
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
     </script>
   </body>
 </html>

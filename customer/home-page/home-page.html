@@ -4,25 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blümeo | Home-Page</title>
+     <link rel="stylesheet" href="../../Style.css" />
     <link rel="stylesheet" href="home-page.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="../../assets/Logo.png" alt="Flower Logo" width="70" height="70">
-            <div class="logo-text-part">
-                <h1>BLÜMEO</h1>
-                <h3>Design. Bloom. Inspire</h3>
-            </div>
-        </div>
-        <nav id="header-nav">
-            <a href="https://en.wikipedia.org/wiki/Flower">
-                <span class="material-symbols-outlined">shopping_cart</span>
-            </a>
-        </nav>
-    </header>
+   <div id="header"></div>
 
     <main>
         <section class="content">
@@ -44,20 +32,14 @@
         </div>
 
     </main>
-    
-    <nav class="bubble-nav">
-        <a class="bubble" href="#profile" data-label="Account">
-        <span class="material-symbols-outlined">account_circle</span>
-        </a>
-        <a class="bubble" href="#chat" data-label="Chat">
-        <span class="material-symbols-outlined">forum</span>
-        </a>
-        <a class="bubble" href="#design" data-label="Design">
-        <span class="material-symbols-outlined">wand_stars</span>
-        </a>
-        <a class="bubble" href="#" data-label="Notifications">
-        <span class="material-symbols-outlined">notifications</span>
-        </a>
-    </nav>
 </body>
 </html>
+
+<script>
+      fetch("../../Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("header").innerHTML = data;
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
+</script>
