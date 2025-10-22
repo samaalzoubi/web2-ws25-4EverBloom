@@ -19,43 +19,11 @@
   --color-btn-hover: #9f7cc1;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     background: linear-gradient(to bottom right, var(--color-background), var(--color-background-secondary));
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-}
-
-
-nav .material-symbols-outlined {
-  font-size: 40px;
-  color: var(--color-text-dark);    
-  cursor: pointer;  
-}
-
-nav .material-symbols-outlined:hover {
-    color: var(--color-hover);
-}
-
-.bubble-nav a {
-    text-decoration: none;
-}
-
-.bubble-nav {
-    display: flex;
-    flex-flow: column;
-    gap: 20px;
-    position: fixed;
-    transform: translateY(-50%);
-    top: 50%;
-    right: clamp(12px, 2vw, 24px);
-    z-index: 1000;
 }
 
 .search-container input {

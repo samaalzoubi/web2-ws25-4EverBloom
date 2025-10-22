@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blumeo | Login & Register</title>
     <link rel="stylesheet" href="../Style.css" />
-    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <!-- Navigation -->
@@ -81,6 +80,13 @@
       const showRegister = document.getElementById("show-register");
       const showLogin = document.getElementById("show-login");
 
+      fetch("/web2-ws25-4EverBloom/Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("header").innerHTML = data;
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
       showRegister.addEventListener("click", () => {
         loginContainer.classList.add("hidden");
         registerContainer.classList.remove("hidden");
@@ -118,13 +124,6 @@
           alert("Invalid email or password. Please try again.");
         }
       });
-
-         fetch("../Header/header.html")
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById("header").innerHTML = data;
-        })
-        .catch(err => console.error("Header konnte nicht geladen werden:", err));
     </script>
   </body>
 </html>

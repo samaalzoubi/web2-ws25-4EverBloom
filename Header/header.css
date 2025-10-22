@@ -21,22 +21,6 @@
   --color-btn-hover: #9f7cc1;
 }
 
-/* Reset & Base */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
-body {
-  background: linear-gradient(120deg, var(--color-background), var(--color-background-secondary));
-  color: var(--color-text-dark);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 /* Header */
 header {
   display: flex;
