@@ -19,13 +19,6 @@
   --color-btn-hover: #9f7cc1;
 }
 
-body {
-    background: linear-gradient(to bottom right, var(--color-background), var(--color-background-secondary));
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
 .search-container input {
   border: none;
   outline: none;
@@ -68,48 +61,51 @@ body {
 }
 
 main {
-    margin: 10px 5px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.278), rgba(255,255,255,.55)),
+      url("/web2-ws25-4EverBloom/assets/Background_Home_Page.png") center/cover no-repeat;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-left: 4rem;
 }
 
 .content {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: center;
-    gap: 10px;
+    display: grid;
 }
 
-.banner, .banner-text { 
+/*.banner, .banner-text { 
     flex: 1 1 0; 
-}
+}*/
 
-.banner img{
+/*.banner img{
   width: 100%;
   height: auto;
   border-radius: 17px;
   box-shadow: 0 4px 12px rgba(0,0,0,.1);
   object-fit: cover;
+}*/
+
+.banner{
+  display: flex;
+  align-items: center;   /* vertikal zentrieren */
+  justify-content: flex-start;
+  height: 20vh;
+  text-align: left;
+  flex-direction: column;
+  margin-top: 6rem;
 }
 
-.banner-text{
-  background: var(--color-background);
-  border-radius: 17px;
-  padding: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.05);
-  text-align: center;
-  align-content: center;
-}
-
-.banner-text h2 {
+.banner h2 {
   margin: 0 0 8px;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 30px;
 }
 
-.banner-text p { 
+.banner p { 
     margin: 6px 0; 
     line-height: 1.3; 
     color: var(--color-text-dark); 
