@@ -1,12 +1,4 @@
 :root {
-  /* Colors */
-  --color-header-background: rgba(255, 255, 255, 0.7);
-  --color-background: #ffffff;
-  --color-background-secondary: #d4bdf0;
-  --color-text-dark: #333333;
-  --color-hover: #b79bd3;
-  --color-box-shadows: rgba(0, 0, 0, 0.05);
-
   /* Accent & Text Colors */
   --color-accent-dark: #4b3c8a;
   --color-accent-light: #7e4bb1;
@@ -25,7 +17,7 @@
   background: transparent;
   width: 100%;
   font-size: 16px;
-  font-family: "Dancing Script", cursive;
+  
 }
 
 .search-container input::placeholder {
@@ -43,7 +35,7 @@
   flex: 1 1 clamp(260px, 40%, 520px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  background-color: whitesmoke;
+  background-color: var(--color-header-background);
 }
 
 .search-container .material-symbols-outlined {
@@ -70,36 +62,25 @@ main {
       url("/web2-ws25-4EverBloom/assets/Background.png") center/cover no-repeat;*/
     align-items: flex-start;
     justify-content: flex-start;
-    padding-left: 4rem;
 }
-
-/*.banner, .banner-text { 
-    flex: 1 1 0; 
-}*/
-
-/*.banner img{
-  width: 100%;
-  height: auto;
-  border-radius: 17px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.1);
-  object-fit: cover;
-}*/
 
 .banner {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
-  /*height: 20vh;*/
   text-align: left;
   flex-direction: column;
   margin-top: 6rem;
+  padding-left: 4rem;
 }
 
 .banner h2 {
-  margin: 0 0 8px;
   line-height: 1.2;
   font-weight: 600;
   font-size: 30px;
+  background: linear-gradient(to left, var(--color-accent-light), rgb(241, 194, 236));
+  -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
 }
 
 .banner p { 
@@ -111,10 +92,11 @@ main {
 .search-and-carousel {
   display: flex;
   align-items: flex-start; 
-  gap: 3rem;
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
+  padding-left: 4rem;
+  margin-bottom: 5rem;
 }
 
 .carousel-container {
@@ -187,6 +169,42 @@ main {
   right: 1rem;
 }
 
+.back-video-container {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.background-video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 1;
+  object-fit: cover;
+  display: block;
+  opacity: 0.7;
+  z-index: -1;
+  filter: brightness(0.8) contrast(1.05);
+}
+
+#citation p {
+  letter-spacing: 0.06rem;
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 300;
+}
+
+#citation {
+  position: absolute;
+  z-index: 100;
+  color: white;
+  text-align: center;
+  padding: 0 1rem;
+}
 
 
 @media (max-width: 900px){
