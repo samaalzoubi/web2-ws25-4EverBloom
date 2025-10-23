@@ -13,23 +13,50 @@
    <div id="header"></div>
 
     <main>
-        <section class="content">
-            <div class="banner">
+        <section class="banner">
                 <h2>🌸 Create & Send Beautiful Bouquets – Fresh, Local & Designed for You 🌸</h2>
                 <div class="under-banner">
                     <p>At Blümeo, every bouquet is crafted with love by local florists and brought to life in our 3D flower designer.</p>
                     <p>Explore, customize, and send your perfect arrangement – whether for birthdays, celebrations, or “just because.”</p>
                     <p>Enjoy same-day delivery from trusted local shops. Transparent prices, no hidden fees – just pure floral joy delivered to your doorstep.</p>
                 </div>
-            </div>
-            <!--<figure class="banner">
-                <img src="../../assets/Banner.svg" alt="Spring Sale Banner">
-            </figure>-->
         </section>
 
-        <div class="search-container">
-            <button type="button"><span class="material-symbols-outlined">search</span></button>
-            <input type="text" name="address" placeholder="Find your perfect bouquet...📍">
+        <div class="search-and-carousel">
+            <div class="search-container">
+                <button type="button"><span class="material-symbols-outlined">search</span></button>
+                <input type="text" name="address" placeholder="Find your perfect bouquet...📍">
+            </div>
+            <div class="carousel-container" aria-label="Newest Photos">
+                <button class="carousel-button prev" data-carousel-button="prev">&#10594;</button>
+                <button class="carousel-button next" data-carousel-button="next">&#10596;</button>
+                <ul>
+                    <li class="slide" data-active>
+                        <img src="/web2-ws25-4EverBloom/assets/banner1.png" alt="Spring Sale Image #1">
+                    </li>
+                    <li class="slide">
+                        <img src="/web2-ws25-4EverBloom/assets/banner2.png" alt="A woman selling flowers #2">
+                    </li>
+                    <li class="slide">
+                        <img src="/web2-ws25-4EverBloom/assets/banner3.png" alt="Spring Sale Image #3">
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="happiness-hubs">
+            <h3>Happiness Hubs</h3>
+            <ul>
+                <li>
+                    <img src="" alt="">
+                </li>
+                <li>
+                    <img src="" alt="">
+                </li>
+                <li>
+                    <img src="" alt="">
+                </li>
+            </ul>
         </div>
 
     </main>
@@ -43,4 +70,29 @@
           document.getElementById("header").innerHTML = data;
         })
         .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
+
+
+
+
+        const buttons = document.querySelectorAll(".carousel-button")
+        const slides  = document.querySelectorAll(".slide");
+
+        if (!document.querySelector(".slide[data-active]") && slides.length) {
+            slides[0].setAttribute("data-active", "");
+        }
+
+        buttons.forEach(button => {
+            button.addEventListener("click", () => {
+                const offset = button.getAttribute("data-carousel-button") === "next" ? 1 : -1;
+                const activeSlide = document.querySelector(".slide[data-active]")
+                const activeIndex = [...slides].indexOf(activeSlide);
+
+                const newIndex = (activeIndex + offset + [...slides].length) % [...slides].length;
+
+                activeSlide.removeAttribute("data-active");
+                slides[newIndex].setAttribute("data-active", "")
+            })
+        });
+        
 </script>
