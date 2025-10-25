@@ -53,17 +53,18 @@
     
         <div class="happiness-hubs">
             <h3>Happiness Hubs</h3>
-            <ul>
-                <li>
-                    <img src="" alt="">
-                </li>
-                <li>
-                    <img src="" alt="">
-                </li>
-                <li>
-                    <img src="" alt="">
-                </li>
-            </ul>
+            <button class="carousel-button prev" data-carousel-button="prev">&#10594;</button>
+            <button class="carousel-button next" data-carousel-button="next">&#10596;</button>
+            <div class="carousel">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-1.jpg" alt="Flower Shop Logo 1">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-2.jpg" alt="Flower Shop Logo 2">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-3.webp" alt="Flower Shop Logo 3">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-4.jpg" alt="Flower Shop Logo 4">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-5.webp" alt="Flower Shop Logo 5">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-6.avif" alt="Flower Shop Logo 6">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-7.jpg.avif" alt="Flower Shop Logo 7">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-8.png" alt="Flower Shop Logo 8">
+            </div>
         </div>
 
     </main>
@@ -82,10 +83,10 @@
 
 
 
-        const buttons = document.querySelectorAll(".carousel-button")
-        const slides  = document.querySelectorAll(".slide");
+        /*const buttons = document.querySelectorAll(".carousel-button")
+        const slides  = document.querySelectorAll(".carousel");
 
-        if (!document.querySelector(".slide[data-active]") && slides.length) {
+        if (!document.querySelector(".carousel[data-active]") && slides.length) {
             slides[0].setAttribute("data-active", "");
         }
 
@@ -100,6 +101,24 @@
                 activeSlide.removeAttribute("data-active");
                 slides[newIndex].setAttribute("data-active", "")
             })
-        });
+        });*/
+
+        const slide  = document.querySelector(".carousel");
+        const buttons = document.querySelectorAll(".carousel-button");
+        buttons[0].style.display = "none";
+        firstImage = slide.querySelectorAll("img")[0]
+
+        const showHideButtons = () => {
+            let scrollWidth = slide.scrollWidth - slide.clientWidth;
+            buttons[0].style.display = slide.scrollLeft == 0 ? "none" : "block";
+            buttons[1].style.display = slide.scrollLeft == scrollWidth ? "none" : "block";
+        }
         
+        buttons.forEach(button => {
+            button.addEventListener("click", () => {
+                let firstImageWidth = firstImage.clientWidth + 35;
+                slide.scrollLeft +=  button.getAttribute("data-carousel-button") === "next" ? firstImageWidth : -firstImageWidth;
+                setTimeout(() => showHideButtons(), 60)
+            })
+        });
 </script>

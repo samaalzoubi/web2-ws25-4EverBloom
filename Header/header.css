@@ -39,6 +39,9 @@ header .logo {
   color: var(--color-accent-light);
 }
 
+header a {
+  text-decoration: none;
+}
 
 .flower-icon {
   width: 40px;
