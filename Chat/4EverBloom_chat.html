@@ -6,8 +6,8 @@
 <title>4EverBloom Bot</title>
  <link rel="stylesheet" href="../Style.css" />
  <link rel="stylesheet" href="./chat.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head> 
 <body>
 <div id="header"></div>
@@ -25,14 +25,57 @@
         </button>
     </div>
 </div>
+<div id="footer"></div>
 
 <script>
-      fetch("../Header/header.html")
+      fetch("/web2-ws25-4EverBloom/Header/header.html")
         .then(response => response.text())
         .then(data => {
-          document.getElementById("header").innerHTML = data;
+            const mount = document.getElementById('header');
+            mount.innerHTML = data;
+            initHeader(mount);
         })
         .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
+        function initHeader() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            const loginLink = document.querySelector('#login-link');
+            const userLinks = document.querySelectorAll('.user-links');
+            const designBouquetButton = document.querySelector('.design-bouquet')
+
+            if (isLoggedIn) {
+                loginLink?.classList.add('hidden');
+                userLinks.forEach(el => el.classList.remove('hidden'));
+                designBouquetButton?.classList.remove('hidden');
+            } else {
+                loginLink?.classList.remove('hidden');
+                userLinks.forEach(el => el.classList.add('hidden'));
+                designBouquetButton?.classList.add('hidden');
+            }
+
+            // Logout-Handler
+            const logout = document.querySelector('.logout-link');
+            if (logout) {
+                logout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('login-email');
+                localStorage.removeItem('login-password');
+                // Optional: zur Login- oder Home-Seite
+                window.location.href = '/web2-ws25-4EverBloom/customer/home-page/home-page.html';
+                });
+            }
+        }
+
+        //Fetch footer
+        fetch("/web2-ws25-4EverBloom/footer/footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+
     const chatBox = document.getElementById('chat-box');
     const userInputField = document.getElementById('user-input');
 

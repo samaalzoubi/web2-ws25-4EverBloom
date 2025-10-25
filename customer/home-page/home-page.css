@@ -189,7 +189,6 @@ main {
   overflow: hidden;
   display: flex;
   width: 90%;
-  
   scroll-behavior: smooth;
 }
 
@@ -214,7 +213,7 @@ main {
 }
 
 
-.carousel > img {
+.carousel img {
   height: 200px;
   width: calc(100% / 7);
   object-fit: cover;
@@ -254,6 +253,89 @@ main {
 
 .carousel-button.prev { left: clamp(6px, 1.5vw, 14px); }
 .carousel-button.next { right: clamp(6px, 1.5vw, 14px); }
+
+.flower-suggestions {
+  display: grid;
+  list-style: none;
+  gap: 50px 48px; 
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  margin: 0; padding: 0;
+  align-items: start; 
+  max-width: 1100px;
+  width: 100%; 
+  justify-items: center;
+}
+
+.petals-of-happiness {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  overflow: hidden;
+  margin-top: 80px;
+}
+
+.petals-of-happiness h3 {
+  font-size: 1.8rem;
+  font-weight: 450;
+  letter-spacing: 0.06rem; 
+  color: rgb(51, 51, 51);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.petals-of-happiness h3::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 3px;
+  margin: 0.6rem auto 0;
+  background: var(--color-accent-light);
+  border-radius: 3px;
+  opacity: 0.7;
+}
+
+.bouquet-card__link{
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.9s ease, box-shadow 0.4s ease, background-color .4s ease;
+  transform-origin: center center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  height: 550px;
+}
+
+.bouquet-card__link:hover{
+  transform: translateY(-6px) rotate(1deg);
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.15);
+  background-color: #e3d8f1;
+}
+
+.bouquet-card__media{
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+
+.bouquet-card__media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bouquet-card__caption{
+  padding: 18px 6px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 @media(max-width: 900px){
   .content{ flex-direction:column; }

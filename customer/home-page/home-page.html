@@ -27,21 +27,6 @@
                 <button type="button"><span class="material-symbols-outlined">search</span></button>
                 <input type="text" name="address" placeholder="Find your perfect bouquet...📍">
             </div>
-            <!--<div class="carousel-container" aria-label="Newest Photos">
-                <button class="carousel-button prev" data-carousel-button="prev">&#10594;</button>
-                <button class="carousel-button next" data-carousel-button="next">&#10596;</button>
-                <ul>
-                    <li class="slide" data-active>
-                        <img src="/web2-ws25-4EverBloom/assets/banner1.png" alt="Spring Sale Image #1">
-                    </li>
-                    <li class="slide">
-                        <img src="/web2-ws25-4EverBloom/assets/banner2.png" alt="A woman selling flowers #2">
-                    </li>
-                    <li class="slide">
-                        <img src="/web2-ws25-4EverBloom/assets/banner3.png" alt="Spring Sale Image #3">
-                    </li>
-                </ul>
-            </div>-->
         </div>
 
         <div class="back-video-container">
@@ -67,42 +52,111 @@
             </div>
         </div>
 
-    </main>
-</body>
-</html>
+        <section class="petals-of-happiness">
+            <h3>Petals of Happiness</h3>
 
-<script>
+            <ul class="flower-suggestions">
+                <li class="bouquet-card">
+                    <a class="bouquet-card__link" href="#">
+                        <figure class="bouquet-card__media">
+                            <img src="/web2-ws25-4EverBloom/assets/bouquet1.png" alt="Amaryllis Bouquet">
+                        </figure>
+                        <figcaption class="bouquet-card__caption">
+                            <span class="bouquet-card__name">Amaryllis Bouquet</span>
+                            <span class="bouquet-card__price">€45,00</span>
+                        </figcaption>
+                    </a>
+                </li>
+
+                <li class="bouquet-card">
+                    <a class="bouquet-card__link" href="#">
+                        <figure class="bouquet-card__media">
+                            <img src="/web2-ws25-4EverBloom/assets/bouquet2.png" alt="Dried Vanilla Sky">
+                        </figure>
+                        <figcaption class="bouquet-card__caption">
+                            <span class="bouquet-card__name">Dried Vanilla Sky</span>
+                            <span class="bouquet-card__price">€49,00</span>
+                        </figcaption>
+                    </a>
+                </li>
+
+                <li class="bouquet-card">
+                    <a class="bouquet-card__link" href="#">
+                        <figure class="bouquet-card__media">
+                            <img src="/web2-ws25-4EverBloom/assets/bouquet3.png" alt="Flamingo Stripes">
+                        </figure>
+                        <figcaption class="bouquet-card__caption">
+                            <span class="bouquet-card__name">Flamingo Stripes</span>
+                            <span class="bouquet-card__price">€80,00</span>
+                        </figcaption>
+                    </a>
+                </li>
+
+                <li class="bouquet-card">
+                <a class="bouquet-card__link" href="#">
+                    <figure class="bouquet-card__media">
+                        <img src="/web2-ws25-4EverBloom/assets/bouquet4.png" alt="French Martini">
+                    </figure>
+                    <figcaption class="bouquet-card__caption">
+                        <span class="bouquet-card__name">French Martini</span>
+                        <span class="bouquet-card__price">€80,00</span>
+                    </figcaption>
+                </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+    <div id="footer"></div>
+    <script>
+      //Fetch header
       fetch("/web2-ws25-4EverBloom/Header/header.html")
         .then(response => response.text())
         .then(data => {
-          document.getElementById("header").innerHTML = data;
+            const mount = document.getElementById('header');
+            mount.innerHTML = data;
+            initHeader(mount);
         })
         .catch(err => console.error("Header konnte nicht geladen werden:", err));
 
+        function initHeader() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
+            const loginLink = document.querySelector('#login-link');
+            const userLinks = document.querySelectorAll('.user-links');
+            const designBouquetButton = document.querySelector('.design-bouquet')
 
+            if (isLoggedIn) {
+                loginLink?.classList.add('hidden');
+                userLinks.forEach(el => el.classList.remove('hidden'));
+                designBouquetButton?.classList.remove('hidden');
+            } else {
+                loginLink?.classList.remove('hidden');
+                userLinks.forEach(el => el.classList.add('hidden'));
+                designBouquetButton?.classList.add('hidden');
+            }
 
-
-        /*const buttons = document.querySelectorAll(".carousel-button")
-        const slides  = document.querySelectorAll(".carousel");
-
-        if (!document.querySelector(".carousel[data-active]") && slides.length) {
-            slides[0].setAttribute("data-active", "");
+            // Logout-Handler
+            const logout = document.querySelector('.logout-link');
+            if (logout) {
+                logout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('login-email');
+                localStorage.removeItem('login-password');
+                window.location.href = '/web2-ws25-4EverBloom/customer/home-page/home-page.html';
+                });
+            }
         }
 
-        buttons.forEach(button => {
-            button.addEventListener("click", () => {
-                const offset = button.getAttribute("data-carousel-button") === "next" ? 1 : -1;
-                const activeSlide = document.querySelector(".slide[data-active]")
-                const activeIndex = [...slides].indexOf(activeSlide);
+        //Fetch footer
+        fetch("/web2-ws25-4EverBloom/footer/footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(err => console.error("Footer konnte nicht geladen werden:", err));
 
-                const newIndex = (activeIndex + offset + [...slides].length) % [...slides].length;
-
-                activeSlide.removeAttribute("data-active");
-                slides[newIndex].setAttribute("data-active", "")
-            })
-        });*/
-
+        //Slider of flower shops
         const slide  = document.querySelector(".carousel");
         const buttons = document.querySelectorAll(".carousel-button");
         buttons[0].style.display = "none";
@@ -122,3 +176,5 @@
             })
         });
 </script>
+</body>
+</html>

@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="/web2-ws25-4EverBloom/Header/header.css">
   </head>
   <header>
-    <!--TODO: redirect to the home-page only if the user is logged in-->
     <a href="/web2-ws25-4EverBloom/customer/home-page/home-page.html">
       <div class="logo">
         <img src="/web2-ws25-4EverBloom/assets/Logo.png" alt="Flower Logo" width="70" height="70">
@@ -21,7 +20,22 @@
       <a href="/web2-ws25-4EverBloom/customer/home-page/home-page.html">Home</a>
       <a href="/web2-ws25-4EverBloom/Chat/4EverBloom_chat.html">Chat</a>
       <a href="#">About</a>
-      <a href="/web2-ws25-4EverBloom/Login/Login.html">Login</a>
+      <a id="login-link" href="/web2-ws25-4EverBloom/Login/Login.html">Login</a>
+
+      <div class="design-bouquet hidden">
+        <a class="user-links" href="/web2-ws25-4EverBloom/Customer/DesignBouquet.html" title="Design a Bouquet">
+        <span class="fx-3d">3D</span>esign Bouquet 🪄
+        </a>
+      </div>
+      <a class="user-links hidden" href="/web2-ws25-4EverBloom/Customer/Profile.html" title="Profile">
+        <span class="material-symbols-outlined">account_circle</span>
+      </a>
+      <a class="user-links hidden" href="/web2-ws25-4EverBloom/Customer/Cart.html" title="Cart">
+        <span class="material-symbols-outlined">shopping_cart</span>
+      </a>
+      <a class="user-links logout-link hidden" href="#" title="Logout">
+        <span class="material-symbols-outlined">logout</span>
+      </a>
     </nav>
   </header>
 </html>

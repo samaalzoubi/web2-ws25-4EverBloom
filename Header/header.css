@@ -53,10 +53,45 @@ nav a {
   color: var(--color-accent-dark);
   font-weight: 500;
   transition: color 0.3s;
+  display: inline-flex; 
 }
 
 nav a:hover {
   color: var(--color-hover);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+}
+
+.design-bouquet {
+  border: 3px solid transparent;
+  border-radius: 1em;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(to left, var(--color-accent-light), rgb(241, 194, 236)) border-box;
+}
+
+.design-bouquet:hover {
+  background: linear-gradient(var(--color-background-secondary), var(--color-background-secondary)) padding-box,
+              linear-gradient(to left, var(--color-accent-light), rgb(241, 194, 236)) border-box;
+}
+
+.design-bouquet a:hover {
+  color: var(--color-accent-dark);
+}
+
+.fx-3d{
+  font-weight: 400;
+  letter-spacing: .05em;
+  background: linear-gradient(180deg, #fff, #f7f1ff 90%, #d2c6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow:
+    1px 1px 0 #7265b3,
+    2px 2px 0 #4735a3,
+    3px 3px 0 #8985a6;  
 }
 
 .logo img {

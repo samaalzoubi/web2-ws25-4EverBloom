@@ -119,7 +119,8 @@
         const storedUser = JSON.parse(localStorage.getItem(email));
 
         if (storedUser && storedUser.password === password) {
-          alert(`Welcome back, ${storedUser.username}! 🌸`);
+          localStorage.setItem("isLoggedIn", "true");
+          window.location.href = "/web2-ws25-4EverBloom/customer/home-page/home-page.html";
         } else {
           alert("Invalid email or password. Please try again.");
         }
