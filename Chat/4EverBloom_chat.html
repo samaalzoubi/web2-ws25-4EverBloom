@@ -28,12 +28,15 @@
 <div id="footer"></div>
 
 <script>
+      
+       //Fetch header
       fetch("/web2-ws25-4EverBloom/Header/header.html")
         .then(response => response.text())
         .then(data => {
             const mount = document.getElementById('header');
             mount.innerHTML = data;
             initHeader(mount);
+            document.dispatchEvent(new Event('header:ready'));
         })
         .catch(err => console.error("Header konnte nicht geladen werden:", err));
 
@@ -59,10 +62,11 @@
             if (logout) {
                 logout.addEventListener('click', (e) => {
                 e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
+                localStorage.setItem('isLoggedIn', "false");
                 localStorage.removeItem('login-email');
                 localStorage.removeItem('login-password');
-                // Optional: zur Login- oder Home-Seite
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('totalCartQuantity');
                 window.location.href = '/web2-ws25-4EverBloom/customer/home-page/home-page.html';
                 });
             }
