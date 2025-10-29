@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import url("/web2-ws25-4EverBloom/Header/header.html");
+@import url("/web2-ws25-4EverBloom/footer/footer.html");
+.auth {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(120deg, #ffffff, #d4bdf0);
+  color: #333333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.auth__container {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+  width: 400px;
+}
+.auth__container--hidden {
+  display: none;
+}
+.auth__title {
+  color: #4b3c8a;
+  margin-bottom: 10px;
+}
+.auth__subtitle {
+  color: #666666;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+.auth__label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px;
+  color: #4b3c8a;
+  font-weight: 500;
+}
+.auth__input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cccccc;
+  outline: none;
+  transition: border 0.3s;
+}
+.auth__input:focus {
+  border-color: #b79bd3;
+}
+.auth__btn {
+  width: 100%;
+  background-color: #b79bd3;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.auth__btn:hover {
+  background-color: #9f7cc1;
+}
+.auth__toggle {
+  margin-top: 20px;
+  color: #555555;
+  font-size: 14px;
+}
+.auth__toggle span {
+  color: #7e4bb1;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.auth__toggle span:hover {
+  color: #5b2e91;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  color: #666666;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Responsive */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    padding: 10px 20px;
+  }
+  nav {
+    margin-top: 10px;
+  }
+  .auth__container {
+    width: 90%;
+  }
+}/*# sourceMappingURL=main.css.map */

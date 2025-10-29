@@ -1,0 +1,114 @@
+.auth {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(120deg, $color-background, $color-background-secondary);
+  color: $color-text-dark;
+  min-height: 100vh;
+  @include flex-center;
+  flex-direction: column;
+
+  &__container {
+    @include card-style;
+    width: 400px;
+
+    &--hidden {
+      display: none;
+    }
+  }
+
+  &__title {
+    color: $color-accent-dark;
+    margin-bottom: 10px;
+  }
+
+  &__subtitle {
+    color: $color-subtitle;
+    margin-bottom: 25px;
+    font-size: 15px;
+  }
+
+  &__label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    color: $color-accent-dark;
+    font-weight: 500;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid $color-border;
+    outline: none;
+    transition: border 0.3s;
+
+    &:focus {
+      border-color: $color-hover;
+    }
+  }
+
+  &__btn {
+    width: 100%;
+    background-color: $color-hover;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background-color: $color-btn-hover;
+    }
+  }
+
+  &__toggle {
+    margin-top: 20px;
+    color: $color-toggle-text;
+    font-size: 14px;
+
+    span {
+      color: $color-accent-light;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: $color-accent-hover;
+      }
+    }
+  }
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: $color-footer-bg;
+  font-size: 14px;
+  color: $color-footer-text;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    padding: 10px 20px;
+  }
+
+  nav {
+    margin-top: 10px;
+  }
+
+  .auth__container {
+    width: 90%;
+  }
+}
