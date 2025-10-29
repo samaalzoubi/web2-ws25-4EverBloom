@@ -26,6 +26,9 @@
             <div class="search-container">
                 <button type="button"><span class="material-symbols-outlined">search</span></button>
                 <input type="text" name="address" placeholder="Find your perfect bouquet...📍">
+                <button type="button" id="open-map" class="map-btn" title="Open map">
+                    <span class="material-symbols-outlined">map_search</span>
+                </button>
             </div>
         </div>
 
@@ -279,6 +282,12 @@
             close.addEventListener("click", () => {
                 cartMenu.style.right = "-100%"
             })
+        })
+
+        //Toggle map button to be redirected to the map-page
+        const btn = document.getElementById('open-map');
+        btn.addEventListener("click", () => {
+            window.location.href = "/web2-ws25-4EverBloom/customer/map/map.html";
         })
 
 </script>
