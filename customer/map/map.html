@@ -32,7 +32,7 @@
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
             const loginLink = document.querySelector('#login-link');
-            const userLinks = document.querySelectorAll('.user-links');
+            const userLinks = document.querySelectorAll('.design-bouquet__user-links');
             const designBouquetButton = document.querySelector('.design-bouquet')
 
             if (isLoggedIn) {
@@ -46,7 +46,7 @@
             }
 
             // Logout-Handler
-            const logout = document.querySelector('.logout-link');
+            const logout = document.querySelector('.design-bouquet__logout-link');
             if (logout) {
                 logout.addEventListener('click', (e) => {
                 e.preventDefault();

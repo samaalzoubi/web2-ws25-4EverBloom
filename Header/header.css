@@ -81,7 +81,7 @@ nav {
   color: var(--color-accent-dark);
 }
 
-.fx-3d{
+.design-bouquet__fx-3d {
   font-weight: 400;
   letter-spacing: .05em;
   background: linear-gradient(180deg, #fff, #f7f1ff 90%, #d2c6ff);
@@ -98,14 +98,14 @@ nav {
   display: block;
 }
 
-.cart-link {
+.design-bouquet__cart-link {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.cart-count {
+.design-bouquet__cart-count {
   position: absolute;
   top: -6px;
   right: 0;
@@ -124,7 +124,7 @@ nav {
 }
 
 /*TODO: pruefen, warum nicht funktioniert*/
-.cart-link:hover {
+.design-bouquet__cart-link:hover {
   color: var(--color-hover);
 }
 
