@@ -255,7 +255,8 @@
                     totalQuantity--;
                     break;
             }
-            localStorage.setItem("cartItems", JSON.stringify(listCart))
+            localStorage.setItem("cartItems", JSON.stringify(listCart));
+            localStorage.setItem("totalCartQuantity", totalQuantity)
             addCartToHTML();
         }
 

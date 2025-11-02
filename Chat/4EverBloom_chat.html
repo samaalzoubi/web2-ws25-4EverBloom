@@ -10,23 +10,25 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head> 
 <body>
-<div id="header"></div>
+    <div id="header"></div>
 
-<div class="chat-container">
-    <div class="chat-header">4EverBloom Bot 🌸</div>
-    <div class="chat-box" id="chat-box"></div>
-    <div class="input-container">
-        <input type="text" id="user-input" placeholder="Type your message..." />
-        <button onclick="sendMessage()">
-            <!-- Send icon SVG -->
-            <svg class="send-icon" viewBox="0 0 24 24">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-            </svg>
-        </button>
+    <div class="page-chat">
+        <div class="chat-container">
+            <div class="chat-header">4EverBloom Bot 🌸</div>
+            <div class="chat-box" id="chat-box"></div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Type your message..." />
+                <button onclick="sendMessage()">
+                    <!-- Send icon SVG -->
+                    <svg class="send-icon" viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
-</div>
 
-<div id="footer"></div>
+    <div id="footer"></div>
 
 <script>
       
