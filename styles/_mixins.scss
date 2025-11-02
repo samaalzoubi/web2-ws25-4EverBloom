@@ -1,0 +1,26 @@
+//GLOBAL MIXINS
+
+//FLEX UTILITIES
+@mixin flex-center($direction: row, $center: true) {
+  display: flex;
+  flex-direction: $direction;
+  @if $center == true {
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+//TRANSITIONS
+@mixin transition($props: all, $time: 0.3s, $ease: ease) {
+  transition: $props $time $ease;
+}
+
+//POSITION UTILITIES
+@mixin absolute($top: auto, $right: auto, $bottom: auto, $left: auto) {
+  position: absolute;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+

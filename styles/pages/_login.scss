@@ -1,0 +1,58 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.form-container {
+  background-color: $color-background;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px $color-box-shadows;
+  width: 400px;
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+
+  .subtitle {
+    color: $color-subtitle;
+    margin-bottom: 25px;
+    font-size: 15px;
+  }
+
+  .main-btn {
+    width: 100%;
+    background-color: $color-hover;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background-color: $color-btn-hover;
+    }
+  }
+
+  .toggle-text {
+    margin-top: 20px;
+    color: $color-toggle-text;
+    font-size: 14px;
+
+    span {
+      color: $color-accent-light;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: $color-accent-hover;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .form-container {
+    width: 90%;
+  }
+}

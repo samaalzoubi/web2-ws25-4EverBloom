@@ -1,0 +1,131 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+header {
+  @include flex-center(row, false);
+  position: fixed;
+  z-index: 10;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 60px;
+  background-color: $color-header-background;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 10px $color-box-shadows;
+
+   a {
+        text-decoration: none;
+    }
+
+  .logo {
+    @include flex-center(row);
+    gap: 10px;
+    color: $color-accent-light;
+
+    img {
+      display: block;
+      width: 70px;
+      height: 70px;
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: $color-accent-dark;
+      margin: 0;
+      line-height: 1;
+    }
+
+    h3 {
+      font-weight: 400;
+      font-size: 0.9rem;
+      color: $color-subtitle;
+      margin: 0;
+    }
+
+    div {
+      @include flex-center(column, false);
+      align-items: flex-start;
+    }
+  }
+
+  nav {
+    @include flex-center(row);
+    gap: 15px;
+
+    a {
+      text-decoration: none;
+      color: $color-accent-dark;
+      font-weight: 500;
+      display: inline-flex;
+      @include transition(color);
+
+      &:hover {
+        color: $color-hover;
+      }
+    }
+
+    .design-bouquet {
+      border: 3px solid transparent;
+      border-radius: 1em;
+      background: linear-gradient(white, white) padding-box,
+                  linear-gradient(to left, $color-accent-light, rgb(241, 194, 236)) border-box;
+      @include transition(background);
+
+      &:hover {
+        background: linear-gradient($color-background-secondary, $color-background-secondary) padding-box,
+                    linear-gradient(to left, $color-accent-light, rgb(241, 194, 236)) border-box;
+      }
+
+      a {
+        color: $color-accent-dark;
+        text-decoration: none;
+
+        &:hover {
+          color: $color-accent-dark;
+        }
+      }
+
+      &__fx-3d {
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        background: linear-gradient(180deg, #fff, #f7f1ff 90%, #d2c6ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow:
+          1px 1px 0 #7265b3,
+          2px 2px 0 #4735a3,
+          3px 3px 0 #8985a6;
+      }
+    }
+
+    .design-bouquet__cart-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: $color-hover;
+      }
+
+      &.hidden { 
+        display: none;
+      }
+    }
+    .design-bouquet__cart-count {
+      @include absolute(-6px, 0);
+        color: $color-accent-dark;
+        font-size: 0.7rem;
+        font-weight: 600;
+        border-radius: 50%;
+        padding: 1px 3px;
+        min-width: 17px;
+        text-align: center;
+        pointer-events: none;
+        transform: translateX(13px);
+        @include flex-center;
+    }
+  }
+}

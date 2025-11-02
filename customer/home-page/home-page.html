@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blümeo | Home-Page</title>
-     <link rel="stylesheet" href="/web2-ws25-4EverBloom/Style.css" />
-    <link rel="stylesheet" href="home-page.css" />
+    <link rel="stylesheet" href="/web2-ws25-4EverBloom/styles/main.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 <body>
    <div id="header"></div>
 
-    <main>
+    <main class="home-page">
         <section class="banner">
                 <h2>Create & Send Beautiful Bouquets – Fresh, Local & Designed for You</h2>
                 <div class="banner__text">
@@ -252,6 +251,7 @@
                     break;
             }
             localStorage.setItem("cartItems", JSON.stringify(listCart))
+            localStorage.setItem("totalCartQuantity", totalQuantity)
             addCartToHTML();
         }
 
