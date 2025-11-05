@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4EverBloom Bot</title>
+ <link rel="stylesheet" href="../Style.css">
+ <link rel="stylesheet" href="./chat.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+</head> 
+<body>
+    <div id="header"></div>
+
+    <div class="page-chat">
+        <div class="chat-container">
+            <div class="chat-header">4EverBloom Bot 🌸</div>
+            <div class="chat-box" id="chat-box"></div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button onclick="sendMessage()">
+                    <!-- Send icon SVG -->
+                    <svg class="send-icon" viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+<script>
+      
+       //Fetch header
+      fetch("/web2-ws25-4EverBloom/Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+            const mount = document.getElementById('header');
+            mount.innerHTML = data;
+            initHeader(mount);
+            document.dispatchEvent(new Event('header:ready'));
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
+        function initHeader() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            const loginLink = document.querySelector('#login-link');
+            const userLinks = document.querySelectorAll('.user-links');
+            const designBouquetButton = document.querySelector('.design-bouquet')
+
+            if (isLoggedIn) {
+                loginLink?.classList.add('hidden');
+                userLinks.forEach(el => el.classList.remove('hidden'));
+                designBouquetButton?.classList.remove('hidden');
+            } else {
+                loginLink?.classList.remove('hidden');
+                userLinks.forEach(el => el.classList.add('hidden'));
+                designBouquetButton?.classList.add('hidden');
+            }
+
+            // Logout-Handler
+            const logout = document.querySelector('.logout-link');
+            if (logout) {
+                logout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.setItem('isLoggedIn', "false");
+                localStorage.removeItem('login-email');
+                localStorage.removeItem('login-password');
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('totalCartQuantity');
+                window.location.href = '/web2-ws25-4EverBloom/customer/home-page/home-page.html';
+                });
+            }
+        }
+
+        //Fetch footer
+        fetch("/web2-ws25-4EverBloom/footer/footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+
+    const chatBox = document.getElementById('chat-box');
+    const userInputField = document.getElementById('user-input');
+
+    function sendMessage() {
+        const userInput = userInputField.value.trim();
+        if(userInput === "") return;
+
+        appendMessage(userInput, 'user');
+        userInputField.value = '';
+
+        setTimeout(() => {
+            const botResponse = getBotResponse(userInput);
+            appendMessage(botResponse, 'bot');
+        }, 500);
+    }
+
+    function appendMessage(message, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add(sender);
+        messageDiv.textContent = message;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function getBotResponse(input) {
+        input = input.toLowerCase();
+        if(input.includes('hello') || input.includes('hi')) {
+            return "Hello! Welcome to 4EverBloom 🌸 How can I help you today?";
+        } else if(input.includes('flowers') || input.includes('bouquet')) {
+            return "We have a variety of flowers! Roses, lilies, tulips, and more. Would you like to see our bestsellers?";
+        } else if(input.includes('price') || input.includes('cost')) {
+            return "Our prices vary depending on the bouquet. Most start from $20. Do you want details on a specific flower?";
+        } else if(input.includes('thanks') || input.includes('thank you')) {
+            return "You're welcome! Happy to help 🌷";
+        } else {
+            return "I'm sorry, I didn't understand that. Could you please rephrase?";
+        }
+    }
+
+    
+    userInputField.addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') {
+            sendMessage();
+            e.preventDefault();
+        }
+    });
+</script>
+</body>
+</html>

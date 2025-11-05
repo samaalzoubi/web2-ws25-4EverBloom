@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blümeo | Home-Page</title>
+    <link rel="stylesheet" href="/web2-ws25-4EverBloom/Style.css">
+    <link rel="stylesheet" href="home-page.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+</head>
+<body>
+   <div id="header"></div>
+
+    <main>
+        <section class="banner">
+                <h2>Create & Send Beautiful Bouquets – Fresh, Local & Designed for You</h2>
+                <div class="under-banner">
+                    <p>At Blümeo, every bouquet is crafted with love by local florists and brought to life in our 3D flower designer.</p>
+                    <p>Explore, customize, and send your perfect arrangement – whether for birthdays, celebrations, or “just because.”</p>
+                    <p>Enjoy same-day delivery from trusted local shops. Transparent prices, no hidden fees – just pure floral joy delivered to your doorstep.</p>
+                </div>
+        </section>
+
+        <div class="search-and-carousel">
+            <div class="search-container">
+                <button type="button"><span class="material-symbols-outlined">search</span></button>
+                <input type="text" name="address" placeholder="Find your perfect bouquet...📍">
+                <button type="button" id="open-map" class="map-btn" title="Open map">
+                    <span class="material-symbols-outlined">map_search</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="back-video-container">
+            <video class="background-video" autoplay loop muted playsinline src="/web2-ws25-4EverBloom/assets/flowers_background.mp4"></video>
+            <div id="citation">
+                <p>“I must have flowers, always, and always.” <strong>― Claude Monet</strong></p>
+            </div>
+        </div>
+    
+        <div class="happiness-hubs">
+            <h3>Happiness Hubs</h3>
+            <button class="carousel-button prev" data-carousel-button="prev">&#10594;</button>
+            <button class="carousel-button next" data-carousel-button="next">&#10596;</button>
+            <div class="carousel">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-1.jpg" alt="Flower Shop Logo 1">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-2.jpg" alt="Flower Shop Logo 2">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-3.webp" alt="Flower Shop Logo 3">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-4.jpg" alt="Flower Shop Logo 4">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-5.webp" alt="Flower Shop Logo 5">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-6.avif" alt="Flower Shop Logo 6">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-7.jpg.avif" alt="Flower Shop Logo 7">
+                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-8.png" alt="Flower Shop Logo 8">
+            </div>
+        </div>
+
+        <section class="petals-of-happiness">
+            <h3>Petals of Happiness</h3>
+
+            <ul class="flower-suggestions"></ul>
+        </section>
+    </main>
+    <div class="cart">
+            <h2>CART</h2>
+            <div class="list-cart">
+            </div>
+            <div class="buttons">
+                <div class="close">CLOSE</div>
+                <div class="checkout">
+                    <a href="checkout.html">CHECKOUT</a>
+                </div>
+            </div>
+        </div>
+    <div id="footer"></div>
+    <script>
+      //Fetch header
+      fetch("/web2-ws25-4EverBloom/Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+            const mount = document.getElementById('header');
+            mount.innerHTML = data;
+            initHeader(mount);
+            document.dispatchEvent(new Event('header:ready'));
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
+        function initHeader() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            const loginLink = document.querySelector('#login-link');
+            const userLinks = document.querySelectorAll('.user-links');
+            const designBouquetButton = document.querySelector('.design-bouquet')
+
+            if (isLoggedIn) {
+                loginLink?.classList.add('hidden');
+                userLinks.forEach(el => el.classList.remove('hidden'));
+                designBouquetButton?.classList.remove('hidden');
+            } else {
+                loginLink?.classList.remove('hidden');
+                userLinks.forEach(el => el.classList.add('hidden'));
+                designBouquetButton?.classList.add('hidden');
+            }
+
+            // Logout-Handler
+            const logout = document.querySelector('.logout-link');
+            if (logout) {
+                logout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.setItem('isLoggedIn', "false");
+                localStorage.removeItem('login-email');
+                localStorage.removeItem('login-password');
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('totalCartQuantity');
+                window.location.href = '/web2-ws25-4EverBloom/customer/home-page/home-page.html';
+                });
+            }
+        }
+
+        //Fetch footer
+        fetch("/web2-ws25-4EverBloom/footer/footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+
+
+
+
+        //Fetch Flower Bouquets Data (Mock Data)
+        let products = null
+        fetch("/web2-ws25-4EverBloom/customer/home-page/testBouquetsData.json")
+        .then(response => response.json())
+        .then(data => {
+            products = data;
+            addDataToHTML();
+        })
+
+        function addDataToHTML() {
+            let listProductHTML = document.querySelector('.flower-suggestions');
+            listProductHTML.innerHTML = '';
+            products.forEach(product => {
+                let newProduct = document.createElement('li');
+                newProduct.classList.add("bouquet-card");
+                newProduct.innerHTML = `
+                    <div class="bouquet-card__link">
+                        <figure class="bouquet-card__media">
+                            <img src="${product.image}" alt="${product.name}">
+                            <span class="bouquet-card__label">Exclusive</span>
+                        </figure>
+                        <figcaption class="bouquet-card__caption">
+                            <span class="bouquet-card__name">${product.name}</span>
+                            <span class="bouquet-card__price">${product.price}</span>
+                            <button class="add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                        </figcaption>
+                    </div>`
+                listProductHTML.appendChild(newProduct)
+            })
+        }
+
+        //Slider of flower shops
+        const slide  = document.querySelector(".carousel");
+        const buttons = document.querySelectorAll(".carousel-button");
+        buttons[0].style.display = "none";
+        firstImage = slide.querySelectorAll("img")[0]
+
+        const showHideButtons = () => {
+            let scrollWidth = slide.scrollWidth - slide.clientWidth;
+            buttons[0].style.display = slide.scrollLeft == 0 ? "none" : "block";
+            buttons[1].style.display = slide.scrollLeft == scrollWidth ? "none" : "block";
+        }
+        
+        buttons.forEach(button => {
+            button.addEventListener("click", () => {
+                let firstImageWidth = firstImage.clientWidth + 35;
+                slide.scrollLeft +=  button.getAttribute("data-carousel-button") === "next" ? firstImageWidth : -firstImageWidth;
+                setTimeout(() => showHideButtons(), 60)
+            })
+        });
+
+        //Add to cart
+        let listCart = JSON.parse(localStorage.getItem('cartItems') || '[]');
+        let totalQuantity = JSON.parse(localStorage.getItem('totalCartQuantity') || '0');
+
+        function addToCart($idProduct) {
+            if (localStorage.getItem("isLoggedIn") === 'true') {
+                let productCopy = JSON.parse(JSON.stringify(products))
+                if(!listCart[$idProduct]) {
+                    let dataProduct = productCopy.filter(
+                        product => product.id == $idProduct
+                    )[0];
+                    listCart[$idProduct] = dataProduct;
+                    listCart[$idProduct].quantity = 1;
+                }
+                else {
+                    listCart[$idProduct].quantity++;
+                }
+
+                totalQuantity++;
+                //TODO: set these properties on the logged-in user
+                localStorage.setItem("cartItems", JSON.stringify(listCart))
+                localStorage.setItem('totalCartQuantity', totalQuantity)
+                addCartToHTML();
+                }
+                else {
+                    alert("Log in first!")
+                }
+        }
+
+        function addCartToHTML() {
+            let listProductHTML = document.querySelector('.list-cart');
+            listProductHTML.innerHTML = '';
+
+            let totalHTML = document.querySelector('#header .cart-count')
+
+            if(listCart) {
+                listCart.forEach(product => {
+                    if (product) {
+                        let newCartItemHTML = document.createElement("div");
+                        newCartItemHTML.classList.add("item")
+                        newCartItemHTML.innerHTML = `<img src="${product.image}" alt="${product.name}">
+                                <div class="content">
+                                    <div class="name">
+                                    ${product.name}
+                                    </div>
+                                    <div class="price">
+                                    ${product.price}
+                                    </div>
+                                </div>
+                                <div class="quantity">
+                                    <button onclick="changeQuantity(${product.id}, '-')">-</button>
+                                    <span class="value">${product.quantity}</span>
+                                    <button onclick="changeQuantity(${product.id}, '+')">+</button>
+                                </div>`
+                        listProductHTML.appendChild(newCartItemHTML)
+                    }
+                })
+            }
+            totalHTML.innerHTML = totalQuantity;
+        }
+
+        function changeQuantity($idProduct, $operationType) {
+            console.log("hey")
+            switch($operationType) {
+                case '+':
+                    listCart[$idProduct].quantity++;
+                    totalQuantity++;
+                    break;
+                case '-':
+                    listCart[$idProduct].quantity--;
+                    if (listCart[$idProduct].quantity <= 0) {
+                        delete listCart[$idProduct];
+                    }
+                    totalQuantity--;
+                    break;
+            }
+            localStorage.setItem("cartItems", JSON.stringify(listCart));
+            localStorage.setItem("totalCartQuantity", totalQuantity)
+            addCartToHTML();
+        }
+
+        //Toggle cart icon
+        document.addEventListener('header:ready', () => {
+            const cartIcon = document.querySelector('#header .cart-link');
+            const cartMenu = document.querySelector('.cart');
+            const close = document.querySelector(".close")
+
+            //Load items in the cart from localStorage after updating the page
+            addCartToHTML();
+
+            cartIcon.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (cartMenu.style.right == "-100%") {
+                    cartMenu.style.right = "0"
+                }
+                else {
+                    cartMenu.style.right = "-100%"
+                }
+            })
+
+            close.addEventListener("click", () => {
+                cartMenu.style.right = "-100%"
+            })
+        })
+
+        //Toggle map button to be redirected to the map-page
+        const btn = document.getElementById('open-map');
+        btn.addEventListener("click", () => {
+            window.location.href = "/web2-ws25-4EverBloom/customer/map/map.html";
+        })
+
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blümeo | Home-Page | Map</title>
+    <link rel="stylesheet" href="/web2-ws25-4EverBloom/Style.css">
+    <link rel="stylesheet" href="map.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+    <div id="header"></div>
+    <main>
+        <div class="leaflet-map" id="map"></div>
+    </main>
+    <div id="footer"></div>
+    <script>
+    //Fetch header
+      fetch("/web2-ws25-4EverBloom/Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+            const mount = document.getElementById('header');
+            mount.innerHTML = data;
+            initHeader(mount);
+            document.dispatchEvent(new Event('header:ready'));
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
+        function initHeader() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            const loginLink = document.querySelector('#login-link');
+            const userLinks = document.querySelectorAll('.user-links');
+            const designBouquetButton = document.querySelector('.design-bouquet')
+
+            if (isLoggedIn) {
+                loginLink?.classList.add('hidden');
+                userLinks.forEach(el => el.classList.remove('hidden'));
+                designBouquetButton?.classList.remove('hidden');
+            } else {
+                loginLink?.classList.remove('hidden');
+                userLinks.forEach(el => el.classList.add('hidden'));
+                designBouquetButton?.classList.add('hidden');
+            }
+
+            // Logout-Handler
+            const logout = document.querySelector('.logout-link');
+            if (logout) {
+                logout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.setItem('isLoggedIn', "false");
+                localStorage.removeItem('login-email');
+                localStorage.removeItem('login-password');
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('totalCartQuantity');
+                window.location.href = '/web2-ws25-4EverBloom/customer/home-page/home-page.html';
+                });
+            }
+        }
+
+        //Fetch footer
+        fetch("/web2-ws25-4EverBloom/footer/footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+
+        //Karte initialisieren
+        var map = L.map('map').setView([51.505, -0.09], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+</script>
+</body>
+</html>
