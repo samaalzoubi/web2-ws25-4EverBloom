@@ -24,12 +24,15 @@
 /* Header */
 header {
   display: flex;
+  position: fixed;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   padding: 15px 60px;
   background-color: var(--color-header-background);
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 10px var(--color-box-shadows);
+  z-index: 1000; 
 }
 
 header .logo {
@@ -132,3 +135,48 @@ nav {
   display: none;
 }
 
+
+.material-symbols-outlined {
+  font-size: 32px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Container vom Menü */
+.user-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  width: 180px;
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.user-menu.show {
+  display: flex;
+}
+
+/* Menüelemente */
+.option-btn {
+  padding: 8px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #333;
+  transition: background 0.2s;
+}
+
+.option-btn:hover {
+  background: #f2f2f2;
+}
+
+/* Profilbild optional */
+.profile-pic img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
