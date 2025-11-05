@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blümeo | Home-Page</title>
-     <link rel="stylesheet" href="/web2-ws25-4EverBloom/Style.css" />
-    <link rel="stylesheet" href="home-page.css" />
+    <link rel="stylesheet" href="/web2-ws25-4EverBloom/styles/main.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 <body>
    <div id="header"></div>
 
-    <main>
+    <main class="home-page">
         <section class="banner">
                 <h2>Create & Send Beautiful Bouquets – Fresh, Local & Designed for You</h2>
-                <div class="under-banner">
+                <div class="banner__text">
                     <p>At Blümeo, every bouquet is crafted with love by local florists and brought to life in our 3D flower designer.</p>
                     <p>Explore, customize, and send your perfect arrangement – whether for birthdays, celebrations, or “just because.”</p>
                     <p>Enjoy same-day delivery from trusted local shops. Transparent prices, no hidden fees – just pure floral joy delivered to your doorstep.</p>
@@ -23,24 +22,27 @@
         </section>
 
         <div class="search-and-carousel">
-            <div class="search-container">
+            <div class="search-and-carousel__search">
                 <button type="button"><span class="material-symbols-outlined">search</span></button>
                 <input type="text" name="address" placeholder="Find your perfect bouquet...📍">
+                <button type="button" id="open-map" title="Open map">
+                    <span class="material-symbols-outlined">map_search</span>
+                </button>
             </div>
         </div>
 
-        <div class="back-video-container">
-            <video class="background-video" autoplay loop muted playsinline src="/web2-ws25-4EverBloom/assets/flowers_background.mp4"></video>
-            <div id="citation">
+        <div class="back-video">
+            <video class="back-video__video" autoplay loop muted playsinline src="/web2-ws25-4EverBloom/assets/flowers_background.mp4"></video>
+            <div class="back-video__citation">
                 <p>“I must have flowers, always, and always.” <strong>― Claude Monet</strong></p>
             </div>
         </div>
     
-        <div class="happiness-hubs">
+        <div class="carousel">
             <h3>Happiness Hubs</h3>
-            <button class="carousel-button prev" data-carousel-button="prev">&#10594;</button>
-            <button class="carousel-button next" data-carousel-button="next">&#10596;</button>
-            <div class="carousel">
+            <button class="carousel__button carousel__button--prev" data-carousel-button="prev">&#10594;</button>
+            <button class="carousel__button carousel__button--next" data-carousel-button="next">&#10596;</button>
+            <div class="carousel__track"">
                 <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-1.jpg" alt="Flower Shop Logo 1">
                 <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-2.jpg" alt="Flower Shop Logo 2">
                 <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-3.webp" alt="Flower Shop Logo 3">
@@ -55,20 +57,17 @@
         <section class="petals-of-happiness">
             <h3>Petals of Happiness</h3>
 
-            <ul class="flower-suggestions"></ul>
+            <ul class="petals-of-happiness__suggestions"></ul>
         </section>
     </main>
     <div class="cart">
-            <h2>CART</h2>
-            <div class="list-cart">
-            </div>
-            <div class="buttons">
-                <div class="close">CLOSE</div>
-                <div class="checkout">
-                    <a href="checkout.html">CHECKOUT</a>
-                </div>
-            </div>
+        <h2>CART</h2>
+        <div class="listCart"></div>
+        <div class="listCart__buttons">
+            <div class="listCart__buttons--close">CLOSE</div>
+            <div class="listCart__buttons--checkout"> <a href="checkout.html">CHECKOUT</a> </div>
         </div>
+    </div>
     <div id="footer"></div>
     <script>
       //Fetch header
@@ -86,7 +85,7 @@
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
             const loginLink = document.querySelector('#login-link');
-            const userLinks = document.querySelectorAll('.user-links');
+            const userLinks = document.querySelectorAll('.design-bouquet__user-links');
             const designBouquetButton = document.querySelector('.design-bouquet')
 
             if (isLoggedIn) {
@@ -100,7 +99,7 @@
             }
 
             // Logout-Handler
-            const logout = document.querySelector('.logout-link');
+            const logout = document.querySelector('.design-bouquet__logout-link');
             if (logout) {
                 logout.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -135,7 +134,7 @@
         })
 
         function addDataToHTML() {
-            let listProductHTML = document.querySelector('.flower-suggestions');
+            let listProductHTML = document.querySelector('.petals-of-happiness__suggestions');
             listProductHTML.innerHTML = '';
             products.forEach(product => {
                 let newProduct = document.createElement('li');
@@ -157,8 +156,8 @@
         }
 
         //Slider of flower shops
-        const slide  = document.querySelector(".carousel");
-        const buttons = document.querySelectorAll(".carousel-button");
+        const slide  = document.querySelector(".carousel__track");
+        const buttons = document.querySelectorAll(".carousel__button");
         buttons[0].style.display = "none";
         firstImage = slide.querySelectorAll("img")[0]
 
@@ -206,10 +205,10 @@
         }
 
         function addCartToHTML() {
-            let listProductHTML = document.querySelector('.list-cart');
+            let listProductHTML = document.querySelector('.listCart');
             listProductHTML.innerHTML = '';
 
-            let totalHTML = document.querySelector('#header .cart-count')
+            let totalHTML = document.querySelector('#header .design-bouquet__cart-count')
 
             if(listCart) {
                 listCart.forEach(product => {
@@ -217,17 +216,17 @@
                         let newCartItemHTML = document.createElement("div");
                         newCartItemHTML.classList.add("item")
                         newCartItemHTML.innerHTML = `<img src="${product.image}" alt="${product.name}">
-                                <div class="content">
-                                    <div class="name">
+                                <div class="listCartContent">
+                                    <div class="listCartContent__name">
                                     ${product.name}
                                     </div>
-                                    <div class="price">
+                                    <div class="listCartContent__price">
                                     ${product.price}
                                     </div>
                                 </div>
                                 <div class="quantity">
                                     <button onclick="changeQuantity(${product.id}, '-')">-</button>
-                                    <span class="value">${product.quantity}</span>
+                                    <span>${product.quantity}</span>
                                     <button onclick="changeQuantity(${product.id}, '+')">+</button>
                                 </div>`
                         listProductHTML.appendChild(newCartItemHTML)
@@ -238,7 +237,6 @@
         }
 
         function changeQuantity($idProduct, $operationType) {
-            console.log("hey")
             switch($operationType) {
                 case '+':
                     listCart[$idProduct].quantity++;
@@ -253,14 +251,15 @@
                     break;
             }
             localStorage.setItem("cartItems", JSON.stringify(listCart))
+            localStorage.setItem("totalCartQuantity", totalQuantity)
             addCartToHTML();
         }
 
         //Toggle cart icon
         document.addEventListener('header:ready', () => {
-            const cartIcon = document.querySelector('#header .cart-link');
+            const cartIcon = document.querySelector('#header .design-bouquet__cart-link');
             const cartMenu = document.querySelector('.cart');
-            const close = document.querySelector(".close")
+            const close = document.querySelector(".listCart__buttons--close")
 
             //Load items in the cart from localStorage after updating the page
             addCartToHTML();
@@ -279,6 +278,12 @@
             close.addEventListener("click", () => {
                 cartMenu.style.right = "-100%"
             })
+        })
+
+        //Toggle map button to be redirected to the map-page
+        const btn = document.getElementById('open-map');
+        btn.addEventListener("click", () => {
+            window.location.href = "/web2-ws25-4EverBloom/customer/map/map.html";
         })
 
 </script>

@@ -1,0 +1,76 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: linear-gradient(120deg, $color-background, $color-background-secondary);
+  color: $color-text-dark;
+  min-height: 100vh;
+  @include flex-center(column, false);
+}
+
+main {
+  flex: 1;
+  @include flex-center;
+  padding: 80px 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+h2 {
+  color: $color-accent-dark;
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px;
+  color: $color-accent-dark;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid $color-border;
+  outline: none;
+  transition: border 0.3s;
+
+  &:focus {
+    border-color: $color-hover;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    padding: 10px 20px;
+  }
+
+  nav {
+    margin-top: 10px;
+  }
+}

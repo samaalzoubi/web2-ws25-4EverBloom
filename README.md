@@ -18,14 +18,12 @@ By combining **technology, creativity, and community**, BLÜMEO supports both cu
 - To enable **3D bouquet customization** so customers can design their own flower arrangements virtually.  
 - To simplify **inventory and order management** for florists.  
 - To improve **digital visibility** and customer retention for local flower shops.  
-- To provide **corporate clients** with convenient recurring floral deliveries and event solutions.
 
 ## 4. Benefits of the Project
 ### For Customers:
 - Design personalized bouquets in 3D using the website and order from local florists.  
 - Place orders independently of their location with just a few clicks.  
-- Explore unique floral combinations visually before purchasing.  
-- Subscribe for weekly or monthly flower deliveries.  
+- Explore unique floral combinations visually before purchasing. (?) 
 - Enjoy a fast, convenient, and interactive online experience.  
 
 ### For Local Florists:
@@ -36,15 +34,9 @@ By combining **technology, creativity, and community**, BLÜMEO supports both cu
 - Benefit from new advertising and marketing opportunities on the platform.  
 - Simplify product and order management, saving time and effort.
 
-### For Corporate Clients: (to be discussed)
-- Schedule **recurring deliveries** for offices, hotels, or events.  
-- Order custom-branded floral packages for clients or employees.  
-- Simplify invoice and order management through a business dashboard.
-
 ## 5. Target Groups
 - **Private Customers:** Individuals who want to buy or design personalized bouquets for any occasion.  
-- **Local Flower Shops:** Small and medium-sized florists looking to digitize their business.  
-- **Corporate Clients:** Businesses that need regular or event-specific floral arrangements.  
+- **Local Flower Shops:** Small and medium-sized florists looking to digitize their business.   
 - **Administrators:** Manage users, shops, orders, and system integrity.
 
 ## 6. Team Members
@@ -80,7 +72,7 @@ By combining **technology, creativity, and community**, BLÜMEO supports both cu
 - **Bouquet Customization Management (Optional):** Manage bouquet customization options and control flower availability for customers.
 
 ## 8. System Architecture
-_(Provide an overview or diagram showing frontend, backend, and database structure)_
+![UML Diagram](assets/uml-dig.png)
 
 ## 9. Tech Stack
 _(List technologies, frameworks, and tools used)_

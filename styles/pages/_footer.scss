@@ -1,0 +1,10 @@
+@use '../variables' as *;
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: $color-footer-bg;
+  font-size: 14px;
+  color: $color-footer-text;
+  background-color: $color-header-background;
+}
