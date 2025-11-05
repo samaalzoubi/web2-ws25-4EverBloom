@@ -676,7 +676,7 @@ button.danger-btn:hover {
 .home-page .bouquet-card__link:hover {
   transform: translateY(-6px) rotate(1deg);
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.15);
-  background-color: white;
+  background-color: #e3d8f1;
 }
 .home-page .bouquet-card__media {
   margin: 0;
