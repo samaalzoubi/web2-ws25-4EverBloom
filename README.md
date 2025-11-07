@@ -72,7 +72,7 @@ By combining **technology, creativity, and community**, BLÜMEO supports both cu
 - **Bouquet Customization Management (Optional):** Manage bouquet customization options and control flower availability for customers.
 
 ## 8. System Architecture
-![UML Diagram](assets/uml-dig.png)
+![UML Diagram](ClickPrototype/assets/uml-dig.png)
 
 ## 9. Tech Stack
 _(List technologies, frameworks, and tools used)_
