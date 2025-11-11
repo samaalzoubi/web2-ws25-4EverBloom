@@ -1,0 +1,212 @@
+/* ===== GLOBAL STYLES ===== */
+body {
+  margin: 0;
+  font-family: "Poppins", Arial, sans-serif;
+  color: #333;
+  background-color: #ffffff; /* white for rest of the page */
+}
+
+/* ===== HEADER (Company Ribbon) ===== */
+.header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.banner-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Logo fix (shows fully and keeps proportions) */
+.logo {
+  height: 90px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Company Name - Blümeo */
+.brand-text h1 {
+  font-family: "Cormorant Garamond", serif;
+  margin: 0;
+  font-size: 2.8rem;
+  letter-spacing: 1px;
+  color: #2b3540;
+  font-weight: 700;
+}
+
+.brand-text p {
+  margin: 0.2rem 0 0 0;
+  color: #6a6a6a;
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+/* ===== SHOP INFO (FloraHaus Ribbon) ===== */
+.shop-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FAF9F6; /* ivory only for this ribbon */
+  padding: 3rem 5rem 2.5rem 5rem;
+  border-bottom: 1px solid #e5e5e5;
+  flex-wrap: wrap;
+}
+
+/* Left section (shop name + logo) */
+.shop-title {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* shop name + logo in a row */
+.shop-name-with-logo {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* Shop name text */
+.shop-title h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 3.8rem;
+  color: #2f3c50;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* Tagline below name */
+.shop-title .tagline {
+  font-style: italic;
+  color: #888;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
+
+/* Shop logo next to the name */
+.shop-logo {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px; /* Optional: soft rounded edges */
+}
+
+/* Right section (shop details) */
+.shop-details {
+  flex: 1;
+  min-width: 300px;
+  line-height: 1.8;
+  font-size: 1rem;
+  text-align: right;
+  color: #444;
+}
+
+.shop-details a {
+  color: #2b6a9b;
+  text-decoration: none;
+}
+
+.rating {
+  color: #e27b7b;
+}
+
+/* ===== NAVIGATION BAR ===== */
+.shop-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e4e4e4;
+  padding: 1rem;
+}
+
+.shop-tabs a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding-bottom: 0.3rem;
+  transition: color 0.3s;
+}
+
+.shop-tabs a:hover {
+  color: #2b6a9b;
+}
+
+.shop-tabs a.active {
+  border-bottom: 2px solid #2b6a9b;
+  color: #2b6a9b;
+}
+
+/* ===== BOUQUET SECTION ===== */
+.bouquet-section {
+  padding: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffffff; /* pure white */
+}
+
+.bouquet-section h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2f3c50;
+  border-bottom: 2px solid #2b6a9b;
+  display: inline-block;
+  padding-bottom: 0.3rem;
+}
+
+/* Grid Layout */
+.bouquet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Bouquet Cards */
+.bouquet-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.bouquet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bouquet-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.bouquet-card h3 {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.1rem;
+  margin: 0.8rem 0 0.4rem;
+  color: #2f3c50;
+}
+
+.price {
+  font-weight: bold;
+  color: #2b6a9b;
+  margin-bottom: 1rem;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  background: #ffffff;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+  border-top: 1px solid #eee;
+}
