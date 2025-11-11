@@ -28,7 +28,7 @@
     <div class="shop-title">
       <div class="shop-name-with-logo">
         <h2>FloraHaus</h2>
-        <img src="../assets/flower-shop-logo-1.jpg" alt="FloraHaus Logo" class="shop-logo" />
+        <img src="../assets/shop-logos/florahaus-logo.png" alt="FloraHaus Logo" class="shop-logo" />
       </div>
       <p class="tagline">Elegance in Every Stem</p>
     </div>
@@ -37,7 +37,23 @@
       <p>📍 Westenhellweg 102, 44137 Dortmund</p>
       <p>🌐 <a href="#">https://FloraHaus.com</a></p>
       <p>📞 +49 231 1234567</p>
-      <p class="rating">⭐ ⭐ ⭐ ⭐ ☆ (85 reviews)</p>
+
+      <!-- ===== RATING SECTION (Interactive) ===== -->
+      <div class="rating-section">
+        <form id="rating-form">
+          <label for="user-rating">Your Rating:</label>
+          <select id="user-rating" name="rating">
+            <option value="">-- Select --</option>
+            <option value="1">1 ★</option>
+            <option value="2">2 ★★</option>
+            <option value="3">3 ★★★</option>
+            <option value="4">4 ★★★★</option>
+            <option value="5">5 ★★★★★</option>
+          </select>
+          <button type="button" id="submit-rating">Submit</button>
+        </form>
+        <p id="rating-message" class="rating-message">⭐ Average rating: <span id="average-rating">4.2</span> (85 reviews)</p>
+      </div>
     </div>
   </section>
 
@@ -55,49 +71,49 @@
     <h2>Shop</h2>
     <div class="bouquet-grid">
       <div class="bouquet-card">
-        <img src="../assets/bouquet1.png" alt="Ruby Romance" />
+        <img src="../assets/bouquets/bouquet1.png" alt="Ruby Romance" />
         <h3>Ruby Romance</h3>
         <p class="price">€155.00</p>
       </div>
 
       <div class="bouquet-card">
-        <img src="../assets/bouquet2.png" alt="Garden Symphony" />
+        <img src="../assets/bouquets/bouquet2.jpg" alt="Garden Symphony" />
         <h3>Garden Symphony</h3>
         <p class="price">€144.00</p>
       </div>
 
       <div class="bouquet-card">
-        <img src="../assets/bouquet3.png" alt="Spring Charm" />
+        <img src="../assets/bouquets/bouquet3.jpg" alt="Spring Charm" />
         <h3>Spring Charm</h3>
         <p class="price">€139.00</p>
       </div>
 
       <div class="bouquet-card">
-        <img src="../assets/bouquet4.png" alt="Peach Petals" />
+        <img src="../assets/bouquets/bouquet4.jpg" alt="Peach Petals" />
         <h3>Peach Petals</h3>
         <p class="price">€102.00</p>
       </div>
 
       <div class="bouquet-card">
-        <img src="../assets/bouquet4.png" alt="Peach Petals" />
-        <h3>Peach Petals</h3>
+        <img src="../assets/bouquets/bouquet5.jpg" alt="Golden Glow" />
+        <h3>Golden Glow</h3>
         <p class="price">€102.00</p>
       </div>
 
       <div class="bouquet-card">
-        <img src="../assets/bouquet3.png" alt="Peach Petals" />
-        <h3>Peach Petals</h3>
+        <img src="../assets/bouquets/bouquet6.jpg" alt="Soft Blush" />
+        <h3>Soft Blush</h3>
         <p class="price">€102.00</p>
       </div>
 
       <div class="bouquet-card">
-        <img src="../assets/bouquet2.png" alt="Peach Petals" />
-        <h3>Peach Petals</h3>
+        <img src="../assets/bouquets/bouquet7.jpg" alt="Amber Bloom" />
+        <h3>Amber Bloom</h3>
         <p class="price">€102.00</p>
       </div>
 
       <div class="bouquet-card">
-        <img src="../assets/bouquet1.png" alt="Blushing Beauty" />
+        <img src="../assets/bouquets/bouquet8.jpg" alt="Blushing Beauty" />
         <h3>Blushing Beauty</h3>
         <p class="price">€116.00</p>
       </div>
@@ -108,5 +124,34 @@
   <footer>
     <p>© 2025 Blümeo Florists | Designed with 💐 by 4EverBloom</p>
   </footer>
+
+  <!-- ===== RATING SCRIPT ===== -->
+  <script>
+    const ratingForm = document.getElementById("rating-form");
+    const ratingSelect = document.getElementById("user-rating");
+    const ratingMessage = document.getElementById("rating-message");
+    const avgRatingEl = document.getElementById("average-rating");
+
+    let averageRating = 4.2;
+    let totalReviews = 85;
+
+    document.getElementById("submit-rating").addEventListener("click", () => {
+      const userRating = parseFloat(ratingSelect.value);
+      if (!userRating) {
+        alert("Please select a rating before submitting!");
+        return;
+      }
+
+      // Simple average calculation (no backend)
+      averageRating = ((averageRating * totalReviews) + userRating) / (totalReviews + 1);
+      totalReviews++;
+
+      avgRatingEl.textContent = averageRating.toFixed(1);
+      ratingMessage.innerHTML = `⭐ Average rating: <span id="average-rating">${averageRating.toFixed(1)}</span> (${totalReviews} reviews)`;
+
+      alert(`Thank you for rating FloraHaus ${userRating} stars!`);
+      ratingForm.reset();
+    });
+  </script>
 </body>
 </html>
