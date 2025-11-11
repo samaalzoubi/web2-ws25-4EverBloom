@@ -7,7 +7,6 @@
 
   <!-- Elegant serif font for heading -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="shop-profile.css" />
 </head>
 
@@ -62,7 +61,7 @@
     <a href="#" class="active">Shop</a>
     <a href="#">About</a>
     <a href="#">Subscriptions</a>
-    <a href="#">Reviews (85)</a>
+    <a href="reviews.html">Reviews (85)</a>
     <a href="#">Delivery Info</a>
   </nav>
 
@@ -120,6 +119,13 @@
     </div>
   </section>
 
+  <!-- ===== CUSTOMIZATION INVITE SECTION ===== -->
+  <section class="customize-invite">
+    <h2>Want to create your own bouquet?</h2>
+    <p>Personalize colors, flowers, and wrapping to make your moment unique.</p>
+    <a href="../shop-designer/designer.html" class="design-btn">Start Designing 🌷</a>
+  </section>
+
   <!-- ===== FOOTER ===== -->
   <footer>
     <p>© 2025 Blümeo Florists | Designed with 💐 by 4EverBloom</p>
@@ -142,7 +148,6 @@
         return;
       }
 
-      // Simple average calculation (no backend)
       averageRating = ((averageRating * totalReviews) + userRating) / (totalReviews + 1);
       totalReviews++;
 

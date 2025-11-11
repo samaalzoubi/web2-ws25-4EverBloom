@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blümeo | Bewertungen</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="shop-profile.css" />
+</head>
+
+<body>
+  <!-- ===== HEADER ===== -->
+  <header class="header-banner">
+    <div class="banner-left">
+      <img src="../assets/Logo.png" alt="Blümeo Logo" class="logo" />
+      <div class="brand-text">
+        <h1>BLÜMEO</h1>
+        <p>Design. Bloom. Inspire.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="shop-tabs">
+    <a href="shop-profile.html">Shop</a>
+    <a href="#">Über uns</a>
+    <a href="#">Abonnements</a>
+    <a href="reviews.html" class="active">Bewertungen (86)</a>
+    <a href="#">Lieferinformationen</a>
+  </nav>
+
+  <!-- ===== REVIEWS SECTION ===== -->
+  <main class="reviews-section">
+    <h2>Reviews</h2>
+    <p class="review-count">86 Reviews</p>
+
+    <!-- ===== GOOD REVIEWS FIRST ===== -->
+    <article class="review">
+      <header class="review-header">
+        <strong>Anna L.</strong> | <time datetime="2025-10-28">28. Oktober 2025</time>
+      </header>
+      <p class="stars">★★★★★</p>
+      <p>
+        Wunderschöne Blumenarrangements! Ich bestelle regelmäßig bei FloraHaus und bin jedes Mal begeistert.
+        Die Blumen sind frisch, kreativ zusammengestellt und der Lieferservice ist immer pünktlich.
+        Sehr empfehlenswert!
+      </p>
+    </article>
+
+    <article class="review">
+      <header class="review-header">
+        <strong>Lisa M.</strong> | <time datetime="2025-10-05">5. Oktober 2025</time>
+      </header>
+      <p class="stars">★★★★★</p>
+      <p>
+        Toller Service! Ich habe einen Strauß zum Geburtstag meiner Mutter bestellt und sie war überglücklich.
+        Die Blumen waren wunderschön arrangiert und haben über eine Woche gehalten. Danke, FloraHaus!
+      </p>
+    </article>
+
+    <article class="review">
+      <header class="review-header">
+        <strong>Jonas W.</strong> | <time datetime="2025-09-20">20. September 2025</time>
+      </header>
+      <p class="stars">★★★★☆</p>
+      <p>
+        Sehr gute Qualität und stilvolle Arrangements. Die Lieferung war etwas später als erwartet,
+        aber die Blumen waren wunderschön. Ich werde wieder bestellen.
+      </p>
+    </article>
+
+    <!-- ===== AVERAGE REVIEWS BELOW ===== -->
+    <article class="review">
+      <header class="review-header">
+        <strong>Rebecca A.</strong> | <time datetime="2025-08-18">18. August 2025</time>
+      </header>
+      <p class="stars">★★★☆☆</p>
+      <p>
+        Die Blumen waren hübsch, aber die Verpackung war leicht beschädigt.
+        Der Kundenservice hat sich jedoch schnell gemeldet und eine Lösung angeboten.
+      </p>
+    </article>
+
+    <article class="review">
+      <header class="review-header">
+        <strong>Shreni S.</strong> | <time datetime="2025-07-02">2. Juli 2025</time>
+      </header>
+      <p class="stars">★★★☆☆</p>
+      <p>
+        Die Qualität war in Ordnung, aber nicht ganz so beeindruckend wie erwartet.
+        Es wäre schön, wenn die Sträuße etwas größer wären.
+      </p>
+    </article>
+
+    <!-- ===== ADD REVIEW FORM ===== -->
+    <section class="add-review">
+      <h3>Eigene Bewertung abgeben</h3>
+      <form id="review-form">
+        <label for="reviewer-name">Ihr Name:</label>
+        <input type="text" id="reviewer-name" name="reviewer-name" placeholder="Geben Sie Ihren Namen ein" required />
+
+        <label for="review-rating">Ihre Bewertung:</label>
+        <select id="review-rating" name="review-rating" required>
+          <option value="">-- Wählen --</option>
+          <option value="1">1 ★</option>
+          <option value="2">2 ★★</option>
+          <option value="3">3 ★★★</option>
+          <option value="4">4 ★★★★</option>
+          <option value="5">5 ★★★★★</option>
+        </select>
+
+        <label for="review-text">Ihr Kommentar:</label>
+        <textarea id="review-text" name="review-text" rows="4" placeholder="Schreiben Sie Ihre Erfahrung..." required></textarea>
+
+        <button type="button" id="submit-review">Absenden</button>
+      </form>
+      <p id="review-message" class="review-message"></p>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p>© 2025 Blümeo Florists | Designed with 💐 by 4EverBloom</p>
+  </footer>
+
+  <!-- ===== SIMPLE FRONTEND LOGIC ===== -->
+  <script>
+    const submitBtn = document.getElementById("submit-review");
+    const reviewMsg = document.getElementById("review-message");
+
+    submitBtn.addEventListener("click", () => {
+      const name = document.getElementById("reviewer-name").value.trim();
+      const rating = document.getElementById("review-rating").value;
+      const text = document.getElementById("review-text").value.trim();
+
+      if (!name || !rating || !text) {
+        alert("Bitte füllen Sie alle Felder aus, bevor Sie absenden!");
+        return;
+      }
+
+      reviewMsg.textContent = `Danke, ${name}! Ihre ${rating}-Sterne-Bewertung wurde gespeichert.`;
+      reviewMsg.style.color = "#007b5e";
+
+      document.getElementById("review-form").reset();
+    });
+  </script>
+</body>
+</html>

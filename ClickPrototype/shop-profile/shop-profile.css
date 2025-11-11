@@ -210,3 +210,46 @@ footer {
   color: #555;
   border-top: 1px solid #eee;
 }
+.reviews-section {
+  max-width: 800px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.reviews-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  border-bottom: 3px solid #c2185b;
+  display: inline-block;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.review-count {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.review {
+  border-bottom: 1px solid #ddd;
+  padding: 1.5rem 0;
+}
+
+.review-header {
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+.stars {
+  color: #c2185b;
+  letter-spacing: 0.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.review p {
+  color: #444;
+  line-height: 1.6;
+}
+
