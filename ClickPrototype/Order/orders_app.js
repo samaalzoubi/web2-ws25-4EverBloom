@@ -261,6 +261,7 @@ const renderStats = (stats) => `
   <div class="stat-card">
     <div class="stat-value">${stats.pending}</div>
     <div class="stat-label">Pending</div>
+    ${stats.pending > 0 ? `<button id="accept-pending" class="btn-accept">Accept</button>` : `<button id="accept-pending" class="btn-accept" disabled>Accept</button>`}
   </div>
   <div class="stat-card">
     <div class="stat-value">${stats.preparing}</div>
@@ -492,24 +493,25 @@ const renderApp = () => {
         deleteItem(itemName);
       })
     );
-    
-    app.getElementById("add-item")?.addEventListener("click", (e) => {
+
+    // Use querySelector on the app container to find elements by id
+    app.querySelector("#add-item")?.addEventListener("click", (e) => {
       e.preventDefault();
       addNewItemToEdit();
     });
-    app.getElementById("save-edit")?.addEventListener("click", (e) => {
+    app.querySelector("#save-edit")?.addEventListener("click", (e) => {
       e.preventDefault();
       saveEdit();
     });
-    app.getElementById("close-edit")?.addEventListener("click", (e) => {
+    app.querySelector("#close-edit")?.addEventListener("click", (e) => {
       e.preventDefault();
       closeEdit();
     });
   }
 
   if (showCreate) {
-    app.getElementById("create-form")?.addEventListener("submit", submitNewOrder);
-    app.getElementById("cancel-create")?.addEventListener("click", (e) => {
+    app.querySelector("#create-form")?.addEventListener("submit", submitNewOrder);
+    app.querySelector("#cancel-create")?.addEventListener("click", (e) => {
       e.preventDefault();
       closeCreate();
     });
@@ -517,6 +519,23 @@ const renderApp = () => {
 
   // Initialize chatbot scroll
   if (chatbotOpen) scrollChatToBottom();
+  // Accept pending button (moves one pending order -> preparing)
+  app.querySelector("#accept-pending")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    acceptPending();
+  });
+};
+
+// Move the first pending order to preparing
+const acceptPending = () => {
+  const order = MOCK_ORDERS.find((o) => o.status === OrderStatus.PENDING);
+  if (!order) {
+    showNotification("No pending orders to accept.", 'info');
+    return;
+  }
+  order.status = OrderStatus.PREPARING;
+  filterOrders();
+  showNotification(`Order ${order.id} accepted — now Preparing.`, 'success');
 };
 
 // Startup
