@@ -1,4 +1,4 @@
-package de.fhdo._EverBloom;
+package de.fhdo.project.blumeo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
