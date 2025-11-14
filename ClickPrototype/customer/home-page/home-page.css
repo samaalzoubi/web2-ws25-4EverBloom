@@ -11,6 +11,14 @@
   --color-btn-hover: #9f7cc1;
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
 .search-container input {
   border: none;
   outline: none;
@@ -51,14 +59,6 @@
     background: transparent;
     outline: none;
     border: none;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: flex-start;
-    justify-content: flex-start;
 }
 
 .banner {
