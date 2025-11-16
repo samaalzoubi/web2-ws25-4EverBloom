@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blumeo | Login & Register</title>
-    <link rel="stylesheet" href="/web2-ws25-4EverBloom/ClickPrototype/Style.css">
+    <link rel="stylesheet" href="/ClickPrototype/Style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
   </head>
   <body>
@@ -81,7 +81,7 @@
       const showRegister = document.getElementById("show-register");
       const showLogin = document.getElementById("show-login");
 
-      fetch("/web2-ws25-4EverBloom/ClickPrototype/Header/header.html")
+      fetch("/ClickPrototype/Header/header.html")
         .then(response => response.text())
         .then(data => {
           document.getElementById("header").innerHTML = data;
@@ -121,7 +121,7 @@
 
         if (storedUser && storedUser.password === password) {
           localStorage.setItem("isLoggedIn", "true");
-          window.location.href = "/web2-ws25-4EverBloom/ClickPrototype/customer/home-page/home-page.html";
+          window.location.href = "/ClickPrototype/customer/home-page/home-page.html";
         } else {
           alert("Invalid email or password. Please try again.");
         }

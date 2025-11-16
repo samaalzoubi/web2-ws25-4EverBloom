@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blümeo | Florist Profile</title>
-  <link rel="stylesheet" href="/web2-ws25-4EverBloom/ClickPrototype/Style.css">
+  <link rel="stylesheet" href="/ClickPrototype/Style.css">
   <link rel="stylesheet" href="shop-profile.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
@@ -19,7 +19,7 @@
       <div class="shop-title">
         <div class="shop-name-with-logo">
           <h2>FlowerShop</h2>
-          <img src="/web2-ws25-4EverBloom/ClickPrototype/assets/flower-shop-logo-1.jpg" alt="FlowerShop Logo" class="shop-logo" />
+          <img src="/ClickPrototype/assets/flower-shop-logo-1.jpg" alt="FlowerShop Logo" class="shop-logo" />
         </div>
         <p class="tagline">Elegance in Every Stem</p>
       </div>
@@ -143,7 +143,7 @@
     });
 
     //Fetch header
-      fetch("/web2-ws25-4EverBloom/ClickPrototype/Header/header.html")
+      fetch("/ClickPrototype/Header/header.html")
         .then(response => response.text())
         .then(data => {
             const mount = document.getElementById('header');
@@ -180,13 +180,13 @@
                 localStorage.removeItem('login-password');
                 localStorage.removeItem('cartItems');
                 localStorage.removeItem('totalCartQuantity');
-                window.location.href = '/web2-ws25-4EverBloom/ClickPrototype/customer/home-page/home-page.html';
+                window.location.href = '/ClickPrototype/customer/home-page/home-page.html';
                 });
             }
         }
 
         //Fetch footer
-        fetch("/web2-ws25-4EverBloom/ClickPrototype/footer/footer.html")
+        fetch("/ClickPrototype/footer/footer.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById('footer').innerHTML = data;

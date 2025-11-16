@@ -416,9 +416,7 @@ const renderApp = () => {
   const stats = calculateStats();
   const app = document.getElementById("app");
   app.innerHTML = `
-    <header class="header">
-      <div class="logo">BLÜMEO</div>
-    </header>
+
     <main class="main-content">
       ${renderStats(stats)}
       ${renderControls()}

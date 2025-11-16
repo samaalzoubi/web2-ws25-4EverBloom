@@ -61,6 +61,7 @@ body {
 
 /* Main Content */
 .main-content {
+  display :block;
   padding: 2.5rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -73,6 +74,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.25rem;
   margin-bottom: 2rem;
+  margin-top: 100px;
 }
 
 .stat-card {
@@ -585,7 +587,7 @@ body {
 
 .chatbot.open { 
   transform: translateY(0);
-  height: 550px;
+  height: 560px;
 }
 
 .chatbot-header {

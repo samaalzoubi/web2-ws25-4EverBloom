@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blümeo | Home-Page | Map</title>
-    <link rel="stylesheet" href="/web2-ws25-4EverBloom/ClickPrototype/Style.css">
+    <link rel="stylesheet" href="/ClickPrototype/Style.css">
     <link rel="stylesheet" href="map.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
@@ -18,7 +18,7 @@
     <div id="footer"></div>
     <script>
     //Fetch header
-      fetch("/web2-ws25-4EverBloom/ClickPrototype/Header/header.html")
+      fetch("/ClickPrototype/Header/header.html")
         .then(response => response.text())
         .then(data => {
             const mount = document.getElementById('header');
@@ -61,7 +61,7 @@
         }
 
         //Fetch footer
-        fetch("/web2-ws25-4EverBloom/ClickPrototype/footer/footer.html")
+        fetch("/ClickPrototype/footer/footer.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById('footer').innerHTML = data;

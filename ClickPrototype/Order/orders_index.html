@@ -5,15 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BLÜMEO – Orders</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="/ClickPrototype/Style.css">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="orders_styles.css" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+
 </head>
 <body>
+     <div id="header"></div>
+     
+  
   <div id="app"></div>
 
   <script src="orders_constants.js"></script>
   <script src="orders_app.js"></script>
+    <div id="footer"></div>
+
+<script>  
+fetch("/ClickPrototype/Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+            const mount = document.getElementById('header');
+            mount.innerHTML = data;
+            initHeader(mount);
+            document.dispatchEvent(new Event('header:ready'));
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
+        function initHeader() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            const loginLink = document.querySelector('#login-link');
+            const userLinks = document.querySelectorAll('.user-links');
+            const designBouquetButton = document.querySelector('.design-bouquet')
+
+            if (isLoggedIn) {
+                loginLink?.classList.add('hidden');
+                userLinks.forEach(el => el.classList.remove('hidden'));
+                designBouquetButton?.classList.remove('hidden');
+            } else {
+                loginLink?.classList.remove('hidden');
+                userLinks.forEach(el => el.classList.add('hidden'));
+                designBouquetButton?.classList.add('hidden');
+            }
+
+            // Logout-Handler
+            const logout = document.querySelector('.logout-link');
+            if (logout) {
+                logout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.setItem('isLoggedIn', "false");
+                localStorage.removeItem('login-email');
+                localStorage.removeItem('login-password');
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('totalCartQuantity');
+                window.location.href = '/ClickPrototype/customer/home-page/home-page.html';
+                });
+            }
+        }
+
+        //Fetch footer
+        fetch("/ClickPrototype/footer/footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+
+
+</script>
+
 </body>
 </html>
