@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blumeo | Login & Register</title>
-    <link rel="stylesheet" href="/ClickPrototype/Style.css">
+    <title>Blumeo | Login</title>
+    <link rel="stylesheet" href="../Style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
   </head>
   <body>
@@ -36,41 +36,7 @@
         </form>
         <p class="toggle-text">
           No account yet?
-          <span id="show-register">Register here</span>
-        </p>
-      </div>
-
-      <!-- Register Box -->
-      <div class="form-container hidden" id="register-container">
-        <h2>Create Account 🌷</h2>
-        <p class="subtitle">Join our blooming community</p>
-        <form id="register-form">
-          <label>Username</label>
-          <input
-            type="text"
-            id="register-username"
-            placeholder="Choose a username"
-            required
-          >
-          <label>Email</label>
-          <input
-            type="email"
-            id="register-email"
-            placeholder="example@gmail.com"
-            required
-          >
-          <label>Password</label>
-          <input
-            type="password"
-            id="register-password"
-            placeholder="Create password"
-            required
-          >
-          <button type="submit" class="main-btn">Register</button>
-        </form>
-        <p class="toggle-text">
-          Already have an account?
-          <span id="show-login">Back to Login</span>
+          <span id="show-register" onclick="window.location.href='Register.html'">Register here</span>
         </p>
       </div>
     </main>
@@ -78,20 +44,15 @@
     <script>
       const loginContainer = document.getElementById("login-container");
       const registerContainer = document.getElementById("register-container");
-      const showRegister = document.getElementById("show-register");
       const showLogin = document.getElementById("show-login");
 
-      fetch("/ClickPrototype/Header/header.html")
+      fetch("../Header/header.html")
         .then(response => response.text())
         .then(data => {
           document.getElementById("header").innerHTML = data;
         })
         .catch(err => console.error("Header konnte nicht geladen werden:", err));
 
-      showRegister.addEventListener("click", () => {
-        loginContainer.classList.add("hidden");
-        registerContainer.classList.remove("hidden");
-      });
 
       showLogin.addEventListener("click", () => {
         registerContainer.classList.add("hidden");
