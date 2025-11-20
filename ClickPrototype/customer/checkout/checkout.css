@@ -4,7 +4,7 @@ main {
 
 .checkoutLayout {
     display: grid;
-    grid-template-columns: repeat(2, 500px);
+    grid-template-columns: repeat(2, 1fr);
     column-gap: 70px;
     padding: 20px;
 }
