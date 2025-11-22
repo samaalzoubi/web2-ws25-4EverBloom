@@ -1,16 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="header.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-  </head>
-  <!--A part of other HTML-pages/components-->
-<header>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header">
   <a href="/ClickPrototype/customer/home-page/home-page.html">
     <div class="logo">
-      <img src="/ClickPrototype/assets/Logo.png" alt="Flower Logo" width="70" height="70">
+      <img src="/assets/Logo.png" alt="Flower Logo" width="70" height="70">
       <div class="logo-text-part">
         <h1>BLÜMEO</h1>
         <h3>Design. Bloom. Inspire</h3>
@@ -47,26 +40,3 @@
     </nav>
   </header>
 </html>
-
-<script>
-const userEmail = "example@gmail.com"; 
-  document.getElementById('userEmail').textContent = userEmail;
-
-const userMenuButton = document.getElementById('userMenuButton');
-const userMenu = document.getElementById('userMenu');
-
-// Menü öffnen/schließen beim Klick aufs Icon
-userMenuButton.addEventListener('click', (e) => {
-  e.preventDefault();
-  e.stopPropagation(); // verhindert, dass das Klick-Event sofort schließt
-  userMenu.classList.toggle('show');
-});
-
-// Klick außerhalb -> Menü schließen
-document.addEventListener('click', (e) => {
-  if (!userMenu.contains(e.target) && !userMenuButton.contains(e.target)) {
-    userMenu.classList.remove('show');
-  }
-});
-
-</script>

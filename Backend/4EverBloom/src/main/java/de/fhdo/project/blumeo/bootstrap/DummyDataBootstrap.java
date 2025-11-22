@@ -1,7 +1,5 @@
 package de.fhdo.project.blumeo.bootstrap;
 
-import de.fhdo.project.blumeo.entity.flower.ShopStem;
-import de.fhdo.project.blumeo.repository.flower.ShopStemRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;

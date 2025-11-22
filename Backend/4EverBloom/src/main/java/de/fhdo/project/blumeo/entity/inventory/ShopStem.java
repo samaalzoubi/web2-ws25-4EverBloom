@@ -1,5 +1,6 @@
-package de.fhdo.project.blumeo.entity.flower;
+package de.fhdo.project.blumeo.entity.inventory;
 
+import de.fhdo.project.blumeo.entity.flower.Flower;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -10,10 +11,10 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(
-        name = "shop_stems",
-        uniqueConstraints = @UniqueConstraint(
+        name = "shop_stems"
+        /*uniqueConstraints = @UniqueConstraint(
                 name = "uq_shop_flower", columnNames = {"shop_id", "flower_id"}
-        )
+        )*/
 )
 @Getter
 @Setter
