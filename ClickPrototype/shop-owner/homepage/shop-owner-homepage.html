@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blümeo | Shop Owner Home</title>
+
+  <link rel="stylesheet" href="/ClickPrototype/Style.css">
+  <link rel="stylesheet" href="shop-owner-homepage.css">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+</head>
+
+<body>
+
+  <!-- HEADER (auto-loaded) -->
+  <div id="header"></div>
+
+  <!-- WELCOME BANNER -->
+  <section class="welcome-banner">
+    <div class="welcome-content">
+      <h2>Welcome back, FlowerShop! <span class="emoji">🌸</span></h2>
+      <p>Manage your orders, bouquets, inventory, and conversations.</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTAINER FOR GRID -->
+  <main class="owner-home-container">
+
+    <section class="feature-grid">
+
+      <!-- Dashboard -->
+      <a class="feature-card" href="#">
+        <div class="icon-box"><span class="material-symbols-outlined">home</span></div>
+        <h3>Dashboard</h3>
+        <p>View orders, revenue, analytics</p>
+      </a>
+
+      <!-- Manage Bouquets -->
+      <a class="feature-card" href="#">
+        <div class="icon-box"><span class="material-symbols-outlined">local_florist</span></div>
+        <h3>Manage Bouquets</h3>
+        <p>Create & update bouquets</p>
+      </a>
+
+      <!-- Manage Inventory -->
+      <a class="feature-card" href="#">
+        <div class="icon-box"><span class="material-symbols-outlined">inventory_2</span></div>
+        <h3>Manage Inventory</h3>
+        <p>Manage stems & stock</p>
+      </a>
+
+      <!-- Orders -->
+      <a class="feature-card" href="#">
+        <div class="icon-box"><span class="material-symbols-outlined">shopping_bag</span></div>
+        <h3>Orders</h3>
+        <p>View all orders and update status</p>
+      </a>
+
+      <!-- Messages -->
+      <a class="feature-card" href="#">
+        <div class="icon-box"><span class="material-symbols-outlined">chat</span></div>
+        <h3>Messages</h3>
+        <p>Chat with customers</p>
+      </a>
+
+      <!-- Shop Profile -->
+      <a class="feature-card" href="#">
+        <div class="icon-box"><span class="material-symbols-outlined">storefront</span></div>
+        <h3>Shop Profile</h3>
+        <p>Edit shop info and address</p>
+      </a>
+
+      <!-- Subscription Plan -->
+      <a class="feature-card" href="#">
+        <div class="icon-box"><span class="material-symbols-outlined">credit_card</span></div>
+        <h3>Subscription Plan</h3>
+        <p>Manage Basic or Premium plan</p>
+      </a>
+
+      <!-- Settings -->
+      <a class="feature-card" href="#">
+        <div class="icon-box"><span class="material-symbols-outlined">settings</span></div>
+        <h3>Settings</h3>
+        <p>Customize your preferences</p>
+      </a>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER (auto-loaded) -->
+  <div id="footer"></div>
+
+  <!--HEADER + FOOTER LOADING SCRIPT-->
+  <script>
+    // Load Header
+    fetch("/ClickPrototype/Header/header.html")
+      .then(response => response.text())
+      .then(data => {
+          const mount = document.getElementById("header");
+          mount.innerHTML = data;
+          initHeader?.(mount);
+          document.dispatchEvent(new Event("header:ready"));
+      });
+
+    // Load Footer
+    fetch("/ClickPrototype/footer/footer.html")
+      .then(response => response.text())
+      .then(data => {
+          document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+
+</body>
+</html>
