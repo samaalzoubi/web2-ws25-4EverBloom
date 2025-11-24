@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blümeo | Home-Page</title>
-    <link rel="stylesheet" href="/ClickPrototype/Style.css">
+    <link rel="stylesheet" href="../../Style.css">
     <link rel="stylesheet" href="home-page.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
@@ -33,7 +33,7 @@
         </div>
 
         <div class="back-video-container">
-            <video class="background-video" autoplay loop muted playsinline src="/ClickPrototype/assets/flowers_background.mp4"></video>
+            <video class="background-video" autoplay loop muted playsinline src="../../assets/flowers_background.mp4"></video>
             <div id="citation">
                 <p>“I must have flowers, always, and always.” <strong>― Claude Monet</strong></p>
             </div>
@@ -44,14 +44,14 @@
             <button class="carousel-button prev" data-carousel-button="prev">&#10594;</button>
             <button class="carousel-button next" data-carousel-button="next">&#10596;</button>
             <div class="carousel">
-                <img src="/ClickPrototype/assets/flower-shop-logo-1.jpg" alt="Flower Shop Logo 1">
-                <img src="/ClickPrototype/assets/flower-shop-logo-2.jpg" alt="Flower Shop Logo 2">
-                <img src="/ClickPrototype/assets/flower-shop-logo-3.webp" alt="Flower Shop Logo 3">
-                <img src="/ClickPrototype/assets/flower-shop-logo-4.jpg" alt="Flower Shop Logo 4">
-                <img src="/ClickPrototype/assets/flower-shop-logo-5.webp" alt="Flower Shop Logo 5">
-                <img src="/ClickPrototype/assets/flower-shop-logo-6.avif" alt="Flower Shop Logo 6">
-                <img src="/ClickPrototype/assets/flower-shop-logo-7.jpg.avif" alt="Flower Shop Logo 7">
-                <img src="/ClickPrototype/assets/flower-shop-logo-8.png" alt="Flower Shop Logo 8">
+                <img src="../../assets/flower-shop-logo-1.jpg" alt="Flower Shop Logo 1">
+                <img src="../../assets/flower-shop-logo-2.jpg" alt="Flower Shop Logo 2">
+                <img src="../../assets/flower-shop-logo-3.webp" alt="Flower Shop Logo 3">
+                <img src="../../assets/flower-shop-logo-4.jpg" alt="Flower Shop Logo 4">
+                <img src="../../assets/flower-shop-logo-5.webp" alt="Flower Shop Logo 5">
+                <img src="../../assets/flower-shop-logo-6.avif" alt="Flower Shop Logo 6">
+                <img src="../../assets/flower-shop-logo-7.jpg.avif" alt="Flower Shop Logo 7">
+                <img src="../../assets/flower-shop-logo-8.png" alt="Flower Shop Logo 8">
             </div>
         </div>
 
@@ -75,7 +75,7 @@
     <div id="footer"></div>
     <script>
       //Fetch header
-      fetch("/ClickPrototype/Header/header.html")
+      fetch("../../Header/header.html")
         .then(response => response.text())
         .then(data => {
             const mount = document.getElementById('header');
@@ -112,13 +112,13 @@
                 localStorage.removeItem('login-password');
                 localStorage.removeItem('cartItems');
                 localStorage.removeItem('totalCartQuantity');
-                window.location.href = '/ClickPrototype/customer/home-page/home-page.html';
+                window.location.href = '../../customer/home-page/home-page.html';
                 });
             }
         }
 
         //Fetch footer
-        fetch("/ClickPrototype/footer/footer.html")
+        fetch("../../footer/footer.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById('footer').innerHTML = data;
@@ -130,7 +130,7 @@
 
         //Fetch Flower Bouquets Data (Mock Data)
         let products = null
-        fetch("/ClickPrototype/customer/home-page/testBouquetsData.json")
+        fetch("../../customer/home-page/testBouquetsData.json")
         .then(response => response.json())
         .then(data => {
             products = data;
@@ -288,7 +288,7 @@
         //Toggle map button to be redirected to the map-page
         const btn = document.getElementById('open-map');
         btn.addEventListener("click", () => {
-            window.location.href = "/ClickPrototype/customer/map/map.html";
+            window.location.href = "../customer/map/map.html";
         })
 
         //Toggle profile of the first flower shop
@@ -299,7 +299,7 @@
         firstLogo.style.cursor = "pointer"; // Hand-Cursor anzeigen
 
         firstLogo.addEventListener("click", () => {
-            window.location.href = "/ClickPrototype/shop-profile/shop-profile.html";
+            window.location.href = "../shop-profile/shop-profile.html";
         });
         });
 

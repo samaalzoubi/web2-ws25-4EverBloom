@@ -144,41 +144,69 @@ nav {
   user-select: none;
 }
 
-/* Container vom Menü */
-.user-menu {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  width: 180px;
-  display: none;
-  flex-direction: column;
-  padding: 10px;
-  z-index: 1000;
-}
 
-.user-menu.show {
+/* Dropdown Box */
+.dropdown {
+  position: relative;
   display: flex;
+  cursor: pointer;
 }
 
-/* Menüelemente */
-.option-btn {
-  padding: 8px;
-  border-radius: 5px;
+.dropdown > span {
+  color: var(--color-accent-light);
+  font-size: 26px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  align-items: center;
+}
+
+.dropdown > span:hover {
+  color: var(--color-btn-hover);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: -50px;
+  top: 110%;
+  background: var(--color-background);
+  border-radius: 10px;
+  min-width: 200px;
+  padding: 10px 0;
+  box-shadow: 0 6px 18px var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  z-index: 50;
+  text-align: center;
+  height: 150px;
+  align-items: center;
+
+}
+
+.dropdown-content .option-btn{
+  background: var(--color-background-secondary);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 10px 14px;
   text-decoration: none;
-  color: #333;
-  transition: background 0.2s;
+  color: var(--color-text-dark);
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+  align-items: center;
 }
 
-.option-btn:hover {
-  background: #f2f2f2;
+.dropdown-content a:hover {
+  background: var(--color-background-secondary);
+  color: white;
 }
 
-/* Profilbild optional */
-.profile-pic img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.dropdown-content a:first-child {
+    margin-bottom: 20px;
+    margin-top: 10px;
 }
