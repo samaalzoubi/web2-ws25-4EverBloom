@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header">
+  <a href="/ClickPrototype/customer/home-page/home-page.html">
+    <div class="logo">
+      <img src="/assets/Logo.png" alt="Flower Logo" width="70" height="70">
+      <div class="logo-text-part">
+        <h1>BLÜMEO</h1>
+        <h3>Design. Bloom. Inspire</h3>
+      </div>
+    </div>
+  </a>
+
+    <nav>
+      <a id="login-link" href="/ClickPrototype/Login/Login.html" th:if="${!isLoggedIn}">Login</a>
+
+    <div class="design-bouquet" th:if="${isLoggedIn}">
+      <a class="user-links" href="../Customer/DesignBouquet.html" title="Design a Bouquet">
+        <span class="fx-3d">3D</span>esign Bouquet 🪄
+        </a>
+      </div>
+      <a class="user-links cart-link" href="" title="Cart" th:if="${isLoggedIn}">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <span class="cart-count" th:text="${cart != null ? cart.totalQuantity : 0}">0</span>
+      </a>
+
+      <a id="userMenuButton" href="/ClickPrototype/Profile/profile.html" th:if="${isLoggedIn}">
+        <span class="material-symbols-outlined">account_circle</span>
+      </a>
+
+      <div id="userMenu" class="user-menu" th:if="${isLoggedIn}">
+        <div class="profile-pic">
+          <img id="profileImage" src="" alt="Profile Image" class="hidden">
+        </div>
+        <p id="userEmail"></p> 
+        <a href="../Profile/profile.html" class="option-btn">View Profile</a>
+        <a href="/ClickPrototype/Login/Login.html" class="option-btn">Logout</a>
+      </div>
+     
+    </nav>
+  </header>
+</html>

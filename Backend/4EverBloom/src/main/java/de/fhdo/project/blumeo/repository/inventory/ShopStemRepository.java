@@ -1,13 +1,7 @@
-package de.fhdo.project.blumeo.repository.flower;
+package de.fhdo.project.blumeo.repository.inventory;
 
-import de.fhdo.project.blumeo.entity.flower.ShopStem;
+import de.fhdo.project.blumeo.entity.inventory.ShopStem;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 public interface ShopStemRepository extends JpaRepository<ShopStem, Long> {
 

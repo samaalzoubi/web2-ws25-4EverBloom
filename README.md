@@ -71,6 +71,8 @@ By combining **technology, creativity, and community**, BLÜMEO supports both cu
 - **Performance Statistics:** Access insights on sales, customer activity, and top-selling flowers.  
 - **Bouquet Customization Management (Optional):** Manage bouquet customization options and control flower availability for customers.
 
+![UML Diagram](ClickPrototype/assets/use%20case%20diagram.png)
+
 ## 8. System Architecture
 ![UML Diagram](ClickPrototype/assets/uml-dig.png)
 

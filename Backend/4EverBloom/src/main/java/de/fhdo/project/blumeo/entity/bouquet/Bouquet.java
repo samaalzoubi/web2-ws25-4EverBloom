@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.entity.bouquet;
 
+import de.fhdo.project.blumeo.entity.cart.CartItem;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -44,6 +45,9 @@ public abstract class Bouquet {
 
     @OneToMany(mappedBy = "bouquet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BouquetComponent> components = new ArrayList<>();
+
+    @OneToMany(mappedBy = "bouquet")
+    private List<CartItem> cartItems = new ArrayList<>();
 
     public void addComponent(BouquetComponent c) {
         c.setBouquet(this);
