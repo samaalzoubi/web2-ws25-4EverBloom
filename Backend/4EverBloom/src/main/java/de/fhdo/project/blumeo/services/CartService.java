@@ -39,7 +39,7 @@ public class CartService {
 
 
     @Transactional
-    public /*CartDto*/ Cart updateItemQuantity(Long userId, Long itemId, int quantityDelta) {
+    public CartResponseDTO updateItemQuantity(Long userId, Long itemId, int quantityDelta) {
 
         Cart cart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE).orElseThrow(() -> new IllegalStateException("Cart not found"));
         CartItem item = cartItemRepository.findById(itemId).orElseThrow(() -> new IllegalStateException("CartItem not found"));
@@ -61,8 +61,7 @@ public class CartService {
         //recalcTotal(cart);
 
         Cart updated = cartRepository.save(cart);
-        //return cartMapper.toDto(updated);
-        return null;
+        return cartMapper.toDto(updated);
     }
 
     @Transactional
@@ -103,7 +102,7 @@ public class CartService {
     }
 
     @Transactional
-    public /*CartDto*/ Cart removeItem(Long userId, Long itemId) {
+    public CartResponseDTO removeItem(Long userId, Long itemId) {
 
         Cart cart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE).orElseThrow(() -> new IllegalStateException("No active cart for user " + userId));
 
@@ -119,8 +118,7 @@ public class CartService {
 
         Cart updated = cartRepository.save(cart);
 
-        //return cartMapper.toDto(updated);
-        return null;
+        return cartMapper.toDto(updated);
     }
 
     @Transactional

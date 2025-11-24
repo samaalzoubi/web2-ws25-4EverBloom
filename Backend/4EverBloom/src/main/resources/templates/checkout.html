@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 </head>
 <body>
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
     <main>
         <div class="checkoutLayout">
             <div class="returnCart">
@@ -21,7 +21,7 @@
                         <img src="/assets/bouquets/bouquet1.png" alt="">
                         <div class="info">
                             <div class="name" th:text="${cartItem.bouquetName}">Amaryllis Bouquet</div>
-                            <div class="price" th:text="${'€' + item.unitPrice + '/1 bouquet'}">€45/1 bouquet</div>
+                            <div class="price" th:text="${'€' + cartItem.unitPrice + '/1 bouquet'}">€45/1 bouquet</div>
                         </div>
                         <div class="quantity" th:text="${cartItem.quantity}">1</div>
                     </div>
@@ -30,53 +30,116 @@
 
             <div class="checkout">
                 <h1>CHECKOUT</h1>
-                <div class="form">
-                    <div class="group">
-                        <label for="">Full Name</label>
-                        <input type="text">
+                <form class="checkout-form" th:object="${checkoutForm}"
+                      th:action="@{'/api/v1/checkout/user/' + ${cart.userId}}"
+                      method="post">
+                    <div class="checkout-card">
+                        <h2 class="section-title">
+                            <span class="icon">👤</span> Contact Information
+                        </h2>
+                        <div class="form">
+                            <div class="group">
+                                <label>Full Name</label>
+                                <input type="text" th:field="*{fullName}">
+                            </div>
+                            <div class="group">
+                                <label>Email</label>
+                                <input type="text" th:field="*{email}">
+                            </div>
+                            <div class="group">
+                                <label>Phone Number</label>
+                                <input type="text" th:field="*{phoneNumber}">
+                            </div>
+                        </div>
                     </div>
-                    <div class="group">
-                        <label for="">Phone Number</label>
-                        <input type="text">
+
+                    <div class="checkout-card">
+                        <h2 class="section-title">
+                            <span class="icon">📍</span> Delivery Information
+                        </h2>
+                        <div class="form">
+                            <div class="group">
+                                <label>Street Address</label>
+                                <input type="text" th:field="*{streetAddress}">
+                            </div>
+
+                            <div class="group">
+                                <label>City</label>
+                                <input type="text" th:field="*{city}">
+                            </div>
+                            <div class="group">
+                                <label>State</label>
+                                <select th:field="*{state}">
+                                    <option value="">Select state</option>
+                                    <option value="Baden-Württemberg">Baden-Württemberg</option>
+                                    <option value="Bavaria">Bavaria</option>
+                                    <option value="Berlin">Berlin</option>
+                                    <option value="Brandenburg">Brandenburg</option>
+                                    <option value="Bremen">Bremen</option>
+                                    <option value="Hamburg">Hamburg</option>
+                                    <option value="Hesse">Hesse</option>
+                                    <option value="Mecklenburg-Vorpommern">Mecklenburg-Vorpommern</option>
+                                    <option value="Lower Saxony">Lower Saxony</option>
+                                    <option value="North Rhine-Westphalia">North Rhine-Westphalia</option>
+                                    <option value="Rhineland-Palatinate">Rhineland-Palatinate</option>
+                                    <option value="Saarland">Saarland</option>
+                                    <option value="Saxony">Saxony</option>
+                                    <option value="Saxony-Anhalt">Saxony-Anhalt</option>
+                                    <option value="Schleswig-Holstein">Schleswig-Holstein</option>
+                                    <option value="Thuringia ">Thuringia</option>
+                                </select>
+                            </div>
+                            <div class="group">
+                                <label>ZIP Code</label>
+                                <input type="text" th:field="*{zipCode}">
+                            </div>
+                        </div>
                     </div>
-                    <div class="group">
-                        <label for="">Address</label>
-                        <input type="text">
+
+                    <div class="checkout-card">
+                        <h2 class="section-title">
+                            <span class="icon">💳</span> Payment Information
+                        </h2>
+                        <div class="form">
+                            <div class="group">
+                                <label>Card Number</label>
+                                <input type="text" placeholder="1234 5678 9012 3456" th:field="*{cardNumber}">
+                            </div>
+                            <div class="group">
+                                <label>Cardholder Name</label>
+                                <input type="text" placeholder="John Doe" th:field="*{cardholderName}">
+                            </div>
+                            <div class="group">
+                                <label>Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" th:field="*{expiryDate}">
+                            </div>
+                            <div class="group">
+                                <label>CVV</label>
+                                <input type="text" placeholder="123" th:field="*{cvv}">
+                            </div>
+                        </div>
+                        <div class="secure-msg">
+                            🔒 Secure Payment - Your payment information is encrypted and safe.
+                        </div>
                     </div>
-                    <div class="group">
-                        <label for="">Country</label>
-                        <select name="" id="">
-                            <option value="">Choose...</option>
-                            <option value="">Germany</option>
-                        </select>
+
+                    <div class="return">
+                        <div class="row">
+                            <div>Total Quantity</div>
+                            <div class="totalQuantity" th:text="${cart.totalQuantity}">2</div>
+                        </div>
+                        <div class="row">
+                            <div>Total Price</div>
+                            <div class="totalPrice" th:text="${'€' + cart.totalPrice}">€94</div>
+                        </div>
                     </div>
-                    <div class="group">
-                        <label for="">City</label>
-                        <select name="" id="">
-                            <option value="">Choose...</option>
-                            <option value="">Dortmund</option>
-                            <option value="">Bochum</option>
-                            <option value="">Düsseldorf</option>
-                            <option value="">Köln</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="return">
-                    <div class="row">
-                        <div>Total Quantity</div>
-                        <div class="totalQuantity" th:text="${cart.totalQuantity}">2</div>
-                    </div>
-                    <div class="row">
-                        <div>Total Price</div>
-                        <div class="totalPrice" th:text="${'€' + cart.totalPrice}">€94</div>
-                    </div>
-                </div>
-                <button class="buttonOrder">
-                    ORDER
-                </button>
+                    <button class="buttonOrder" type="submit">
+                        Place Order
+                    </button>
+                </form>
             </div>
         </div>
     </main>
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

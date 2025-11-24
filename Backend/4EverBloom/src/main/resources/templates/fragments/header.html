@@ -12,23 +12,23 @@
   </a>
 
     <nav>
-      <a id="login-link" href="/ClickPrototype/Login/Login.html">Login</a>
+      <a id="login-link" href="/ClickPrototype/Login/Login.html" th:if="${!isLoggedIn}">Login</a>
 
-    <div class="design-bouquet hidden">
+    <div class="design-bouquet" th:if="${isLoggedIn}">
       <a class="user-links" href="../Customer/DesignBouquet.html" title="Design a Bouquet">
         <span class="fx-3d">3D</span>esign Bouquet 🪄
         </a>
       </div>
-      <a class="user-links cart-link hidden" href="" title="Cart">
+      <a class="user-links cart-link" href="" title="Cart" th:if="${isLoggedIn}">
         <span class="material-symbols-outlined">shopping_cart</span>
-        <span class="cart-count">0</span>
+        <span class="cart-count" th:text="${cart != null ? cart.totalQuantity : 0}">0</span>
       </a>
 
-      <a id="userMenuButton" href="/ClickPrototype/Profile/profile.html">
+      <a id="userMenuButton" href="/ClickPrototype/Profile/profile.html" th:if="${isLoggedIn}">
         <span class="material-symbols-outlined">account_circle</span>
       </a>
 
-      <div id="userMenu" class="user-menu">
+      <div id="userMenu" class="user-menu" th:if="${isLoggedIn}">
         <div class="profile-pic">
           <img id="profileImage" src="" alt="Profile Image" class="hidden">
         </div>
