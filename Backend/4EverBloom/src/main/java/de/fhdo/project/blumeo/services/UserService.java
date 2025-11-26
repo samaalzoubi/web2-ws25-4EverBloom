@@ -1,7 +1,8 @@
-package com.parkandcharge.userservice.service;
-import com.parkandcharge.userservice.dto.RegisterRequest;
-import com.parkandcharge.userservice.model.User;
-import com.parkandcharge.userservice.repository.UserRepository;
+package de.fhdo.project.blumeo.services;
+
+import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.repository.userService.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -22,7 +24,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User createUser(RegisterRequest request) {
+    //TODO
+    /*public User createUser(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
@@ -34,7 +37,7 @@ public class UserService {
         user.setRole(request.getRole());
 
         return userRepository.save(user);
-    }
+    }*/
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
@@ -69,5 +72,4 @@ public class UserService {
         user.setBalance(user.getBalance() + amount);
         userRepository.save(user);
     }
-}
 }

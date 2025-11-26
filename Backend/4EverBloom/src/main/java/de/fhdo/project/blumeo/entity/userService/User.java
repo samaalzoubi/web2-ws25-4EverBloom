@@ -1,3 +1,9 @@
+package de.fhdo.project.blumeo.entity.userService;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 @Entity
 @Table(name = "users")
