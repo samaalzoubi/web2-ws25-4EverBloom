@@ -1,6 +1,6 @@
 package de.fhdo.project.blumeo.services;
 
-import de.fhdo.project.blumeo.dto.CartResponseDTO;
+import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
 import de.fhdo.project.blumeo.entity.cart.Cart;
 import de.fhdo.project.blumeo.entity.cart.CartItem;
 import de.fhdo.project.blumeo.entity.cart.CartStatus;

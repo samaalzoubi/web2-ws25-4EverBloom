@@ -11,10 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(
-        name="flowers",
-        uniqueConstraints=@UniqueConstraint(
-                name="uq_flower_name_color_season",
-                columnNames={"name","color","season"}
+        name = "flower",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uq_flower_name_color_season",
+                columnNames = {"name", "color", "season"}
         )
 )
 public class Flower {

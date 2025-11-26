@@ -1,72 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="header.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blumeo | Login</title>
+    <link rel="stylesheet" href="header.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   </head>
-  <!--A part of other HTML-pages/components-->
-<header>
-  <a href="/ClickPrototype/customer/home-page/home-page.html">
-    <div class="logo">
-      <img src="/ClickPrototype/assets/Logo.png" alt="Flower Logo" width="70" height="70">
-      <div class="logo-text-part">
-        <h1>BLÜMEO</h1>
-        <h3>Design. Bloom. Inspire</h3>
-      </div>
-    </div>
-  </a>
 
-    <nav>
-      <a id="login-link" href="/ClickPrototype/Login/Login.html">Login</a>
-
-    <div class="design-bouquet hidden">
-      <a class="user-links" href="../Customer/DesignBouquet.html" title="Design a Bouquet">
-        <span class="fx-3d">3D</span>esign Bouquet 🪄
-        </a>
-      </div>
-      <a class="user-links cart-link hidden" href="" title="Cart">
-        <span class="material-symbols-outlined">shopping_cart</span>
-        <span class="cart-count">0</span>
-      </a>
-
-      <a id="userMenuButton" href="/ClickPrototype/Profile/profile.html">
-        <span class="material-symbols-outlined">account_circle</span>
-      </a>
-
-      <div id="userMenu" class="user-menu">
-        <div class="profile-pic">
-          <img id="profileImage" src="" alt="Profile Image" class="hidden">
+  <body>
+    <!-- Header (Teil deiner Seite) -->
+    <header>
+      <a href="../customer/home-page/home-page.html">
+        <div class="logo">
+          <img src="../assets/Logo.png" alt="Flower Logo" width="70" height="70" />
+          <div class="logo-text-part">
+            <h1>BLÜMEO</h1>
+            <h3>Design. Bloom. Inspire</h3>
+          </div>
         </div>
-        <p id="userEmail"></p> 
-        <a href="../Profile/profile.html" class="option-btn">View Profile</a>
-        <a href="/ClickPrototype/Login/Login.html" class="option-btn">Logout</a>
-      </div>
-     
-    </nav>
-  </header>
+      </a>
+
+      <nav>
+        <div class="design-bouquet hidden">
+          <a class="user-links" href="/Customer/DesignBouquet.html" title="Design a Bouquet">
+            <span class="fx-3d">3D</span>esign Bouquet 🪄
+          </a>
+        </div>
+
+        <a class="user-links cart-link hidden" href="" title="Cart">
+          <span class="material-symbols-outlined">shopping_cart</span>
+          <span class="cart-count">0</span>
+        </a>
+
+        <div class="dropdown">
+          <span class="material-symbols-outlined">account_circle</span>
+
+          <div class="dropdown-content">
+            <a href="/Profile/profile.html" class="option-btn">View Profile</a>
+            <a href="/Login/Login.html" class="option-btn">Logout</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+  </body>
 </html>
-
-<script>
-const userEmail = "example@gmail.com"; 
-  document.getElementById('userEmail').textContent = userEmail;
-
-const userMenuButton = document.getElementById('userMenuButton');
-const userMenu = document.getElementById('userMenu');
-
-// Menü öffnen/schließen beim Klick aufs Icon
-userMenuButton.addEventListener('click', (e) => {
-  e.preventDefault();
-  e.stopPropagation(); // verhindert, dass das Klick-Event sofort schließt
-  userMenu.classList.toggle('show');
-});
-
-// Klick außerhalb -> Menü schließen
-document.addEventListener('click', (e) => {
-  if (!userMenu.contains(e.target) && !userMenuButton.contains(e.target)) {
-    userMenu.classList.remove('show');
-  }
-});
-
-</script>

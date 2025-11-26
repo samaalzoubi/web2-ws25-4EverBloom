@@ -1,6 +1,6 @@
 package de.fhdo.project.blumeo.utils.mapper;
 
-import de.fhdo.project.blumeo.dto.CartItemDTO;
+import de.fhdo.project.blumeo.dto.cart.CartItemDTO;
 import de.fhdo.project.blumeo.entity.bouquet.Bouquet;
 import de.fhdo.project.blumeo.entity.cart.CartItem;
 import org.springframework.stereotype.Component;
