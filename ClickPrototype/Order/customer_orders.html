@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLÜMEO – My Orders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+  <link rel="stylesheet" href="/ClickPrototype/Header/header.css">
+  <link rel="stylesheet" href="orders_styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+    
+  <style>
+    /* Edit Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(123, 104, 173, 0.3);
+      padding: 2rem;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--brand-secondary);
+    }
+    
+    .modal-header h2 {
+      color: var(--text-dark);
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+      background: var(--brand-secondary);
+      color: var(--text-dark);
+    }
+    
+    .edit-modal-body {
+      margin-bottom: 1.5rem;
+    }
+    
+    .edit-items-list {
+      margin-bottom: 1.5rem;
+    }
+    
+    .edit-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--brand-secondary);
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+    }
+    
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .item-name {
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    .item-price {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+    
+    .item-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .qty-btn {
+      background: var(--brand-primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .qty-btn:hover {
+      background: var(--brand-dark);
+      transform: scale(1.1);
+    }
+    
+    .qty-display {
+      min-width: 30px;
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+    
+    .delete-btn {
+      background: #e57373;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .delete-btn:hover {
+      background: #d32f2f;
+      transform: scale(1.05);
+    }
+    
+    .add-item-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--brand-secondary);
+      border: 2px dashed var(--brand-primary);
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--brand-dark);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+    
+    .add-item-btn:hover {
+      background: var(--brand-primary);
+      color: white;
+    }
+    
+    .edit-total {
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+      color: white;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    .btn-edit {
+      background: var(--brand-primary);
+      color: white;
+    }
+    
+    .btn-edit:hover {
+      background: var(--brand-dark);
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+    
+    .btn-save, .btn-cancel {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-save {
+      background: var(--brand-primary);
+      color: white;
+    }
+    
+    .btn-save:hover {
+      background: var(--brand-dark);
+      transform: translateY(-2px);
+    }
+    
+    .btn-cancel {
+      background: var(--brand-secondary);
+      color: var(--text-dark);
+    }
+    
+    .btn-cancel:hover {
+      background: var(--brand-primary);
+      color: white;
+    }
+    
+    .create-order-btn {
+      background: var(--brand-primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .create-order-btn:hover {
+      background: var(--brand-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(126, 75, 177, 0.3);
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 0.95rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 3px rgba(183, 155, 211, 0.1);
+    }
+    
+    /* Rating Box Styles */
+    .rating-box {
+      background: linear-gradient(135deg, var(--brand-secondary) 0%, rgba(212, 189, 240, 0.5) 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    
+    .rating-box h4 {
+      margin: 0 0 1rem 0;
+      color: var(--text-dark);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    
+    .rating-box .stars {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .rating-box .stars i {
+      font-size: 1.75rem;
+      color: #ddd;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .rating-box .stars i:hover,
+    .rating-box .stars i.active {
+      color: #ffc107;
+      transform: scale(1.2);
+    }
+    
+    .rating-value-display {
+      font-weight: 600;
+    }
+    
+    .rating-submit-btn {
+      background: var(--brand-primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .rating-submit-btn:hover {
+      background: var(--brand-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(126, 75, 177, 0.3);
+    }
+    
+    .rating-submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .rating-thank-you {
+      animation: slideDown 0.5s ease;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+    <div id="header"></div>
+
+  
+  <!-- Rest of the customer orders page content remains the same -->
+  <div id="app">
+    <main class="main-content">
+      <div class="customer-header">
+        <h1>My Orders</h1>
+        <p>Hello Alice! Here's your order history and current orders.</p>
+      </div>
+      
+      <div class="controls-bar">
+        <input class="search-input" placeholder="Search your orders..." />
+        <select class="filter-select">
+          <option value="all">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Preparing">Preparing</option>
+          <option value="Out for Delivery">Out for Delivery</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <button class="create-order-btn" id="create-order-btn">
+          <i class="fas fa-plus"></i> Create New Order
+        </button>
+      </div>
+      
+      <div class="orders-grid" id="orders-grid">
+        <!-- Order Card 1 -->
+        <div class="order-card" data-status="Out for Delivery">
+          <div class="order-header">
+            <div>
+              <div class="order-id">ORD-20240729-001</div>
+              <div class="order-date">July 29, 2024, 10:30 AM</div>
+            </div>
+            <span class="status-badge status-out">Out for Delivery</span>
+          </div>
+          
+          <div class="order-timeline">
+            <h3>Order Progress</h3>
+            <div class="timeline-steps">
+              <div class="timeline-step step-completed">
+                <div class="step-icon">✓</div>
+                <div class="step-label">Pending</div>
+              </div>
+              <div class="timeline-step step-completed">
+                <div class="step-icon">✓</div>
+                <div class="step-label">Preparing</div>
+              </div>
+              <div class="timeline-step step-active">
+                <div class="step-icon">3</div>
+                <div class="step-label">Out for Delivery</div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-icon">4</div>
+                <div class="step-label">Delivered</div>
+              </div>
+            </div>
+            
+            <div class="delivery-info">
+              <div class="estimated-delivery">
+                <i class="fas fa-truck"></i> Estimated delivery: Today, 2:00 PM - 4:00 PM
+              </div>
+              <p>Your driver is on the way! You can track the delivery in real-time.</p>
+            </div>
+          </div>
+          
+          <div class="order-items">
+            <div class="order-item">
+              <span>Sunny Day Bouquet</span>
+              <span class="item-quantity">×1</span>
+            </div>
+            <div class="order-item">
+              <span>Rose Garden Delight</span>
+              <span class="item-quantity">×2</span>
+            </div>
+          </div>
+          <div class="order-total">€117.48</div>
+          
+          <div class="customer-actions">
+              
+            
+            <button class="cancel-btn">
+              <i class="fas fa-times"></i> Cancel
+            </button>
+            <button class="btn-help">
+              <i class="fas fa-question-circle"></i> Help
+            </button>
+          </div>
+        </div>
+        
+        <!-- Order Card 2 -->
+        <div class="order-card" data-status="Delivered">
+          <div class="order-header">
+            <div>
+              <div class="order-id">ORD-20240728-004</div>
+              <div class="order-date">July 28, 2024, 9:15 AM</div>
+            </div>
+            <span class="status-badge status-delivered">Delivered</span>
+          </div>
+          
+          <div class="order-items">
+            <div class="order-item">
+              <span>Wildflower Wonder</span>
+              <span class="item-quantity">×1</span>
+            </div>
+          </div>
+          <div class="order-total">€29.99</div>
+          
+      
+          <div class="customer-actions">
+            <button class="btn-reorder">
+              <i class="fas fa-redo"></i> Reorder
+            </button>
+            <button class="btn-help">
+              <i class="fas fa-question-circle"></i> Help
+            </button>
+          </div>
+              <div class="rating-box" id="rating-box-ORD-20240729-001">
+      <h4>How was your experience?</h4>
+      <div class="stars" data-order-id="ORD-20240729-001">
+        <i class="fa-solid fa-star" data-value="1"></i>
+        <i class="fa-solid fa-star" data-value="2"></i>
+        <i class="fa-solid fa-star" data-value="3"></i>
+        <i class="fa-solid fa-star" data-value="4"></i>
+        <i class="fa-solid fa-star" data-value="5"></i>
+      </div>
+      <div class="rating-value-display" id="rating-display-ORD-20240729-001" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--brand-primary); display: none;">
+        Rating: <span class="current-rating">0</span>/5
+      </div>
+
+ <div class="customer-actions">
+
+ <button class="rating-submit-btn" type="submit" data-order-id="ORD-20240729-001">
+               Submit Rating
+            </button>
+            </div>
+            <div class="rating-thank-you" id="thank-you-ORD-20240729-001" style="display: none; margin-top: 1rem; padding: 1rem; background: #e8f5e9; border-radius: 8px; text-align: center; color: #2e7d32;">
+              <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+              <span>Thank you for your rating! We appreciate your feedback.</span>
+            </div>
+
+    </div>
+        </div>
+        
+        <!-- Order Card 3 -->
+        <div class="order-card" data-status="Pending">
+          <div class="order-header">
+            <div>
+              <div class="order-id">ORD-20240727-006</div>
+              <div class="order-date">July 27, 2024, 6:00 PM</div>
+            </div>
+            <span class="status-badge status-pending">Pending</span>
+          </div>
+          
+          <div class="order-items">
+            <div class="order-item">
+              <span>Tulip Treasure</span>
+              <span class="item-quantity">×1</span>
+            </div>
+          </div>
+          <div class="order-total">€42.00</div>
+          
+          <div class="customer-actions">
+            <button class="btn-edit edit-btn" data-order-id="ORD-20240727-006">
+              <i class="fas fa-pen"></i> Edit
+            </button>
+            <button class="btn-help">
+              <i class="fas fa-question-circle"></i> Help
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Edit Modal -->
+      <div id="edit-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="modal-title">Edit Order</h2>
+            <button class="modal-close" id="close-edit-modal">&times;</button>
+          </div>
+          <div id="edit-modal-body" class="edit-modal-body">
+            <!-- Order items will be populated here -->
+          </div>
+          <div class="modal-actions">
+            <button id="save-edit-btn" class="btn-save">Save Changes</button>
+            <button id="cancel-edit-btn" class="btn-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Create Order Modal -->
+      <div id="create-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Create New Order</h2>
+            <button class="modal-close" id="close-create-modal">&times;</button>
+          </div>
+          <form id="create-form">
+            <div class="form-group">
+              <label>Customer Name</label>
+              <input type="text" name="customer" required />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" required />
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="text" name="phone" />
+            </div>
+            <div class="form-group">
+              <label>Address</label>
+              <textarea name="address" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Item Name</label>
+              <input type="text" name="item" placeholder="e.g., Sunny Day Bouquet" />
+            </div>
+            <div class="form-group">
+              <label>Price (€)</label>
+              <input type="number" name="price" step="0.01" min="0" placeholder="e.g., 49.99" required />
+            </div>
+            <div class="form-group">
+              <label>Quantity</label>
+              <input type="number" name="quantity" value="1" min="1" />
+            </div>
+            <div class="form-group">
+              <label>Notes</label>
+              <textarea name="notes" rows="3" placeholder="Order notes or special requests"></textarea>
+            </div>
+            <div class="modal-actions">
+              <button type="submit" class="btn-save">Create Order</button>
+              <button type="button" id="cancel-create-btn" class="btn-cancel">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <div class="customer-support">
+        <h3>Need help with your order?</h3>
+        <p>Our customer support team is here to help you with any questions about your orders.</p>
+        <button class="create-order-btn" id="contact-support">
+          <i class="fas fa-headset"></i> Contact Support
+        </button>
+      </div>
+    </main>
+    
+    <!-- Chatbot -->
+    <div id="chatbot" class="chatbot">
+      <div class="chatbot-header">
+        💬 BLÜMEO Assistant
+        <span class="chatbot-close">✖</span>
+      </div>
+      <div class="chatbot-body">
+        <div class="chatbot-message bot">Hello and welcome to BLÜMEO 🌷 I'm your virtual floral assistant. I can help you track your order, recommend the perfect bouquet, or answer any questions about our services.</div>
+        <div class="chatbot-message user">Can you help me track my order?</div>
+        <div class="chatbot-message bot">Of course 🌸 Please provide your order ID (e.g., ORD-20240729-001) or the recipient's name, and I'll check your order status right away.</div>
+      </div>
+      <div class="chatbot-input">
+        <input type="text" placeholder="Ask about your orders..." />
+        <button>
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+    
+    <button class="chatbot-toggle">💬</button>
+  </div>
+
+  <!-- Footer -->
+  <div id="footer"></div>
+
+  <script>
+    // Create Order Modal Functionality
+    const createModal = document.getElementById('create-modal');
+    const createForm = document.getElementById('create-form');
+    const closeCreateModalBtn = document.getElementById('close-create-modal');
+    const cancelCreateBtn = document.getElementById('cancel-create-btn');
+    const createOrderBtn = document.getElementById('create-order-btn');
+    
+    function handleCreateOrder() {
+      createModal.style.display = 'flex';
+    }
+    
+    function closeCreate() {
+      createModal.style.display = 'none';
+      createForm.reset();
+    }
+    
+    function submitNewOrder(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(createForm);
+      const newOrder = {
+        id: `ORD-${new Date().getTime()}`,
+        customer: formData.get('customer'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        address: formData.get('address'),
+        items: [{
+          name: formData.get('item'),
+          price: parseFloat(formData.get('price')),
+          quantity: parseInt(formData.get('quantity'))
+        }],
+        notes: formData.get('notes'),
+        status: 'Pending',
+        date: new Date().toLocaleDateString()
+      };
+      
+      alert(`Order ${newOrder.id} created successfully for ${newOrder.customer}!`);
+      closeCreate();
+    }
+    
+    // Event listeners for create order modal
+    createOrderBtn?.addEventListener('click', handleCreateOrder);
+    closeCreateModalBtn?.addEventListener('click', closeCreate);
+    cancelCreateBtn?.addEventListener('click', closeCreate);
+    createForm?.addEventListener('submit', submitNewOrder);
+    
+    // Close modal when clicking outside
+    createModal?.addEventListener('click', (e) => {
+      if (e.target === createModal) {
+        closeCreate();
+      }
+    });
+    
+    // Filter Functionality
+    let selectedStatus = 'all';
+    
+    function filterOrders() {
+      const ordersGrid = document.getElementById('orders-grid');
+      const orderCards = ordersGrid.querySelectorAll('.order-card');
+      
+      orderCards.forEach(card => {
+        const cardStatus = card.getAttribute('data-status');
+        
+        if (selectedStatus === 'all' || cardStatus === selectedStatus) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+    
+    // Get filter select element and add event listener
+    document.addEventListener('DOMContentLoaded', () => {
+      const filterSelect = document.querySelector('.filter-select');
+      if (filterSelect) {
+        filterSelect.addEventListener('change', (e) => {
+          selectedStatus = e.target.value;
+          filterOrders();
+        });
+      }
+    });
+    
+    // Edit Order Functionality
+    let editingOrder = null;
+    const editModal = document.getElementById('edit-modal');
+    const editModalBody = document.getElementById('edit-modal-body');
+    const modalTitle = document.getElementById('modal-title');
+    const closeEditModalBtn = document.getElementById('close-edit-modal');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const saveEditBtn = document.getElementById('save-edit-btn');
+    
+    // Mock order data - In real app, would come from backend
+    const ordersData = {
+      'ORD-20240729-001': {
+        id: 'ORD-20240729-001',
+        items: [
+          { name: 'Sunny Day Bouquet', price: 49.99, quantity: 1 },
+          { name: 'Rose Garden Delight', price: 35.75, quantity: 2 }
+        ]
+      },
+      'ORD-20240727-006': {
+        id: 'ORD-20240727-006',
+        items: [
+          { name: 'Tulip Treasure', price: 42.00, quantity: 1 }
+        ]
+      }
+    };
+    
+    function calculateTotal(items) {
+      return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    }
+    
+    function openEditModal(orderId) {
+      const orderData = ordersData[orderId];
+      if (!orderData) {
+        alert('Order not found');
+        return;
+      }
+      
+      editingOrder = JSON.parse(JSON.stringify(orderData));
+      modalTitle.textContent = `Edit Order ${orderId}`;
+      renderEditModalContent();
+      editModal.style.display = 'flex';
+    }
+    
+    function renderEditModalContent() {
+      let html = '<div class="edit-items-list">';
+      
+      editingOrder.items.forEach((item, index) => {
+        html += `
+          <div class="edit-item">
+            <div class="item-info">
+              <span class="item-name">${item.name}</span>
+              <span class="item-price">€${item.price.toFixed(2)}</span>
+            </div>
+            <div class="item-controls">
+              <button class="qty-btn" onclick="decreaseQty(${index})">−</button>
+              <span class="qty-display">${item.quantity}</span>
+              <button class="qty-btn" onclick="increaseQty(${index})">+</button>
+              ${editingOrder.items.length > 1 ? `<button class="delete-btn" onclick="deleteItem(${index})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      html += `<button class="add-item-btn" onclick="addNewItem()"><i class="fas fa-plus"></i> Add Item</button>`;
+      html += `<div class="edit-total">Total: €${calculateTotal(editingOrder.items).toFixed(2)}</div>`;
+      
+      editModalBody.innerHTML = html;
+    }
+    
+    function increaseQty(index) {
+      if (editingOrder.items[index]) {
+        editingOrder.items[index].quantity++;
+        renderEditModalContent();
+      }
+    }
+    
+    function decreaseQty(index) {
+      if (editingOrder.items[index] && editingOrder.items[index].quantity > 1) {
+        editingOrder.items[index].quantity--;
+        renderEditModalContent();
+      }
+    }
+    
+    function deleteItem(index) {
+      if (editingOrder.items.length > 1) {
+        editingOrder.items.splice(index, 1);
+        renderEditModalContent();
+      } else {
+        alert('Cannot delete the last item. An order must have at least one item.');
+      }
+    }
+    
+    function addNewItem() {
+      const itemName = prompt('Enter item name:');
+      if (itemName) {
+        const newItem = {
+          name: itemName,
+          price: 49.99,
+          quantity: 1
+        };
+        editingOrder.items.push(newItem);
+        renderEditModalContent();
+      }
+    }
+    
+    function closeEditModal() {
+      editModal.style.display = 'none';
+      editingOrder = null;
+    }
+    
+    // Event listeners for modal
+    closeEditModalBtn.addEventListener('click', closeEditModal);
+    cancelEditBtn.addEventListener('click', closeEditModal);
+    
+    saveEditBtn.addEventListener('click', () => {
+      if (editingOrder) {
+        alert(`Order ${editingOrder.id} updated successfully with ${editingOrder.items.length} item(s) - Total: €${calculateTotal(editingOrder.items).toFixed(2)}`);
+        closeEditModal();
+      }
+    });
+    
+    // Close modal when clicking outside
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) {
+        closeEditModal();
+      }
+    });
+    
+    // Add click listeners to edit buttons
+    document.addEventListener('DOMContentLoaded', () => {
+      const editButtons = document.querySelectorAll('.edit-btn');
+      editButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const orderId = btn.dataset.orderId;
+          openEditModal(orderId);
+        });
+      });
+    });
+    
+    // Header functionality from your header.html
+    const userEmail = "example@gmail.com"; 
+    document.getElementById('userEmail').textContent = userEmail;
+
+    const userMenuButton = document.getElementById('userMenuButton');
+    const userMenu = document.getElementById('userMenu');
+
+    // Menü öffnen/schließen beim Klick aufs Icon
+    userMenuButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation(); // verhindert, dass das Klick-Event sofort schließt
+      userMenu.classList.toggle('show');
+    });
+
+    // Klick außerhalb -> Menü schließen
+    document.addEventListener('click', (e) => {
+      if (!userMenu.contains(e.target) && !userMenuButton.contains(e.target)) {
+        userMenu.classList.remove('show');
+      }
+    });
+
+    // Initialize header based on login status
+    function initHeader() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      const loginLink = document.getElementById('login-link');
+      const userLinks = document.querySelectorAll('.user-links');
+      const designBouquetButton = document.querySelector('.design-bouquet');
+
+      if (isLoggedIn) {
+        loginLink?.classList.add('hidden');
+        userLinks.forEach(el => el.classList.remove('hidden'));
+        designBouquetButton?.classList.remove('hidden');
+      } else {
+        loginLink?.classList.remove('hidden');
+        userLinks.forEach(el => el.classList.add('hidden'));
+        designBouquetButton?.classList.add('hidden');
+      }
+
+      // Logout functionality
+      const logout = document.querySelector('.logout-link');
+      if (logout) {
+        logout.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.setItem('isLoggedIn', "false");
+          localStorage.removeItem('login-email');
+          localStorage.removeItem('login-password');
+          localStorage.removeItem('cartItems');
+          localStorage.removeItem('totalCartQuantity');
+          window.location.href = '/ClickPrototype/customer/home-page/home-page.html';
+        });
+      }
+    }
+      
+      // Chatbot functionality
+      const chatbot = document.getElementById('chatbot');
+      const chatbotToggle = document.querySelector('.chatbot-toggle');
+      const chatbotClose = document.querySelector('.chatbot-close');
+      const contactSupport = document.getElementById('contact-support');
+      
+      // Toggle chatbot
+      chatbotToggle.addEventListener('click', function() {
+        chatbot.classList.toggle('open');
+      });
+      
+      // Close chatbot
+      chatbotClose.addEventListener('click', function() {
+        chatbot.classList.remove('open');
+      });
+      
+      // Contact support button
+      contactSupport.addEventListener('click', function() {
+        chatbot.classList.add('open');
+      });
+      
+      // Send message on Enter key
+      const chatInput = document.querySelector('.chatbot-input input');
+      chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+      
+      // Send message on button click
+      const sendButton = document.querySelector('.chatbot-input button');
+      sendButton.addEventListener('click', sendMessage);
+      
+      function sendMessage() {
+        const message = chatInput.value.trim();
+        if (message) {
+          // Add user message
+          const chatBody = document.querySelector('.chatbot-body');
+          const userMessage = document.createElement('div');
+          userMessage.className = 'chatbot-message user';
+          userMessage.textContent = message;
+          chatBody.appendChild(userMessage);
+          
+          // Clear input
+          chatInput.value = '';
+          
+          // Simulate bot response
+          setTimeout(() => {
+            const botMessage = document.createElement('div');
+            botMessage.className = 'chatbot-message bot';
+            botMessage.textContent = "I can help you track your order! Please provide your order ID or tell me which order you'd like to check.";
+            chatBody.appendChild(botMessage);
+            
+            // Scroll to bottom
+            chatBody.scrollTop = chatBody.scrollHeight;
+          }, 1000);
+          
+          // Scroll to bottom
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }
+      }
+      
+      // Order action buttons
+      const trackButtons = document.querySelectorAll('.btn-track');
+      trackButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          alert('Tracking information would open here.');
+        });
+      });
+      
+      const reorderButtons = document.querySelectorAll('.btn-reorder');
+      reorderButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          alert('Items added to cart!');
+        });
+      });
+      
+      const cancelButtons = document.querySelectorAll('.cancel-btn');
+      cancelButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          if (confirm('Are you sure you want to cancel this order?')) {
+            alert('Order cancelled successfully.');
+          }
+        });
+      });
+      
+      const helpButtons = document.querySelectorAll('.btn-help');
+      helpButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          chatbot.classList.add('open');
+        });
+      });
+ 
+
+    // Footer loading
+    fetch("/ClickPrototype/footer/footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('footer').innerHTML = data;
+      })
+      .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+  </script>
+
+<script>  
+// Enhanced Rating System with Data Persistence
+class RatingSystem {
+  constructor() {
+    this.ratings = this.loadRatings();
+    this.initializeRatings();
+  }
+  
+  loadRatings() {
+    const stored = localStorage.getItem('orderRatings');
+    return stored ? JSON.parse(stored) : {};
+  }
+  
+  saveRatings() {
+    localStorage.setItem('orderRatings', JSON.stringify(this.ratings));
+  }
+  
+  initializeRatings() {
+    const starContainers = document.querySelectorAll('.stars');
+    
+    starContainers.forEach(container => {
+      const orderId = container.dataset.orderId;
+      const stars = container.querySelectorAll('i');
+      
+      // Restore previously saved rating if exists
+      if (this.ratings[orderId]) {
+        this.displayRating(orderId, this.ratings[orderId]);
+      }
+      
+      // Add click listeners to stars
+      stars.forEach((star, index) => {
+        star.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.setRating(orderId, index + 1);
+        });
+        
+        // Hover effect
+        star.addEventListener('mouseover', (e) => {
+          stars.forEach((s, i) => {
+            if (i < index + 1) {
+              s.classList.add('active');
+            } else {
+              s.classList.remove('active');
+            }
+          });
+        });
+      });
+      
+      // Reset on mouse leave
+      container.addEventListener('mouseleave', () => {
+        if (this.ratings[orderId]) {
+          this.displayRating(orderId, this.ratings[orderId]);
+        } else {
+          stars.forEach(s => s.classList.remove('active'));
+        }
+      });
+    });
+    
+    // Add submit button listeners
+    const submitButtons = document.querySelectorAll('.rating-submit-btn');
+    submitButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.submitRating(btn);
+      });
+    });
+  }
+  
+  setRating(orderId, value) {
+    this.ratings[orderId] = value;
+    this.displayRating(orderId, value);
+  }
+  
+  displayRating(orderId, value) {
+    const container = document.querySelector(`.stars[data-order-id="${orderId}"]`);
+    const stars = container.querySelectorAll('i');
+    const displayElement = document.getElementById(`rating-display-${orderId}`);
+    
+    stars.forEach((star, index) => {
+      if (index < value) {
+        star.classList.add('active');
+      } else {
+        star.classList.remove('active');
+      }
+    });
+    
+    if (displayElement) {
+      displayElement.style.display = 'block';
+      displayElement.querySelector('.current-rating').textContent = value;
+    }
+  }
+  
+  submitRating(button) {
+    const orderId = button.dataset.orderId;
+    const rating = this.ratings[orderId];
+    
+    if (!rating) {
+      alert('Please select a rating before submitting.');
+      return;
+    }
+    
+    // Disable button during submission
+    button.disabled = true;
+    const originalText = button.textContent;
+    button.textContent = 'Submitting...';
+
+    // Build payload for backend
+    const payload = {
+      orderId: this.extractOrderId(orderId), // Convert string to Long
+      customerId: 1, // TODO: Replace with actual customer ID from session localStorage
+      ratingScore: rating, // Changed from 'value' to 'ratingScore'
+      review: null
+    };
+
+    // Send rating to backend
+    fetch('http://localhost:8080/api/ratings/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(res => {
+      if (!res.ok) throw res;
+      return res.json();
+    })
+    .then(data => {
+      // Persist locally as well
+      this.saveRatings();
+
+      // Show thank you message
+      const thankYouElement = document.getElementById(`thank-you-${orderId}`);
+      if (thankYouElement) {
+        thankYouElement.style.display = 'block';
+      }
+
+      // Hide button
+      button.style.display = 'none';
+
+      console.log(`Rating submitted for order ${orderId}: ${rating}/5 stars`, data);
+    })
+    .catch(err => {
+      console.error('Failed to submit rating', err);
+      button.disabled = false;
+      button.textContent = originalText;
+      alert('Failed to submit rating. It has been saved locally and will be retried later.');
+      // still save locally
+      this.saveRatings();
+    });
+  }
+}
+
+// Initialize rating system when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  new RatingSystem();
+});
+
+</script>
+
+<script>
+  //Fetch header
+  fetch("/ClickPrototype/Header/header.html")
+    .then(response => response.text())
+    .then(data => {
+        const mount = document.getElementById('header');
+        mount.innerHTML = data;
+        initHeader(mount);
+        document.dispatchEvent(new Event('header:ready'));
+    })
+    .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
+    function initHeader() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        const loginLink = document.querySelector('#login-link');
+        const userLinks = document.querySelectorAll('.user-links');
+        const designBouquetButton = document.querySelector('.design-bouquet')
+
+        if (isLoggedIn) {
+            loginLink?.classList.add('hidden');
+            userLinks.forEach(el => el.classList.remove('hidden'));
+            designBouquetButton?.classList.remove('hidden');
+        } else {
+            loginLink?.classList.remove('hidden');
+            userLinks.forEach(el => el.classList.add('hidden'));
+            designBouquetButton?.classList.add('hidden');
+        }
+
+        // Logout-Handler
+        const logout = document.querySelector('.logout-link');
+        if (logout) {
+            logout.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.setItem('isLoggedIn', "false");
+            localStorage.removeItem('login-email');
+            localStorage.removeItem('login-password');
+            localStorage.removeItem('cartItems');
+            localStorage.removeItem('totalCartQuantity');
+            window.location.href = '/ClickPrototype/customer/home-page/home-page.html';
+            });
+        }
+    }
+
+    //Fetch footer
+    fetch("/ClickPrototype/footer/footer.html")
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('footer').innerHTML = data;
+    })
+    .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+</script>
+
+</body>
+</html>

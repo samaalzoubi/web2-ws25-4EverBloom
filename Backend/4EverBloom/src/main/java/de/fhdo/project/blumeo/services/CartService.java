@@ -8,7 +8,6 @@ import de.fhdo.project.blumeo.repository.cart.CartItemRepository;
 import de.fhdo.project.blumeo.repository.cart.CartRepository;
 import de.fhdo.project.blumeo.utils.mapper.CartMapper;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final CartMapper cartMapper;
 
-    @Autowired
     public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, CartMapper cartMapper) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
@@ -67,7 +65,7 @@ public class CartService {
     @Transactional
     public /*CartDto*/ Cart addItemToCart(Long userId /*AddCartItemRequest request*/) {
 
-        Cart cart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE).orElseGet(() -> createEmptyCart(userId));
+        // method currently a placeholder; commented real logic
 
         /*Bouquet bouquet = bouquetRepository.findById(request.getBouquetId()).orElseThrow(() -> new EntityNotFoundException("Bouquet not found"));*/
 

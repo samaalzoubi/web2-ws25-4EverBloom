@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomBouquet extends Bouquet {
 
-    //TODO: comment out when Customer-Entity was created
+    // Customer relationship to be added when Customer entity is implemented
     /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer designedByCustomer;*/

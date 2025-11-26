@@ -3,7 +3,6 @@
 let currentOrders = [...MOCK_ORDERS];
 let searchTerm = "";
 let selectedStatus = "all";
-let showCreate = false;
 let showEdit = false;
 let editOrder = null;
 let chatbotOpen = false;
@@ -49,45 +48,6 @@ const handleFilter = (e) => {
   filterOrders();
 };
 
-// Create Order
-const handleCreateOrder = () => {
-  showCreate = true;
-  renderApp();
-};
-
-const closeCreate = () => {
-  showCreate = false;
-  renderApp();
-};
-
-const submitNewOrder = (e) => {
-  e.preventDefault();
-  const fd = new FormData(e.target);
-  const customer = {
-    id: `CUST-${Date.now()}`,
-    name: fd.get("customer"),
-    email: fd.get("email"),
-    phone: fd.get("phone"),
-    address: fd.get("address"),
-  };
-  const item = AVAILABLE_ITEMS.find((i) => i.name === fd.get("item"));
-  const order = {
-    id: `ORD-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${String(Math.random()).slice(2,5)}`,
-    customer,
-    orderDate: new Date().toISOString(),
-    items: [{ ...item, quantity: parseInt(fd.get("quantity")) || 1 }],
-    total: item.price * (parseInt(fd.get("quantity")) || 1),
-    status: OrderStatus.PENDING,
-    notes: fd.get("notes"),
-  };
-  MOCK_ORDERS.unshift(order);
-  closeCreate();
-  filterOrders();
-  
-  // Show success notification
-  showNotification(`Order ${order.id} created successfully!`, 'success');
-};
-
 // Cancel Order - FIXED VERSION
 const cancelOrder = (id) => {
   const order = MOCK_ORDERS.find((o) => o.id === id);
@@ -105,6 +65,36 @@ const cancelOrder = (id) => {
     order.status = OrderStatus.CANCELLED;
     filterOrders();
     showNotification(`Order ${id} has been cancelled.`, 'success');
+  }
+};
+
+// Accept Order - Changes status from PENDING to PREPARING or PREPARING to OUT_FOR_DELIVERY
+const acceptOrder = (id) => {
+  const order = MOCK_ORDERS.find((o) => o.id === id);
+  if (!order) {
+    showNotification("Order not found.", 'error');
+    return;
+  }
+  
+  let nextStatus, confirmMessage, successMessage;
+  
+  if (order.status === OrderStatus.PENDING) {
+    nextStatus = OrderStatus.PREPARING;
+    confirmMessage = "Are you sure you want to accept this order? It will move to Preparing status.";
+    successMessage = `Order ${id} has been accepted and moved to Preparing status.`;
+  } else if (order.status === OrderStatus.PREPARING) {
+    nextStatus = OrderStatus.OUT_FOR_DELIVERY;
+    confirmMessage = "Are you sure you want to send this order out for delivery?";
+    successMessage = `Order ${id} has been sent out for delivery.`;
+  } else {
+    showNotification("Only pending or preparing orders can be accepted.", 'error');
+    return;
+  }
+  
+  if (confirm(confirmMessage)) {
+    order.status = nextStatus;
+    filterOrders();
+    showNotification(successMessage, 'success');
   }
 };
 
@@ -278,10 +268,6 @@ const renderControls = () => `
       .map((s) => `<option value="${s}" ${selectedStatus === s ? "selected" : ""}>${s}</option>`)
       .join("")}
   </select>
-  <button class="create-order-btn">
-    <i class="fas fa-plus"></i>
-    Create New Order
-  </button>
 </div>`;
 
 const renderOrderCard = (o) => `
@@ -305,11 +291,11 @@ const renderOrderCard = (o) => `
   <div class="order-total">${formatCurrency(o.total)}</div>
   <div class="order-actions">
     ${
-      o.status === OrderStatus.OUT_FOR_DELIVERY
-        ? `<button class="cancel-btn" data-order-id="${o.id}"><i class="fas fa-times"></i>Cancel</button>`
-        : o.status === OrderStatus.PENDING || o.status === OrderStatus.PREPARING
-        ? `<button class="edit-btn" data-order-id="${o.id}"><i class="fas fa-edit"></i>Edit</button>
+      o.status === OrderStatus.PENDING || o.status === OrderStatus.PREPARING
+        ? `<button class="accept-btn" data-order-id="${o.id}"><i class="fas fa-check"></i>Accept</button>
            <button class="cancel-btn" data-order-id="${o.id}"><i class="fas fa-times"></i>Cancel</button>`
+        : o.status === OrderStatus.OUT_FOR_DELIVERY
+        ? `<button class="cancel-btn" data-order-id="${o.id}"><i class="fas fa-times"></i>Cancel</button>`
         : '<button disabled><i class="fas fa-lock"></i>Locked</button>'
     }
   </div>
@@ -321,49 +307,6 @@ const renderOrdersGrid = () => `
     ? currentOrders.map((o) => renderOrderCard(o)).join("")
     : '<div class="no-orders">No orders found matching your criteria.</div>'
   }
-</div>`;
-
-const renderCreateModal = () => !showCreate ? "" : `
-<div class="modal-overlay active">
-  <div class="modal-content">
-    <h2>Create New Order</h2>
-    <form id="create-form">
-      <div class="form-group">
-        <label>Customer Name</label>
-        <input name="customer" required />
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required />
-      </div>
-      <div class="form-group">
-        <label>Phone</label>
-        <input type="text" name="phone" />
-      </div>
-      <div class="form-group">
-        <label>Address</label>
-        <textarea name="address" rows="3"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Items</label>
-        <select name="item">
-          ${AVAILABLE_ITEMS.map((i) => `<option value="${i.name}">${i.name} - ${formatCurrency(i.price)}</option>`).join("")}
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Quantity</label>
-        <input type="number" name="quantity" value="1" min="1" />
-      </div>
-      <div class="form-group">
-        <label>Notes</label>
-        <textarea name="notes" rows="3"></textarea>
-      </div>
-      <div class="modal-actions">
-        <button type="submit" class="btn-create">Create Order</button>
-        <button type="button" class="btn-cancel" id="cancel-create">Cancel</button>
-      </div>
-    </form>
-  </div>
 </div>`;
 
 const renderEditModal = () => !showEdit ? "" : `
@@ -422,7 +365,6 @@ const renderApp = () => {
       ${renderControls()}
       ${renderOrdersGrid()}
     </main>
-    ${renderCreateModal()}
     ${renderEditModal()}
     ${renderChatbot()}
     <button class="chatbot-toggle" onclick="toggleChatbot()" style="
@@ -448,7 +390,16 @@ const renderApp = () => {
   // Event Listeners
   app.querySelector(".search-input")?.addEventListener("input", handleSearch);
   app.querySelector(".filter-select")?.addEventListener("change", handleFilter);
-  app.querySelector(".create-order-btn")?.addEventListener("click", handleCreateOrder);
+
+  // Accept buttons
+  app.querySelectorAll(".accept-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const orderId = e.target.closest('.accept-btn').dataset.orderId;
+      acceptOrder(orderId);
+    });
+  });
 
   // Cancel buttons - FIXED VERSION
   app.querySelectorAll(".cancel-btn").forEach((btn) => {
@@ -504,14 +455,6 @@ const renderApp = () => {
     app.querySelector("#close-edit")?.addEventListener("click", (e) => {
       e.preventDefault();
       closeEdit();
-    });
-  }
-
-  if (showCreate) {
-    app.querySelector("#create-form")?.addEventListener("submit", submitNewOrder);
-    app.querySelector("#cancel-create")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      closeCreate();
     });
   }
 

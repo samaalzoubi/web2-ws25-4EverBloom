@@ -29,7 +29,7 @@ public class Cart {
     @Enumerated(EnumType.STRING)
     private CartStatus cartStatus;
 
-    //TODO
+    // FlowerShop relationship to be added when FlowerShop entity is implemented
     /*@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     private FlowerShop shop;*/

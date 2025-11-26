@@ -23,7 +23,7 @@ public abstract class Bouquet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bouquetId;
 
-    //TODO: comment out when FlowerShop-Entity was created
+    // FlowerShop relationship to be added when FlowerShop entity is implemented
     /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "shop_id", nullable = false)
     private FlowerShop shop;*/
