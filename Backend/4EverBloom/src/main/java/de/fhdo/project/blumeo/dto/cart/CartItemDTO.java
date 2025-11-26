@@ -1,6 +1,7 @@
-package de.fhdo.project.blumeo.dto;
+package de.fhdo.project.blumeo.dto.cart;
 
 import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data

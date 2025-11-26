@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "bouquets")
+@Table(name = "bouquet")
 @DiscriminatorColumn(name = "bouquet_type")
 @Getter
 @Setter
@@ -53,6 +53,7 @@ public abstract class Bouquet {
         c.setBouquet(this);
         this.components.add(c);
     }
+
     public void removeComponent(BouquetComponent c) {
         c.setBouquet(null);
         this.components.remove(c);

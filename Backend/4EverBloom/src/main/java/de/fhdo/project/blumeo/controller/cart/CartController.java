@@ -1,0 +1,59 @@
+package de.fhdo.project.blumeo.controller.cart;
+
+import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
+import de.fhdo.project.blumeo.services.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+//TODO + Javadoc + other controllers
+@RestController
+@RequestMapping(
+        value = "/api/v1/cart",
+        produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }
+)
+public class CartController {
+
+    private final CartService cartService;
+
+    @Autowired
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<CartResponseDTO> getActiveCart(@PathVariable Long userId) {
+        CartResponseDTO dto = cartService.getActiveCartForUser(userId);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PatchMapping("/{userId}/items/{itemId}")
+    public ResponseEntity<CartResponseDTO> updateItemQuantity(@PathVariable Long userId, @PathVariable Long itemId, @RequestParam int quantityDelta) {
+        CartResponseDTO dto = cartService.updateItemQuantity(userId, itemId, quantityDelta);
+        return ResponseEntity.ok(dto);
+    }
+
+
+    @DeleteMapping("/{userId}/items/{itemId}")
+    public ResponseEntity<CartResponseDTO> removeItem(@PathVariable Long userId, @PathVariable Long itemId) {
+        CartResponseDTO dto = cartService.removeItem(userId, itemId);
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> clearCart(@PathVariable Long userId) {
+        cartService.clearCart(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /*
+     *
+     * @PostMapping("/{userId}/items")
+     * public ResponseEntity<CartResponseDTO> addItem(@PathVariable Long userId, @RequestBody AddCartItemRequest request) {
+     *     CartResponseDTO dto = cartService.addItemToCart(userId, request);
+     *     return new ResponseEntity<>(dto, HttpStatus.CREATED);
+     * }
+     */
+}
+

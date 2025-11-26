@@ -1,7 +1,7 @@
 package de.fhdo.project.blumeo.controller.checkout;
 
-import de.fhdo.project.blumeo.dto.CartResponseDTO;
-import de.fhdo.project.blumeo.dto.CheckoutFormDTO;
+import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
+import de.fhdo.project.blumeo.dto.payment.CheckoutFormDTO;
 import de.fhdo.project.blumeo.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

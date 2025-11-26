@@ -1,4 +1,4 @@
-package de.fhdo.project.blumeo.dto;
+package de.fhdo.project.blumeo.dto.payment;
 
 import lombok.Data;
 
