@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blumeo | Login</title>
+    <link rel="stylesheet"  type="text/css" href="/static/style/Style.css">
+    <link rel="stylesheet"  type="text/css" href="/static/style/header.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main>
+    <div class="form-container" id="login-container">
+        <h2>Welcome Back 🌸</h2>
+        <p class="subtitle">Log in to explore our floral collections</p>
+
+        <!-- LOGIN FORM -->
+        <form th:action="@{/users/login}" th:object="${authRequest}" method="post">
+            <label>Email</label>
+            <input type="email" th:field="*{email}" placeholder="example@gmail.com" required>
+
+            <label>Password</label>
+            <input type="password" th:field="*{password}" placeholder="Enter your password" required>
+
+            <button type="submit" class="main-btn">Login</button>
+        </form>
+
+        <!-- ERROR MESSAGE -->
+        <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+        <!-- SUCCESS MESSAGE -->
+        <p th:if="${success}" th:text="${success}" style="color:green;"></p>
+
+        <p class="toggle-text">
+            No account yet?
+            <span onclick="window.location.href='/users/create'">Register here</span>
+        </p>
+    </div>
+</main>
+</body>
+</html>

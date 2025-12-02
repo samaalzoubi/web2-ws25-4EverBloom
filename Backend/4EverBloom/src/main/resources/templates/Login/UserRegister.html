@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blumeo | Register</title>
+    <link rel="stylesheet"  type="text/css" href="/static/style/Style.css">
+    <link rel="stylesheet"  type="text/css" href="/static/style/header.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main>
+    <div class="form-container" id="register-container">
+        <h2>Create Account 🌷</h2>
+        <p class="subtitle">Join our blooming community</p>
+
+        <!-- REGISTRATION FORM -->
+        <form th:action="@{/users/create}" th:object="${registerRequest}" method="post">
+            <label>Username</label>
+            <label>
+                <input type="text" th:field="*{username}" placeholder="Choose a username" required>
+            </label>
+
+            <label>Email</label>
+            <label>
+                <input type="email" th:field="*{email}" placeholder="example@gmail.com" required>
+            </label>
+
+            <label>Password</label>
+            <label>
+                <input type="password" th:field="*{password}" placeholder="Create password" required>
+            </label>
+
+            <label>Role</label>
+            <label>
+                <select th:field="*{role}">
+                    <option value="OWNER">Owner</option>
+                    <option value="USER">Flower User</option>
+                </select>
+            </label>
+
+            <button type="submit" class="main-btn">Register</button>
+        </form>
+
+        <!-- ERROR MESSAGE -->
+        <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+        <!-- SUCCESS MESSAGE -->
+        <p th:if="${success}" th:text="${success}" style="color:green;"></p>
+
+        <p class="toggle-text">
+            Already have an account?
+            <span onclick="window.location.href='/users/login'">Back to Login</span>
+        </p>
+    </div>
+</main>
+</body>
+</html>

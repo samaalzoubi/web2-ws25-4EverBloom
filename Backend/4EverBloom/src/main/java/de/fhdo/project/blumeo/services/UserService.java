@@ -1,75 +1,68 @@
 package de.fhdo.project.blumeo.services;
 
+import de.fhdo.project.blumeo.UserConverter;
+import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
+import de.fhdo.project.blumeo.dto.userService.UserDTO;
 import de.fhdo.project.blumeo.entity.userService.User;
 import de.fhdo.project.blumeo.repository.userService.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
+    private final UserConverter userConverter;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserConverter userConverter) {
         this.userRepository = userRepository;
+        this.userConverter = userConverter;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userConverter::toDTO)
+                .toList();
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public UserDTO getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(userConverter::toDTO)
+                .orElse(null);
     }
 
-    //TODO
-    /*public User createUser(RegisterRequest request) {
+    @Transactional
+    public UserDTO createUser(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setRole(request.getRole());
+        User entity = userConverter.toEntity(request);
+        User saved = userRepository.save(entity);
+        return userConverter.toDTO(saved);
+    }
 
-        return userRepository.save(user);
-    }*/
+    @Transactional
+    public UserDTO updateUser(Long id, UserDTO dto) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    userConverter.updateEntity(user, dto);
+                    User saved = userRepository.save(user);
+                    return userConverter.toDTO(saved);
+                })
+                .orElse(null);
+    }
+
+    public UserDTO authenticate(String email, String password) {
+        return userRepository.findByEmail(email)
+                .filter(user -> user.getPassword().equals(password))
+                .map(userConverter::toDTO)
+                .orElse(null);
+    }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
-    }
-
-    public Optional<User> authenticate(String email, String password) {
-        return userRepository.findByEmail(email)
-                .filter(user -> user.getPassword().equals(password));
-    }
-
-    public Optional<User> updateUser(Long id, User updatedUser) {
-        return userRepository.findById(id).map(user -> {
-            user.setUsername(updatedUser.getUsername());
-            user.setEmail(updatedUser.getEmail());
-            user.setPassword(updatedUser.getPassword());
-            return userRepository.save(user);
-        });
-    }
-
-    public void deductBalance(Long userId, double amount) {
-        User user = userRepository.findById(userId).orElseThrow();
-        if (user.getBalance() < amount) {
-            throw new IllegalStateException("Insufficient balance");
-        }
-        user.setBalance(user.getBalance() - amount);
-        userRepository.save(user);
-    }
-
-    public void addBalance(Long userId, double amount) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setBalance(user.getBalance() + amount);
-        userRepository.save(user);
     }
 }
