@@ -6,10 +6,16 @@ import de.fhdo.project.blumeo.entity.order.Order;
 import de.fhdo.project.blumeo.entity.order.OrderLine;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
+
 import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
+
+
+private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public OrderDTO toDto(Order order) {
         OrderDTO dto = new OrderDTO();
@@ -18,6 +24,11 @@ public class OrderMapper {
         dto.setStatus(order.getStatus());
         dto.setDeliveryAddress(order.getDeliveryAddress());
         dto.setTotalAmount(order.getTotalAmount());
+
+
+        if (order.getOrderDate() != null) {
+            dto.setOrderDate(order.getOrderDate().format(FORMATTER));
+        }
 
         dto.setOrderLines(
                 order.getOrderLines().stream().map(this::toDto).collect(Collectors.toList())

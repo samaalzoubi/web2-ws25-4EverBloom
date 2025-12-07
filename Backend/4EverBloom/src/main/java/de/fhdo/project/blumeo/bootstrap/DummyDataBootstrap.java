@@ -8,17 +8,28 @@ import de.fhdo.project.blumeo.entity.inventory.ShopStem;
 import de.fhdo.project.blumeo.entity.rating.Rating;
 import de.fhdo.project.blumeo.entity.user.Role;
 import de.fhdo.project.blumeo.entity.user.User;
+
+
+import de.fhdo.project.blumeo.entity.order.Order;
+import de.fhdo.project.blumeo.entity.order.OrderLine;
+import de.fhdo.project.blumeo.entity.order.OrderStatus;
+
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
 import de.fhdo.project.blumeo.repository.cart.CartRepository;
 import de.fhdo.project.blumeo.repository.flower.FlowerRepository;
 import de.fhdo.project.blumeo.repository.inventory.ShopStemRepository;
 import de.fhdo.project.blumeo.repository.rating.RatingRepository;
 import de.fhdo.project.blumeo.repository.user.UserRepository;
+
+import de.fhdo.project.blumeo.repository.order.OrderRepository;
+import de.fhdo.project.blumeo.repository.order.OrderLineRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import de.fhdo.project.blumeo.entity.flower.Flower;
+
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,15 +43,23 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
     private final BouquetRepository bouquetRepository;
     private final CartRepository cartRepository;
     private final RatingRepository ratingRepository;
+    private final OrderRepository orderRepository;
+    private final OrderLineRepository orderLineRepository;
 
     @Autowired
-    public DummyDataBootstrap(UserRepository userRepository, FlowerRepository flowerRepository, ShopStemRepository shopStemRepository, BouquetRepository bouquetRepository, CartRepository cartRepository, RatingRepository ratingRepository) {
+    public DummyDataBootstrap(UserRepository userRepository, FlowerRepository flowerRepository, ShopStemRepository shopStemRepository, BouquetRepository bouquetRepository, CartRepository cartRepository, RatingRepository ratingRepository,  OrderRepository orderRepository,
+                          OrderLineRepository orderLineRepository) {
         this.userRepository = userRepository;
         this.flowerRepository = flowerRepository;
         this.shopStemRepository = shopStemRepository;
         this.bouquetRepository = bouquetRepository;
         this.cartRepository = cartRepository;
         this.ratingRepository = ratingRepository;
+
+        
+        this.orderRepository = orderRepository;
+        this.orderLineRepository = orderLineRepository;
+
     }
 
     @Override
@@ -178,6 +197,35 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         rating.setRatingScore(5);
         rating.setReview("Beautiful bouquet and fast delivery!");
         ratingRepository.save(rating);
+
+         Order order = new Order();
+        order.setCustomer(customer);
+        order.setDeliveryAddress("123 Demo Street, Berlin");
+        order.setStatus(OrderStatus.CREATED);
+
+        order = orderRepository.save(order);
+
+        OrderLine line1 = new OrderLine();
+        line1.setOrder(order);
+        line1.setBouquet(romanticRoses);
+        line1.setQuantity(1);
+        line1.setPrice(romanticRoses.getPrice());
+
+        OrderLine line2 = new OrderLine();
+        line2.setOrder(order);
+        line2.setBouquet(customSpring);
+        line2.setQuantity(2);
+        line2.setPrice(customSpring.getPrice());
+
+        orderLineRepository.save(line1);
+        orderLineRepository.save(line2);
+
+        double total =
+                romanticRoses.getPrice().doubleValue() * 1 +
+                customSpring.getPrice().doubleValue() * 2;
+
+        order.setTotalAmount(total);
+        orderRepository.save(order);
     }
 }
 
