@@ -1,10 +1,10 @@
 package de.fhdo.project.blumeo.services;
 
-import de.fhdo.project.blumeo.UserConverter;
+import de.fhdo.project.blumeo.utils.mapper.UserMapper;
 import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
 import de.fhdo.project.blumeo.dto.userService.UserDTO;
-import de.fhdo.project.blumeo.entity.userService.User;
-import de.fhdo.project.blumeo.repository.userService.UserRepository;
+import de.fhdo.project.blumeo.entity.user.User;
+import de.fhdo.project.blumeo.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +14,9 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserConverter userConverter;
+    private final UserMapper userConverter;
 
-    public UserService(UserRepository userRepository, UserConverter userConverter) {
+    public UserService(UserRepository userRepository, UserMapper userConverter) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
     }

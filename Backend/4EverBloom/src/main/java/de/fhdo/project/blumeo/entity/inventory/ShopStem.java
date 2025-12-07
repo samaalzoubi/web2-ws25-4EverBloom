@@ -1,7 +1,7 @@
 package de.fhdo.project.blumeo.entity.inventory;
 
 import de.fhdo.project.blumeo.entity.flower.Flower;
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;

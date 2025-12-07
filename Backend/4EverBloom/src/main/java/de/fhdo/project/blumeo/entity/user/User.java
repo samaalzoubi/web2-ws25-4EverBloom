@@ -1,4 +1,4 @@
-package de.fhdo.project.blumeo.entity.userService;
+package de.fhdo.project.blumeo.entity.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

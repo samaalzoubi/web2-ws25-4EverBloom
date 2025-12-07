@@ -1,6 +1,6 @@
 package de.fhdo.project.blumeo.entity.cart;
 
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -5,7 +5,7 @@ import de.fhdo.project.blumeo.entity.bouquet.Bouquet;
 import de.fhdo.project.blumeo.entity.cart.Cart;
 import de.fhdo.project.blumeo.entity.cart.CartItem;
 import de.fhdo.project.blumeo.entity.cart.CartStatus;
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
 import de.fhdo.project.blumeo.repository.cart.CartItemRepository;
 import de.fhdo.project.blumeo.repository.cart.CartRepository;

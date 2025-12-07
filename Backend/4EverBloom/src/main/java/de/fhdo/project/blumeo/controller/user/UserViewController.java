@@ -1,4 +1,4 @@
-package de.fhdo.project.blumeo.controller.login;
+package de.fhdo.project.blumeo.controller.user;
 
 import de.fhdo.project.blumeo.dto.userService.AuthRequest;
 import de.fhdo.project.blumeo.dto.userService.RegisterRequest;

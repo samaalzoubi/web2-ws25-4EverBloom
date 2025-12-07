@@ -1,6 +1,6 @@
-package de.fhdo.project.blumeo.repository.userService;
+package de.fhdo.project.blumeo.repository.user;
 
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

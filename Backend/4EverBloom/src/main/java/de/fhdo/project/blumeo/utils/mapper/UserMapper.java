@@ -1,12 +1,12 @@
-package de.fhdo.project.blumeo;
+package de.fhdo.project.blumeo.utils.mapper;
 
 import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
 import de.fhdo.project.blumeo.dto.userService.UserDTO;
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserConverter {
+public class UserMapper {
 
     public UserDTO toDTO(User user) {
         UserDTO dto = new UserDTO();

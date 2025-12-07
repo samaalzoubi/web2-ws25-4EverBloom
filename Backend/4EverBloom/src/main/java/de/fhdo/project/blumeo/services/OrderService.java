@@ -5,16 +5,15 @@ import de.fhdo.project.blumeo.entity.bouquet.Bouquet;
 import de.fhdo.project.blumeo.entity.order.Order;
 import de.fhdo.project.blumeo.entity.order.OrderLine;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
 import de.fhdo.project.blumeo.repository.order.OrderRepository;
-import de.fhdo.project.blumeo.repository.userService.UserRepository;
+import de.fhdo.project.blumeo.repository.user.UserRepository;
 import de.fhdo.project.blumeo.utils.mapper.OrderMapper;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service

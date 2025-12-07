@@ -1,7 +1,7 @@
 package de.fhdo.project.blumeo.entity.bouquet;
 
 import de.fhdo.project.blumeo.entity.cart.CartItem;
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
