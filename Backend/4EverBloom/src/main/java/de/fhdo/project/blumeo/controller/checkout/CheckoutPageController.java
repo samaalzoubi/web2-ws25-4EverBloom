@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 //Lab4
 @Controller
 @RequestMapping("/api/v1/checkout")
-public class CheckoutController {
+public class CheckoutPageController {
     private final CartService cartService;
 
-    public CheckoutController(CartService cartService) {
+    public CheckoutPageController(CartService cartService) {
         this.cartService = cartService;
     }
 
@@ -29,6 +29,7 @@ public class CheckoutController {
         return "checkout";
     }
 
+    //TODO
     @PostMapping("/user/{userId}")
     public String submitCheckout(@PathVariable Long userId,
                                  @ModelAttribute("checkoutForm") CheckoutFormDTO form,

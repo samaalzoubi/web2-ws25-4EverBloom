@@ -33,7 +33,6 @@ type CartResponseDTO {
 }
 
 type CartItemDTO {
-    id: ID!
     bouquetId: ID!
     bouquetName: String!
     imageUrl: String!
