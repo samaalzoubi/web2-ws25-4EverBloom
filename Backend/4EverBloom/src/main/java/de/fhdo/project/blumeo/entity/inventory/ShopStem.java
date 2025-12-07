@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.entity.inventory;
 
 import de.fhdo.project.blumeo.entity.flower.Flower;
+import de.fhdo.project.blumeo.entity.userService.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -11,10 +12,10 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(
-        name = "shop_stems"
-        /*uniqueConstraints = @UniqueConstraint(
-                name = "uq_shop_flower", columnNames = {"shop_id", "flower_id"}
-        )*/
+        name = "shop_stems",
+        uniqueConstraints = @UniqueConstraint(
+            name = "uq_shop_flower", columnNames = {"shop_owner_id", "flower_id"}
+        )
 )
 @Getter
 @Setter
@@ -25,10 +26,9 @@ public class ShopStem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long stemId;
 
-    // FlowerShop relationship to be added when FlowerShop entity is implemented
-    /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "shop_id", nullable = false)
-    private FlowerShop shop;*/
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "shop_owner_id", nullable = false)
+    private User shopOwner;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "flower_id", nullable = false)

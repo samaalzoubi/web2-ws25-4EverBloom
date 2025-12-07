@@ -18,7 +18,6 @@ public class CartMapper {
 
     public CartResponseDTO toDto(Cart cart) {
         CartResponseDTO dto = new CartResponseDTO();
-        dto.setId(cart.getId());
         dto.setUserId(cart.getUserId());
 
         List<CartItemDTO> itemDtos = cart.getItems().stream().map(cartItemMapper::toDto).toList();

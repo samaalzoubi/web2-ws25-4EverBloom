@@ -6,9 +6,6 @@ import lombok.Data;
 
 @Data
 public class CartItemDTO {
-
-    private Long id;
-
     private Long bouquetId;
 
     private String bouquetName;

@@ -20,7 +20,7 @@ public class PremadeBouquet extends Bouquet {
             joinColumns = @JoinColumn(name = "bouquet_id")
     )
     @Enumerated(EnumType.STRING)
-    @Column(name = "occasion", nullable = false)
+    @Column(name = "occasion")
     private Set<Occasion> occasions = new HashSet<>();
 }
 

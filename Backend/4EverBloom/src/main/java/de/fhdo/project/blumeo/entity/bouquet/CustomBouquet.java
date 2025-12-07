@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.entity.bouquet;
 
+import de.fhdo.project.blumeo.entity.userService.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomBouquet extends Bouquet {
 
-    // Customer relationship to be added when Customer entity is implemented
-    /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer designedByCustomer;*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private User designedByCustomer;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "wrapping", nullable = false)
+    @Column(name = "wrapping")
     private Wrapping wrapping = Wrapping.SIMPLE;
 }
 

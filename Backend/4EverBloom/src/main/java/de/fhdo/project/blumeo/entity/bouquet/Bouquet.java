@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.entity.bouquet;
 
 import de.fhdo.project.blumeo.entity.cart.CartItem;
+import de.fhdo.project.blumeo.entity.userService.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -23,10 +24,9 @@ public abstract class Bouquet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bouquetId;
 
-    // FlowerShop relationship to be added when FlowerShop entity is implemented
-    /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "shop_id", nullable = false)
-    private FlowerShop shop;*/
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "shop_owner_id", nullable = false)
+    private User shopOwner;
 
     @NotBlank
     @Column(nullable = false)

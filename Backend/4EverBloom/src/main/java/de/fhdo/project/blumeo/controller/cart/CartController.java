@@ -3,11 +3,13 @@ package de.fhdo.project.blumeo.controller.cart;
 import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
 import de.fhdo.project.blumeo.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 //TODO + Javadoc + other controllers
+//Lab5
 @RestController
 @RequestMapping(
         value = "/api/v1/cart",
@@ -47,13 +49,10 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
-    /*
-     *
-     * @PostMapping("/{userId}/items")
-     * public ResponseEntity<CartResponseDTO> addItem(@PathVariable Long userId, @RequestBody AddCartItemRequest request) {
-     *     CartResponseDTO dto = cartService.addItemToCart(userId, request);
-     *     return new ResponseEntity<>(dto, HttpStatus.CREATED);
-     * }
-     */
+     @PostMapping("/{userId}/items")
+     public ResponseEntity<CartResponseDTO> addItem(@PathVariable Long userId, @RequestParam Long bouquetId) {
+          CartResponseDTO dto = cartService.addItemToCart(userId, bouquetId);
+          return new ResponseEntity<>(dto, HttpStatus.CREATED);
+    }
 }
 

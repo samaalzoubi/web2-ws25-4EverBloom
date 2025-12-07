@@ -16,7 +16,6 @@ public class CartItemMapper {
         Bouquet tempBouquet = cartItemEntity.getBouquet();
 
         CartItemDTO dto = new CartItemDTO();
-        dto.setId(cartItemEntity.getId());
         dto.setBouquetId(tempBouquet.getBouquetId());
         dto.setBouquetName(tempBouquet.getName());
         dto.setImageUrl(tempBouquet.getImageUrl());
