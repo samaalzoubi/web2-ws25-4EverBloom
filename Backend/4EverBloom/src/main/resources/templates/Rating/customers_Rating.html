@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,9 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
-  <link rel="stylesheet" href="/ClickPrototype/Header/header.css">
-  <link rel="stylesheet" href="orders_styles.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+  <link rel="stylesheet" th:href="@{/style/header.css}">
+  <link rel="stylesheet" th:href="@{/style/orders_styles.css}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
     
   <style>
     /* Edit Modal Styles */
@@ -362,7 +362,8 @@
 </head>
 <body>
 
-    <div id="header"></div>
+    <!-- Header Fragment - Temporarily disabled -->
+    <!-- <div th:replace="~{fragments/header :: header}"></div> -->
 
   
   <!-- Rest of the customer orders page content remains the same -->
@@ -388,149 +389,56 @@
         </button>
       </div>
       
-      <div class="orders-grid" id="orders-grid">
-        <!-- Order Card 1 -->
-        <div class="order-card" data-status="Out for Delivery">
+      <div class="orders-grid" id="orders-grid" th:attr="data-customer-id=${customerId}">
+        <div class="order-card" th:if="${#lists.isEmpty(orders)}">
           <div class="order-header">
             <div>
-              <div class="order-id">ORD-20240729-001</div>
-              <div class="order-date">July 29, 2024, 10:30 AM</div>
+              <div class="order-id">No orders yet</div>
+              <div class="order-date">Place an order to leave a rating.</div>
             </div>
-            <span class="status-badge status-out">Out for Delivery</span>
-          </div>
-          
-          <div class="order-timeline">
-            <h3>Order Progress</h3>
-            <div class="timeline-steps">
-              <div class="timeline-step step-completed">
-                <div class="step-icon">✓</div>
-                <div class="step-label">Pending</div>
-              </div>
-              <div class="timeline-step step-completed">
-                <div class="step-icon">✓</div>
-                <div class="step-label">Preparing</div>
-              </div>
-              <div class="timeline-step step-active">
-                <div class="step-icon">3</div>
-                <div class="step-label">Out for Delivery</div>
-              </div>
-              <div class="timeline-step">
-                <div class="step-icon">4</div>
-                <div class="step-label">Delivered</div>
-              </div>
-            </div>
-            
-            <div class="delivery-info">
-              <div class="estimated-delivery">
-                <i class="fas fa-truck"></i> Estimated delivery: Today, 2:00 PM - 4:00 PM
-              </div>
-              <p>Your driver is on the way! You can track the delivery in real-time.</p>
-            </div>
-          </div>
-          
-          <div class="order-items">
-            <div class="order-item">
-              <span>Sunny Day Bouquet</span>
-              <span class="item-quantity">×1</span>
-            </div>
-            <div class="order-item">
-              <span>Rose Garden Delight</span>
-              <span class="item-quantity">×2</span>
-            </div>
-          </div>
-          <div class="order-total">€117.48</div>
-          
-          <div class="customer-actions">
-              
-            
-            <button class="cancel-btn">
-              <i class="fas fa-times"></i> Cancel
-            </button>
-            <button class="btn-help">
-              <i class="fas fa-question-circle"></i> Help
-            </button>
           </div>
         </div>
-        
-        <!-- Order Card 2 -->
-        <div class="order-card" data-status="Delivered">
+
+        <div class="order-card" th:each="order : ${orders}" th:attr="data-status=${order.status}">
           <div class="order-header">
             <div>
-              <div class="order-id">ORD-20240728-004</div>
-              <div class="order-date">July 28, 2024, 9:15 AM</div>
+              <div class="order-id" th:text="'Order #' + ${order.orderId}">Order #1</div>
+              <div class="order-date" th:text="${order.orderDate != null ? #temporals.format(order.orderDate,'MMM d, yyyy HH:mm') : ''}">Date</div>
             </div>
-            <span class="status-badge status-delivered">Delivered</span>
+            <span class="status-badge" th:classappend="' status-' + ${#strings.toLowerCase(order.status)}" th:text="${order.status}">Status</span>
           </div>
-          
+
           <div class="order-items">
-            <div class="order-item">
-              <span>Wildflower Wonder</span>
-              <span class="item-quantity">×1</span>
+            <div class="order-item" th:if="${#lists.isEmpty(order.orderLines)}">No items</div>
+            <div class="order-item" th:each="line : ${order.orderLines}">
+              <span th:text="${line.bouquet != null ? line.bouquet.name : 'Item'}">Item</span>
+              <span class="item-quantity" th:text="'×' + ${line.quantity}">×1</span>
             </div>
           </div>
-          <div class="order-total">€29.99</div>
-          
-      
-          <div class="customer-actions">
-            <button class="btn-reorder">
-              <i class="fas fa-redo"></i> Reorder
-            </button>
-            <button class="btn-help">
-              <i class="fas fa-question-circle"></i> Help
-            </button>
-          </div>
-              <div class="rating-box" id="rating-box-ORD-20240729-001">
-      <h4>How was your experience?</h4>
-      <div class="stars" data-order-id="ORD-20240729-001">
-        <i class="fa-solid fa-star" data-value="1"></i>
-        <i class="fa-solid fa-star" data-value="2"></i>
-        <i class="fa-solid fa-star" data-value="3"></i>
-        <i class="fa-solid fa-star" data-value="4"></i>
-        <i class="fa-solid fa-star" data-value="5"></i>
-      </div>
-      <div class="rating-value-display" id="rating-display-ORD-20240729-001" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--brand-primary); display: none;">
-        Rating: <span class="current-rating">0</span>/5
-      </div>
+          <div class="order-total" th:text="${order.totalAmount != null ? '€' + #numbers.formatDecimal(order.totalAmount,1,2) : '€0.00'}">€0.00</div>
 
- <div class="customer-actions">
-
- <button class="rating-submit-btn" type="submit" data-order-id="ORD-20240729-001">
-               Submit Rating
-            </button>
+          <div class="rating-box" th:with="oid=${order.orderId}">
+            <h4>How was your experience?</h4>
+            <div class="stars" th:attr="data-order-id=${oid}">
+              <i class="fa-solid fa-star" data-value="1"></i>
+              <i class="fa-solid fa-star" data-value="2"></i>
+              <i class="fa-solid fa-star" data-value="3"></i>
+              <i class="fa-solid fa-star" data-value="4"></i>
+              <i class="fa-solid fa-star" data-value="5"></i>
             </div>
-            <div class="rating-thank-you" id="thank-you-ORD-20240729-001" style="display: none; margin-top: 1rem; padding: 1rem; background: #e8f5e9; border-radius: 8px; text-align: center; color: #2e7d32;">
+            <div class="rating-value-display" th:attr="id=${'rating-display-' + oid}" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--brand-primary); display: none;">
+              Rating: <span class="current-rating">0</span>/5
+            </div>
+
+            <div class="customer-actions">
+              <button class="rating-submit-btn" type="button" th:attr="data-order-id=${oid}">
+                Submit Rating
+              </button>
+            </div>
+            <div class="rating-thank-you" th:attr="id=${'thank-you-' + oid}" style="display: none; margin-top: 1rem; padding: 1rem; background: #e8f5e9; border-radius: 8px; text-align: center; color: #2e7d32;">
               <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
               <span>Thank you for your rating! We appreciate your feedback.</span>
             </div>
-
-    </div>
-        </div>
-        
-        <!-- Order Card 3 -->
-        <div class="order-card" data-status="Pending">
-          <div class="order-header">
-            <div>
-              <div class="order-id">ORD-20240727-006</div>
-              <div class="order-date">July 27, 2024, 6:00 PM</div>
-            </div>
-            <span class="status-badge status-pending">Pending</span>
-          </div>
-          
-          <div class="order-items">
-            <div class="order-item">
-              <span>Tulip Treasure</span>
-              <span class="item-quantity">×1</span>
-            </div>
-          </div>
-          <div class="order-total">€42.00</div>
-          
-          <div class="customer-actions">
-            <button class="btn-edit edit-btn" data-order-id="ORD-20240727-006">
-              <i class="fas fa-pen"></i> Edit
-            </button>
-            <button class="btn-help">
-              <i class="fas fa-question-circle"></i> Help
-            </button>
           </div>
         </div>
       </div>
@@ -577,12 +485,17 @@
               <textarea name="address" rows="3"></textarea>
             </div>
             <div class="form-group">
+              <label>Bouquet ID</label>
+              <input type="number" name="bouquetId" min="1" placeholder="Enter bouquet ID" required />
+              <small style="display:block;color:#6b7280;margin-top:4px;">Use an existing bouquet ID from the catalog.</small>
+            </div>
+            <div class="form-group">
               <label>Item Name</label>
               <input type="text" name="item" placeholder="e.g., Sunny Day Bouquet" />
             </div>
             <div class="form-group">
               <label>Price (€)</label>
-              <input type="number" name="price" step="0.01" min="0" placeholder="e.g., 49.99" required />
+              <input type="number" name="price" step="0.01" min="0" placeholder="e.g., 49.99" />
             </div>
             <div class="form-group">
               <label>Quantity</label>
@@ -631,8 +544,8 @@
     <button class="chatbot-toggle">💬</button>
   </div>
 
-  <!-- Footer -->
-  <div id="footer"></div>
+  <!-- Footer Fragment - Temporarily disabled -->
+  <!-- <div th:replace="~{fragments/footer :: footer}"></div> -->
 
   <script>
     // Create Order Modal Functionality
@@ -651,28 +564,46 @@
       createForm.reset();
     }
     
-    function submitNewOrder(e) {
+    async function submitNewOrder(e) {
       e.preventDefault();
-      
       const formData = new FormData(createForm);
-      const newOrder = {
-        id: `ORD-${new Date().getTime()}`,
-        customer: formData.get('customer'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        address: formData.get('address'),
-        items: [{
-          name: formData.get('item'),
-          price: parseFloat(formData.get('price')),
-          quantity: parseInt(formData.get('quantity'))
-        }],
-        notes: formData.get('notes'),
-        status: 'Pending',
-        date: new Date().toLocaleDateString()
+
+      const bouquetId = Number(formData.get('bouquetId'));
+      const quantity = Number(formData.get('quantity')) || 1;
+      const address = formData.get('address') || '';
+      const customerId = document.getElementById('orders-grid')?.dataset.customerId || '1';
+
+      if (!bouquetId) {
+        alert('Please provide a valid bouquet ID.');
+        return;
+      }
+
+      const payload = {
+        bouquetIds: [bouquetId],
+        quantities: [quantity],
+        address
       };
-      
-      alert(`Order ${newOrder.id} created successfully for ${newOrder.customer}!`);
-      closeCreate();
+
+      try {
+        const res = await fetch(`/api/v1/orders/${customerId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || `Request failed with status ${res.status}`);
+        }
+
+        await res.json();
+        alert('Order created successfully!');
+        closeCreate();
+        window.location.reload();
+      } catch (err) {
+        console.error('Failed to create order', err);
+        alert(`Failed to create order: ${err.message}`);
+      }
     }
     
     // Event listeners for create order modal
@@ -906,7 +837,7 @@
           localStorage.removeItem('login-password');
           localStorage.removeItem('cartItems');
           localStorage.removeItem('totalCartQuantity');
-          window.location.href = '/ClickPrototype/customer/home-page/home-page.html';
+          window.location.href = '/';
         });
       }
     }
@@ -1003,30 +934,14 @@
           chatbot.classList.add('open');
         });
       });
- 
-
-    // Footer loading
-    console.log("Attempting to fetch footer from /ClickPrototype/footer/footer.html");
-    fetch("/ClickPrototype/footer/footer.html")
-      .then(response => {
-        console.log("Footer fetch response:", response);
-        return response.text();
-      })
-      .then(data => {
-        console.log("Footer loaded successfully");
-        document.getElementById('footer').innerHTML = data;
-      })
-      .catch(err => {
-        console.error("Footer konnte nicht geladen werden:", err);
-        console.log("Footer fetch failed - likely due to CORS or path issues when opening HTML directly in browser");
-      });
   </script>
 
-<script>  
-// Enhanced Rating System with Data Persistence
+<script th:inline="javascript">  
+// Enhanced Rating System with GraphQL submission
 class RatingSystem {
   constructor() {
     this.ratings = this.loadRatings();
+    this.customerId = this.resolveCustomerId();
     this.initializeRatings();
   }
   
@@ -1039,6 +954,12 @@ class RatingSystem {
     localStorage.setItem('orderRatings', JSON.stringify(this.ratings));
   }
   
+  resolveCustomerId() {
+    const grid = document.getElementById('orders-grid');
+    const id = grid?.dataset.customerId;
+    return id ? Number(id) : null;
+  }
+  
   initializeRatings() {
     const starContainers = document.querySelectorAll('.stars');
     
@@ -1046,20 +967,17 @@ class RatingSystem {
       const orderId = container.dataset.orderId;
       const stars = container.querySelectorAll('i');
       
-      // Restore previously saved rating if exists
       if (this.ratings[orderId]) {
         this.displayRating(orderId, this.ratings[orderId]);
       }
       
-      // Add click listeners to stars
       stars.forEach((star, index) => {
         star.addEventListener('click', (e) => {
           e.preventDefault();
           this.setRating(orderId, index + 1);
         });
         
-        // Hover effect
-        star.addEventListener('mouseover', (e) => {
+        star.addEventListener('mouseover', () => {
           stars.forEach((s, i) => {
             if (i < index + 1) {
               s.classList.add('active');
@@ -1070,7 +988,6 @@ class RatingSystem {
         });
       });
       
-      // Reset on mouse leave
       container.addEventListener('mouseleave', () => {
         if (this.ratings[orderId]) {
           this.displayRating(orderId, this.ratings[orderId]);
@@ -1080,7 +997,6 @@ class RatingSystem {
       });
     });
     
-    // Add submit button listeners
     const submitButtons = document.querySelectorAll('.rating-submit-btn');
     submitButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -1097,6 +1013,7 @@ class RatingSystem {
   
   displayRating(orderId, value) {
     const container = document.querySelector(`.stars[data-order-id="${orderId}"]`);
+    if (!container) return;
     const stars = container.querySelectorAll('i');
     const displayElement = document.getElementById(`rating-display-${orderId}`);
     
@@ -1114,134 +1031,78 @@ class RatingSystem {
     }
   }
   
-  submitRating(button) {
-    const orderId = button.dataset.orderId;
+  async submitRating(button) {
+    const orderId = Number(button.dataset.orderId);
     const rating = this.ratings[orderId];
     
     if (!rating) {
       alert('Please select a rating before submitting.');
       return;
     }
+
+    if (!this.customerId) {
+      alert('Missing customer information. Please reload the page.');
+      return;
+    }
     
-    // Disable button during submission
     button.disabled = true;
     const originalText = button.textContent;
     button.textContent = 'Submitting...';
 
-    // Build payload for backend
-    const payload = {
-      orderId: this.extractOrderId(orderId), // Convert string to Long
-      customerId: 1, // TODO: Replace with actual customer ID from session localStorage
-      ratingScore: rating, // Changed from 'value' to 'ratingScore'
-      review: null
-    };
+    const mutation = `mutation SubmitRating($input: RatingInput!) {
+      submitRating(input: $input) {
+        id
+        ratingScore
+        review
+      }
+    }`;
 
-    // Send rating to backend
-    console.log("Attempting to submit rating to http://localhost:8080/api/ratings/submit", payload);
-    fetch('http://localhost:8080/api/ratings/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(res => {
-      console.log("Rating submit response:", res);
-      if (!res.ok) throw res;
-      return res.json();
-    })
-    .then(data => {
-      console.log("Rating submitted successfully", data);
-      // Persist locally as well
+    try {
+      const response = await fetch('/graphql', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: mutation,
+          variables: {
+            input: {
+              orderId,
+              customerId: this.customerId,
+              ratingScore: rating,
+              review: null
+            }
+          }
+        })
+      });
+
+      const result = await response.json();
+      if (result.errors) {
+        throw new Error(result.errors.map(e => e.message).join(', '));
+      }
+
       this.saveRatings();
 
-      // Show thank you message
       const thankYouElement = document.getElementById(`thank-you-${orderId}`);
       if (thankYouElement) {
         thankYouElement.style.display = 'block';
       }
 
-      // Hide button
       button.style.display = 'none';
-
-      console.log(`Rating submitted for order ${orderId}: ${rating}/5 stars`, data);
-    })
-    .catch(err => {
-      console.error('Failed to submit rating', err);
-      console.log("Rating submit failed - likely CORS issue if HTML opened directly in browser");
       button.disabled = false;
       button.textContent = originalText;
-      alert('Failed to submit rating. It has been saved locally and will be retried later.');
-      // still save locally
+      console.log(`Rating submitted for order ${orderId}: ${rating}/5 stars`, result.data);
+    } catch (err) {
+      console.error('Failed to submit rating', err);
+      button.disabled = false;
+      button.textContent = originalText;
+      alert(`Failed to submit rating: ${err.message || 'Please try again.'}`);
       this.saveRatings();
-    });
+    }
   }
 }
 
-// Initialize rating system when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   new RatingSystem();
 });
-
-</script>
-
-<script>
-  //Fetch header
-  console.log("Attempting to fetch header from /ClickPrototype/Header/header.html");
-  fetch("/ClickPrototype/Header/header.html")
-    .then(response => {
-      console.log("Header fetch response:", response);
-      return response.text();
-    })
-    .then(data => {
-        console.log("Header loaded successfully");
-        const mount = document.getElementById('header');
-        mount.innerHTML = data;
-        initHeader(mount);
-        document.dispatchEvent(new Event('header:ready'));
-    })
-    .catch(err => {
-      console.error("Header konnte nicht geladen werden:", err);
-      console.log("Header fetch failed - likely due to CORS or path issues when opening HTML directly in browser");
-    });
-
-    function initHeader() {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-        const loginLink = document.querySelector('#login-link');
-        const userLinks = document.querySelectorAll('.user-links');
-        const designBouquetButton = document.querySelector('.design-bouquet')
-
-        if (isLoggedIn) {
-            loginLink?.classList.add('hidden');
-            userLinks.forEach(el => el.classList.remove('hidden'));
-            designBouquetButton?.classList.remove('hidden');
-        } else {
-            loginLink?.classList.remove('hidden');
-            userLinks.forEach(el => el.classList.add('hidden'));
-            designBouquetButton?.classList.add('hidden');
-        }
-
-        // Logout-Handler
-        const logout = document.querySelector('.logout-link');
-        if (logout) {
-            logout.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.setItem('isLoggedIn', "false");
-            localStorage.removeItem('login-email');
-            localStorage.removeItem('login-password');
-            localStorage.removeItem('cartItems');
-            localStorage.removeItem('totalCartQuantity');
-            window.location.href = '/ClickPrototype/customer/home-page/home-page.html';
-            });
-        }
-    }
-
-    //Fetch footer
-    fetch("/ClickPrototype/footer/footer.html")
-    .then(response => response.text())
-    .then(data => {
-        document.getElementById('footer').innerHTML = data;
-    })
-    .catch(err => console.error("Footer konnte nicht geladen werden:", err));
 </script>
 
 </body>
