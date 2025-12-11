@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+//Lab4
 @Controller
 @RequestMapping("/orders")
 public class OrderDetailsController {

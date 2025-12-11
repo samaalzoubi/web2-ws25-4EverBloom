@@ -34,6 +34,7 @@ import de.fhdo.project.blumeo.entity.flower.Flower;
 import java.math.BigDecimal;
 import java.util.List;
 
+//Lab3
 @Component
 public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 

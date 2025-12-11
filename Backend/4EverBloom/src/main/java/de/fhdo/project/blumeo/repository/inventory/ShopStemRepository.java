@@ -11,8 +11,7 @@ import java.util.Optional;
 //Lab3
 public interface ShopStemRepository extends JpaRepository<ShopStem, Long> {
     Optional<ShopStem> findByFlower(Flower flower);
-
-    Optional<ShopStem> findByStemIdAndShop(Long stemId, Long shopId);
-    List<ShopStem> findByShopAndQuantityGreaterThan(User shop, int compareWith);
+    List<ShopStem> findByShopOwnerAndQuantityGreaterThan(User shop, int compareWith);
+    Optional<ShopStem> findByStemIdAndShopOwner_Id(Long stemId, Long shopOwnerId);
 }
 

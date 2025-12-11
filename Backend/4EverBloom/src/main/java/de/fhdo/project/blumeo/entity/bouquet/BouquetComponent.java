@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+//Lab3
 @Entity
 @Table(
         name = "bouquet_components",

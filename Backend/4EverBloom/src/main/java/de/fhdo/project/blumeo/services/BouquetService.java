@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.services;
 
 import de.fhdo.project.blumeo.dto.bouquet.*;
+import de.fhdo.project.blumeo.dto.inventory.ShopStemDTO;
 import de.fhdo.project.blumeo.entity.bouquet.*;
 import de.fhdo.project.blumeo.entity.inventory.ShopStem;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
@@ -8,6 +9,7 @@ import de.fhdo.project.blumeo.entity.user.Role;
 import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.exception.BouquetDeletionNotAllowedException;
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
+import de.fhdo.project.blumeo.repository.inventory.ShopStemRepository;
 import de.fhdo.project.blumeo.repository.order.OrderLineRepository;
 import de.fhdo.project.blumeo.repository.user.UserRepository;
 import de.fhdo.project.blumeo.utils.mapper.bouquet.BouquetMapper;
@@ -26,14 +28,14 @@ public class BouquetService {
 
     private final BouquetRepository bouquetRepository;
     private final UserRepository userRepository;
-    private final InventoryService shopStemService;
+    private final ShopStemRepository shopStemRepository;
     private final OrderLineRepository orderLineRepository;
     private final BouquetMapper bouquetMapper;
 
     @Autowired
-    public BouquetService(BouquetRepository bouquetRepository, InventoryService shopStemService, UserRepository userRepository, BouquetMapper bouquetMapper, OrderLineRepository orderLineRepository) {
+    public BouquetService(BouquetRepository bouquetRepository, ShopStemRepository shopStemRepository, UserRepository userRepository, BouquetMapper bouquetMapper, OrderLineRepository orderLineRepository) {
         this.bouquetRepository = bouquetRepository;
-        this.shopStemService = shopStemService;
+        this.shopStemRepository = shopStemRepository;
         this.userRepository = userRepository;
         this.bouquetMapper = bouquetMapper;
         this.orderLineRepository = orderLineRepository;
@@ -75,7 +77,7 @@ public class BouquetService {
         BigDecimal total = BigDecimal.ZERO;
 
         for (CreateCustomBouquetRequest.BouquetItemRequest item : request.items()) {
-            ShopStem stem = shopStemService.getStemForShop(shopId, item.stemId());
+            ShopStem stem = shopStemRepository.findByStemIdAndShopOwner_Id(item.stemId(), shopId).orElseThrow(() -> new IllegalArgumentException("Active stem not found for shopId=" + shopId + ", stemId=" + item.stemId()));
 
             BouquetComponent comp = new BouquetComponent();
             comp.setBouquet(bouquet);

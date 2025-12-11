@@ -3,6 +3,7 @@ package de.fhdo.project.blumeo.dto.order;
 import java.math.BigDecimal;
 import lombok.Data;
 
+//Lab3
 @Data
 public class OrderLineDTO {
     private Long orderLineId;

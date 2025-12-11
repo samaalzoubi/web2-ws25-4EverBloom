@@ -1,10 +1,11 @@
 package de.fhdo.project.blumeo.utils.mapper.user;
 
-import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
-import de.fhdo.project.blumeo.dto.userService.UserDTO;
+import de.fhdo.project.blumeo.dto.user.RegisterRequest;
+import de.fhdo.project.blumeo.dto.user.UserDTO;
 import de.fhdo.project.blumeo.entity.user.User;
 import org.springframework.stereotype.Component;
 
+//Lab3
 @Component
 public class UserMapper {
 

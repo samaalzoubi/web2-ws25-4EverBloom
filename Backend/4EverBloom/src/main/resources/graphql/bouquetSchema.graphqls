@@ -1,3 +1,5 @@
+#Lab6
+
 extend type Query {
     bouquetsForShop(shopId: ID!): [PremadeBouquetSummary!]!
     #popularBouquetsForShop(shopId: ID!): [PremadeBouquetSummary!]!

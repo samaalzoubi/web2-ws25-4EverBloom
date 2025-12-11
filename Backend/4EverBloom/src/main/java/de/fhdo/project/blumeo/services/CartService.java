@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+//Lab3
 @Service
 public class CartService {
 
@@ -33,7 +34,6 @@ public class CartService {
         this.bouquetRepository = bouquetRepository;
     }
 
-    @Transactional
     public CartResponseDTO getActiveCartForUser(Long userId) {
         Optional<Cart> optionalCart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE);
 

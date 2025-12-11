@@ -4,6 +4,7 @@ import de.fhdo.project.blumeo.entity.bouquet.Wrapping;
 
 import java.util.List;
 
+//Lab3
 public record CreateCustomBouquetRequest(
         Long designedByUserId,
         String name,

@@ -3,14 +3,14 @@ package de.fhdo.project.blumeo.dto.inventory;
 import java.math.BigDecimal;
 
 //Lab3
-public record CreateShopStemRequest(
-        Long flowerId,
+public record ShopStemDTO(
+        Long stemId,
+        Long shopId,
         String flowerName,
         String flowerColor,
         String flowerSeason,
-        BigDecimal price,
         int quantity,
+        BigDecimal price,
         String imageUrl
 ) {
 }
-

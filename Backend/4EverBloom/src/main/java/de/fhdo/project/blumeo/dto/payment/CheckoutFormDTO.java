@@ -2,6 +2,7 @@ package de.fhdo.project.blumeo.dto.payment;
 
 import lombok.Data;
 
+//Lab3
 @Data
 public class CheckoutFormDTO {
 

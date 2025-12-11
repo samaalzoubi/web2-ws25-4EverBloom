@@ -10,6 +10,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+//Lab3
 @Entity
 @DiscriminatorValue("CUSTOM")
 @Getter
