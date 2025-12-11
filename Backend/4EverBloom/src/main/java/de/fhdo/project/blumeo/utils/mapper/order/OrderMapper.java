@@ -1,4 +1,4 @@
-package de.fhdo.project.blumeo.utils.mapper;
+package de.fhdo.project.blumeo.utils.mapper.order;
 
 import de.fhdo.project.blumeo.dto.order.OrderDTO;
 import de.fhdo.project.blumeo.dto.order.OrderLineDTO;

@@ -5,12 +5,13 @@ import de.fhdo.project.blumeo.entity.bouquet.Occasion;
 import java.math.BigDecimal;
 import java.util.Set;
 
-public record CreatePremadeBouquetRequest(
+//Lab3
+public record PremadeBouquetSummary(
+        Long id,
         String name,
-        String description,
         String imageUrl,
-        BigDecimal fixedPrice,
+        BigDecimal price,
+        Long shopId,
         Set<Occasion> occasions
 ) {
 }
-

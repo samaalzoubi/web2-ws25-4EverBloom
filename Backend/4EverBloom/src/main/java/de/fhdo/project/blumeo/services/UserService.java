@@ -1,6 +1,6 @@
 package de.fhdo.project.blumeo.services;
 
-import de.fhdo.project.blumeo.utils.mapper.UserMapper;
+import de.fhdo.project.blumeo.utils.mapper.user.UserMapper;
 import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
 import de.fhdo.project.blumeo.dto.userService.UserDTO;
 import de.fhdo.project.blumeo.entity.user.User;

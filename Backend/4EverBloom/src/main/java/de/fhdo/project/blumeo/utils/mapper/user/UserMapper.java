@@ -1,4 +1,4 @@
-package de.fhdo.project.blumeo.utils.mapper;
+package de.fhdo.project.blumeo.utils.mapper.user;
 
 import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
 import de.fhdo.project.blumeo.dto.userService.UserDTO;

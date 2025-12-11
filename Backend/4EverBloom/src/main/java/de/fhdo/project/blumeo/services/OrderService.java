@@ -9,7 +9,7 @@ import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
 import de.fhdo.project.blumeo.repository.order.OrderRepository;
 import de.fhdo.project.blumeo.repository.user.UserRepository;
-import de.fhdo.project.blumeo.utils.mapper.OrderMapper;
+import de.fhdo.project.blumeo.utils.mapper.order.OrderMapper;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

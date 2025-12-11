@@ -84,7 +84,7 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         customer.setUsername("alice");
         customer.setEmail("alice@blumeo.test");
         customer.setPassword("customerpassword");
-        customer.setRole(Role.USER);
+        customer.setRole(Role.CUSTOMER);
         customer = userRepository.save(customer);
 
         //Create three test flowers
@@ -139,11 +139,6 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         romanticRoses.getOccasions().add(Occasion.VALENTINES_DAY);
         romanticRoses.getOccasions().add(Occasion.ANNIVERSARY);
 
-        BouquetComponent comp1 = new BouquetComponent();
-        comp1.setFlower(redRose);
-        comp1.setRequiredQuantity(12);
-        romanticRoses.addComponent(comp1);
-
         bouquetRepository.save(romanticRoses);
 
         //Create test CustomBouquet designed by customer in a specific flower shop
@@ -153,16 +148,15 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         customSpring.setName("Spring Mix");
         customSpring.setDescription("Custom spring bouquet designed for my beautiful wife.");
         customSpring.setPrice(new BigDecimal("29.90"));
-        customSpring.setImageUrl("https://example.com/images/spring-mix.jpg");
         customSpring.setWrapping(Wrapping.PREMIUM);
 
         BouquetComponent comp2 = new BouquetComponent();
-        comp2.setFlower(whiteLily);
+        comp2.setShopStem(stemLily);
         comp2.setRequiredQuantity(5);
         customSpring.addComponent(comp2);
 
         BouquetComponent comp3 = new BouquetComponent();
-        comp3.setFlower(yellowTulip);
+        comp3.setShopStem(stemTulip);
         comp3.setRequiredQuantity(7);
         customSpring.addComponent(comp3);
 
@@ -196,9 +190,11 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         rating.setCustomerId(customer.getId());
         rating.setRatingScore(5);
         rating.setReview("Beautiful bouquet and fast delivery!");
+
         ratingRepository.save(rating);
 
-         Order order = new Order();
+        //Create test Order
+        Order order = new Order();
         order.setCustomer(customer);
         order.setDeliveryAddress("123 Demo Street, Berlin");
         order.setStatus(OrderStatus.CREATED);
@@ -221,8 +217,8 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         orderLineRepository.save(line2);
 
         double total =
-                romanticRoses.getPrice().doubleValue() * 1 +
-                customSpring.getPrice().doubleValue() * 2;
+                romanticRoses.getPrice().doubleValue() * line1.getQuantity() +
+                customSpring.getPrice().doubleValue() * line2.getQuantity();
 
         order.setTotalAmount(total);
         orderRepository.save(order);

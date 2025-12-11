@@ -3,26 +3,30 @@ package de.fhdo.project.blumeo.services;
 import de.fhdo.project.blumeo.dto.inventory.CreateShopStemRequest;
 import de.fhdo.project.blumeo.entity.flower.Flower;
 import de.fhdo.project.blumeo.entity.inventory.ShopStem;
+import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.flower.FlowerRepository;
 import de.fhdo.project.blumeo.repository.inventory.ShopStemRepository;
+import de.fhdo.project.blumeo.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
+//Lab3
 @Service
 public class InventoryService {
 
     private final ShopStemRepository shopStemRepository;
-
-    //private final FlowerShopRepository flowerShopRepository;
+    private final UserRepository flowerShopRepository;
     private final FlowerRepository flowerRepository;
 
     @Autowired
-    public InventoryService(ShopStemRepository shopStemRepository, FlowerRepository flowerRepository) {
+    public InventoryService(ShopStemRepository shopStemRepository, FlowerRepository flowerRepository, UserRepository flowerShopRepository) {
         this.shopStemRepository = shopStemRepository;
         this.flowerRepository = flowerRepository;
+        this.flowerShopRepository = flowerShopRepository;
     }
 
     @Transactional
@@ -68,33 +72,18 @@ public class InventoryService {
     /*@Transactional
     public ShopStem updateStem(...){}*/
 
-    @Transactional
-    public ShopStem updateQuantity(Long stemId, int delta) {
-        ShopStem stem = shopStemRepository.findById(stemId)
-                .orElseThrow(() -> new IllegalArgumentException("ShopStem not found: " + stemId));
-
-        int newQuantity = stem.getQuantity() + delta;
-        if (newQuantity < 0) {
-            throw new IllegalArgumentException("Not enough stock for stemId=" + stemId +
-                    " (current=" + stem.getQuantity() + ", delta=" + delta + ")");
-        }
-
-        stem.setQuantity(newQuantity);
-        return shopStemRepository.save(stem);
-    }
-
-    /*public List<ShopStem> getAvailableStemsForShop(Long shopId) {
-        FlowerShop shop = flowerShopRepository.findById(shopId)
+    public List<ShopStem> getAvailableStemsForShop(Long shopId) {
+        User shop = flowerShopRepository.findById(shopId)
                 .orElseThrow(() -> new IllegalArgumentException("Shop not found: " + shopId));
 
         return shopStemRepository.findByShopAndQuantityGreaterThan(shop, 0);
-    }*/
+    }
 
-    /*public ShopStem getStemForShop(Long shopId, Long stemId) {
+    public ShopStem getStemForShop(Long shopId, Long stemId) {
         return shopStemRepository.findByStemIdAndShop(stemId, shopId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Active stem not found for shopId=" + shopId + ", stemId=" + stemId));
-    }*/
+    }
 
     @Transactional
     public void removeStemFromAssortiment(Long stemId) {

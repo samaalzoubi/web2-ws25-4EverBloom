@@ -1,7 +1,8 @@
-package de.fhdo.project.blumeo.utils.mapper;
+package de.fhdo.project.blumeo.utils.mapper.cart;
 
 import de.fhdo.project.blumeo.dto.cart.CartItemDTO;
 import de.fhdo.project.blumeo.entity.bouquet.Bouquet;
+import de.fhdo.project.blumeo.entity.bouquet.PremadeBouquet;
 import de.fhdo.project.blumeo.entity.cart.CartItem;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +19,20 @@ public class CartItemMapper {
         CartItemDTO dto = new CartItemDTO();
         dto.setBouquetId(tempBouquet.getBouquetId());
         dto.setBouquetName(tempBouquet.getName());
-        dto.setImageUrl(tempBouquet.getImageUrl());
+
+        String imageUrl = null;
+
+        if (tempBouquet instanceof PremadeBouquet premade) {
+            imageUrl = premade.getImageUrl();
+        }
+
+        dto.setImageUrl(imageUrl);
 
         int quantity = cartItemEntity.getQuantity();
         BigDecimal unitPrice = cartItemEntity.getUnitPrice();
+        BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
         dto.setQuantity(quantity);
         dto.setUnitPrice(unitPrice);
-
-        BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
         dto.setLineTotal(lineTotal);
 
         return dto;
