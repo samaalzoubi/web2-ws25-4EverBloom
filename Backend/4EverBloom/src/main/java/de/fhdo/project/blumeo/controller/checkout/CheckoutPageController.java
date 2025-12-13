@@ -7,7 +7,6 @@ import de.fhdo.project.blumeo.dto.payment.CheckoutFormDTO;
 import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.services.CartService;
 import de.fhdo.project.blumeo.services.OrderService;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
