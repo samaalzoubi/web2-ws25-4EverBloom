@@ -5,6 +5,7 @@ import de.fhdo.project.blumeo.entity.cart.Cart;
 import de.fhdo.project.blumeo.entity.cart.CartItem;
 import de.fhdo.project.blumeo.entity.cart.CartStatus;
 import de.fhdo.project.blumeo.entity.inventory.ShopStem;
+import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.rating.Rating;
 import de.fhdo.project.blumeo.entity.user.Role;
 import de.fhdo.project.blumeo.entity.user.User;
@@ -197,7 +198,7 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         //Create test Order
         Order order = new Order();
         order.setCustomer(customer);
-        order.setDeliveryAddress("123 Demo Street, Berlin");
+        order.setDeliveryAddress(new Address("Eisenacher Straße 4", "Dortmund", "Nordrhein-Westfalen", "44143"));
         order.setStatus(OrderStatus.CREATED);
 
         order = orderRepository.save(order);

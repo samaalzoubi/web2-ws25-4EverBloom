@@ -29,7 +29,8 @@ public class OrderDetailsController {
 
         model.addAttribute("order", order);
         model.addAttribute("orderLines", order.getOrderLines());
+        model.addAttribute("isLoggedIn", true);
 
-        return "order/order-details";  // -> templates/order/order-details.html
+        return "order/order-details";
     }
 }

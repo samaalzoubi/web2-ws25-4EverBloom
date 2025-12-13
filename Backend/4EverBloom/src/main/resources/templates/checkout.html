@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/style/checkout.css">
     <link rel="stylesheet" href="/style/header.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
@@ -30,6 +31,12 @@
 
             <div class="checkout">
                 <h1>CHECKOUT</h1>
+
+                <div class="alert error" th:if="${error}">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <span th:text="${error}">Something went wrong.</span>
+                </div>
+
                 <form class="checkout-form" th:object="${checkoutForm}"
                       th:action="@{'/api/v1/checkout/user/' + ${cart.userId}}"
                       method="post">

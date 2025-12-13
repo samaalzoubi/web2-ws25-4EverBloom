@@ -13,7 +13,6 @@ public class CheckoutFormDTO {
 
     // Delivery Information
     private String streetAddress;
-    private String country;
     private String city;
     private String state;
     private String zipCode;

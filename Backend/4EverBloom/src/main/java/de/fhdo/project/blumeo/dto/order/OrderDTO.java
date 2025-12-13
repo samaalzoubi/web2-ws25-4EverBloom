@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.dto.order;
 
+import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
 import lombok.Data;
 
@@ -15,7 +16,8 @@ public class OrderDTO {
     private String orderDate;
     private String deliveryDate;
 
-    private String deliveryAddress;
+    private Address address;
+
     private Double totalAmount;
 
     private List<OrderLineDTO> orderLines;

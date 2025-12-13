@@ -132,8 +132,7 @@ public class CartService {
         Cart cart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE)
                 .orElseThrow(() -> new IllegalStateException("Cart not found"));
 
-        cart.getItems().clear();
-        cart.setShopOwner(null);
+        cart.setCartStatus(CartStatus.ORDERED);
         cartRepository.save(cart);
     }
 

@@ -23,7 +23,7 @@ private static final DateTimeFormatter FORMATTER =
         dto.setOrderId(order.getOrderId());
         dto.setCustomerId(order.getCustomer().getId());
         dto.setStatus(order.getStatus());
-        dto.setDeliveryAddress(order.getDeliveryAddress());
+        dto.setAddress(order.getDeliveryAddress());
         dto.setTotalAmount(order.getTotalAmount());
 
 
