@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <title>Order Details</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/style/Style.css">
     <link rel="stylesheet" href="/style/order.css">
+    <link rel="stylesheet" href="/style/header.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 </head>
 
 <body>
-
-<!-- HEADER -->
-<!-- <div th:replace="fragments/header :: header"></div> -->
+<!--<div th:replace="~{fragments/header :: header}"></div>-->
 
 <h1>Order Details</h1>
 
@@ -24,7 +25,7 @@
 
 
 
-    <p><b>Address:</b> <span th:text="${order.deliveryAddress}"></span></p>
+    <p><b>Address:</b> <span th:text="${order.address}"></span></p>
 </div>
 
 <h2>Items</h2>
@@ -60,9 +61,7 @@
    <span th:text="${order.totalAmountFormatted}"></span>
 </h3>
 
-
-<!-- FOOTER -->
-<!-- <div th:replace="fragments/footer :: footer"></div> -->
+<!--<div th:replace="~{fragments/footer :: footer}"></div>-->
 
 </body>
 </html>

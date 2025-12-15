@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
+//Lab3
 @Entity
 @Table(name = "order_lines")
 @Getter

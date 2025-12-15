@@ -1,4 +1,4 @@
-package de.fhdo.project.blumeo.utils.mapper;
+package de.fhdo.project.blumeo.utils.mapper.cart;
 
 import de.fhdo.project.blumeo.dto.cart.CartItemDTO;
 import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 
+//Lab3
 @Component
 public class CartMapper {
     private final CartItemMapper cartItemMapper;

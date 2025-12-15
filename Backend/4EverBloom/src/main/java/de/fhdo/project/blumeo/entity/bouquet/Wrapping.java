@@ -2,6 +2,7 @@ package de.fhdo.project.blumeo.entity.bouquet;
 
 import java.math.BigDecimal;
 
+//Lab3
 public enum Wrapping {
     SIMPLE(BigDecimal.ZERO),
     PREMIUM(new BigDecimal("3.50")),
