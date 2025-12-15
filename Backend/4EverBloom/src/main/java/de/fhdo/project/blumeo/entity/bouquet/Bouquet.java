@@ -6,8 +6,10 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 //Lab3
 @Entity
@@ -36,5 +38,9 @@ public abstract class Bouquet {
     @DecimalMin("0.00")
     @Column(nullable = false)
     private BigDecimal price;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 }
 

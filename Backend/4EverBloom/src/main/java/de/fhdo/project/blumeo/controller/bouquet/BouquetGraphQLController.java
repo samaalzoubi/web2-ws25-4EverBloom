@@ -1,10 +1,6 @@
 package de.fhdo.project.blumeo.controller.bouquet;
 
-import de.fhdo.project.blumeo.dto.bouquet.BouquetDetailsDTO;
-import de.fhdo.project.blumeo.dto.bouquet.CreateCustomBouquetRequest;
-import de.fhdo.project.blumeo.dto.bouquet.CreatePremadeBouquetRequest;
-import de.fhdo.project.blumeo.dto.bouquet.UpdateBouquetRequest;
-import de.fhdo.project.blumeo.dto.bouquet.PremadeBouquetSummary;
+import de.fhdo.project.blumeo.dto.bouquet.*;
 import de.fhdo.project.blumeo.services.BouquetService;
 import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -48,6 +44,11 @@ public class BouquetGraphQLController {
     @QueryMapping
     public List<PremadeBouquetSummary> bouquetsForShop(@Argument Long shopId) {
         return bouquetService.getPremadeBouquetsForShop(shopId);
+    }
+
+    @QueryMapping
+    public List<ShopLatestPremadeBouquetsDTO> latestPremadeBouquetsPerShop() {
+        return bouquetService.getLatestPremadeBouquetsPerShop(3);
     }
 
     /*@QueryMapping

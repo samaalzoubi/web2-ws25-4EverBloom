@@ -7,6 +7,8 @@ import lombok.Data;
 //Lab3
 @Data
 public class CartItemDTO {
+    private Long itemId;
+
     private Long bouquetId;
 
     private String bouquetName;

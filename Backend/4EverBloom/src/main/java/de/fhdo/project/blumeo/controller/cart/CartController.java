@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
         value = "/api/v1/cart",
         produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }
 )
+@CrossOrigin
 public class CartController {
 
     private final CartService cartService;

@@ -1,7 +1,6 @@
 package de.fhdo.project.blumeo.services;
 
 import de.fhdo.project.blumeo.dto.bouquet.*;
-import de.fhdo.project.blumeo.dto.inventory.ShopStemDTO;
 import de.fhdo.project.blumeo.entity.bouquet.*;
 import de.fhdo.project.blumeo.entity.inventory.ShopStem;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
@@ -15,6 +14,8 @@ import de.fhdo.project.blumeo.repository.user.UserRepository;
 import de.fhdo.project.blumeo.utils.mapper.bouquet.BouquetMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -155,6 +156,33 @@ public class BouquetService {
                         new HashSet<>(bouquet.getOccasions())
                 )).toList();
     }
+
+    public List<ShopLatestPremadeBouquetsDTO> getLatestPremadeBouquetsPerShop(int limit) {
+
+        List<User> shops = userRepository.findAllByRole(Role.OWNER);
+
+        return shops.stream().map(shop -> {
+                    List<PremadeBouquet> bouquets =
+                            bouquetRepository.findLatestPremadeByShop(
+                                    shop.getId(),
+                                    PageRequest.of(0, limit, Sort.by("createdAt").descending())
+                            );
+
+
+                    List<BouquetDetailsDTO> bouquetDTOs =
+                            bouquets.stream()
+                                    .map(bouquetMapper::mapToDetailsDto)
+                                    .toList();
+
+                    return new ShopLatestPremadeBouquetsDTO(
+                            shop.getId(),
+                            //shop.getName(),
+                            bouquetDTOs
+                    );
+                })
+                .toList();
+    }
+
 
     /*public List<PremadeBouquetSummary> getPopularBouquetsForShop(Long shopId) {
         List<Bouquet> bouquets = bouquetRepository.findTopByShopOrderByPopularityDesc(shopId);

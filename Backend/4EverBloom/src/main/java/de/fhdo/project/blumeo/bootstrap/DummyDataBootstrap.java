@@ -136,12 +136,51 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         romanticRoses.setShopOwner(owner);
         romanticRoses.setName("Romantic Roses");
         romanticRoses.setDescription("A romantic bouquet of red roses.");
-        romanticRoses.setPrice(new BigDecimal("39.90"));
-        romanticRoses.setImageUrl("https://example.com/images/romantic-roses.jpg");
+        romanticRoses.setPrice(new BigDecimal("129.00"));
+        romanticRoses.setImageUrl("https://asset.bloomnation.com/c_fill,d_vendor:global:catalog:product:image.png,f_auto,fl_preserve_transparency,h_2000,q_auto,w_2000/v1750124712/vendor/3752/catalog/product/2/0/20230211060622_file_63e7d91e91094_63e7d927e784b.jpg");
         romanticRoses.getOccasions().add(Occasion.VALENTINES_DAY);
         romanticRoses.getOccasions().add(Occasion.ANNIVERSARY);
 
         bouquetRepository.save(romanticRoses);
+
+        PremadeBouquet candyBouquet = new PremadeBouquet();
+        candyBouquet.setShopOwner(owner);
+        candyBouquet.setName("Cotton Candy");
+        candyBouquet.setDescription("A bouquet to fall in love.");
+        candyBouquet.setPrice(new BigDecimal("89.00"));
+        candyBouquet.setImageUrl("https://bloomandboxflowers.com/cdn/shop/products/image_320d6dde-5104-4824-9975-2fc41e5d5e07.heic?v=1718742546&width=2000");
+        candyBouquet.getOccasions().add(Occasion.JUST_BECAUSE);
+        candyBouquet.getOccasions().add(Occasion.ANNIVERSARY);
+        candyBouquet.getOccasions().add(Occasion.BIRTHDAY);
+        candyBouquet.getOccasions().add(Occasion.SYMPATHY);
+
+        bouquetRepository.save(candyBouquet);
+
+        PremadeBouquet lilacBouquet = new PremadeBouquet();
+        lilacBouquet.setShopOwner(owner);
+        lilacBouquet.setName("Mrs. Lilac");
+        lilacBouquet.setPrice(new BigDecimal("169.00"));
+        lilacBouquet.setImageUrl("https://bloomandboxflowers.com/cdn/shop/products/mrs-lilac-760754.jpg?v=1747859063&width=2000");
+        lilacBouquet.getOccasions().add(Occasion.JUST_BECAUSE);
+        lilacBouquet.getOccasions().add(Occasion.ANNIVERSARY);
+        lilacBouquet.getOccasions().add(Occasion.BIRTHDAY);
+        lilacBouquet.getOccasions().add(Occasion.SYMPATHY);
+        lilacBouquet.getOccasions().add(Occasion.GRADUATION);
+
+        bouquetRepository.save(lilacBouquet);
+
+        PremadeBouquet pastelSkyBouquet = new PremadeBouquet();
+        pastelSkyBouquet.setShopOwner(owner);
+        pastelSkyBouquet.setName("Pastel Sky");
+        pastelSkyBouquet.setPrice(new BigDecimal("118.00"));
+        pastelSkyBouquet.setImageUrl("https://scissorspaperflower.com/cdn/shop/files/image_a4d9c312-0704-4c4b-8063-bc80f670e24c_740x.jpg?v=1689141975");
+        pastelSkyBouquet.getOccasions().add(Occasion.JUST_BECAUSE);
+        pastelSkyBouquet.getOccasions().add(Occasion.BIRTHDAY);
+        pastelSkyBouquet.getOccasions().add(Occasion.SYMPATHY);
+        pastelSkyBouquet.getOccasions().add(Occasion.CONGRATULATIONS);
+        pastelSkyBouquet.getOccasions().add(Occasion.MOTHERS_DAY);
+
+        bouquetRepository.save(pastelSkyBouquet);
 
         //Create test CustomBouquet designed by customer in a specific flower shop
         CustomBouquet customSpring = new CustomBouquet();

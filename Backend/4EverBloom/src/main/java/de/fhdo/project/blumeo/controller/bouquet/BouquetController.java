@@ -18,6 +18,7 @@ import java.util.List;
         value = "/api/v1/bouquet",
         produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }
 )
+@CrossOrigin
 public class BouquetController {
 
     private final BouquetService bouquetService;
@@ -66,6 +67,14 @@ public class BouquetController {
         List<PremadeBouquetSummary> list = bouquetService.getPremadeBouquetsForShop(shopId);
         return ResponseEntity.ok(list);
     }
+
+    @GetMapping("/premade/latest")
+    public ResponseEntity<List<ShopLatestPremadeBouquetsDTO>> getLatestPremadeBouquetsPerShop() {
+        List<ShopLatestPremadeBouquetsDTO> result = bouquetService.getLatestPremadeBouquetsPerShop(3);
+
+        return ResponseEntity.ok(result);
+    }
+
 
     /*@GetMapping("/shops/{shopId}/popular")
     public ResponseEntity<List<PremadeBouquetSummary>> getPopularBouquetsForShop(@PathVariable Long shopId) {

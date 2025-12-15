@@ -2,6 +2,7 @@
 
 extend type Query {
     bouquetsForShop(shopId: ID!): [PremadeBouquetSummary!]!
+    latestPremadeBouquetsPerShop: [ShopLatestPremadeBouquetsDTO!]!
     #popularBouquetsForShop(shopId: ID!): [PremadeBouquetSummary!]!
 }
 
@@ -65,6 +66,12 @@ type PremadeBouquetSummary {
     price: Float!
     shopId: ID!
     occasions: [Occasion!]
+}
+
+type ShopLatestPremadeBouquetsDTO {
+    shopId: ID!
+    #shopName: String!
+    bouquets: [BouquetDetailsDTO!]!
 }
 
 enum Occasion {
