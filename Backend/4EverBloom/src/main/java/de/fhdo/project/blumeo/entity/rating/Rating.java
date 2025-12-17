@@ -3,6 +3,7 @@ package de.fhdo.project.blumeo.entity.rating;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+//Lab3
 @Entity
 @Table(name = "ratings")
 public class Rating {

@@ -1,13 +1,14 @@
 package de.fhdo.project.blumeo.controller.user;
 
-import de.fhdo.project.blumeo.dto.userService.AuthRequest;
-import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
-import de.fhdo.project.blumeo.dto.userService.UserDTO;
+import de.fhdo.project.blumeo.dto.user.AuthRequest;
+import de.fhdo.project.blumeo.dto.user.RegisterRequest;
+import de.fhdo.project.blumeo.dto.user.UserDTO;
 import de.fhdo.project.blumeo.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+//Lab4
 @Controller
 @RequestMapping("/users")
 public class UserViewController {

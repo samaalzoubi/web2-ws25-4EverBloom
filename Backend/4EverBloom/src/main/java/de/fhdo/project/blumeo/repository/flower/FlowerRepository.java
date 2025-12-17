@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+//Lab3
 public interface FlowerRepository extends JpaRepository<Flower, Long> {
     Optional<Flower> findByNameIgnoreCaseAndColorIgnoreCaseAndSeasonIgnoreCase(String name, String color, String season);
 }

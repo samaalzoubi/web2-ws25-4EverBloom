@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+//Lab3
 @Entity
 @Table(
         name = "shop_stems",

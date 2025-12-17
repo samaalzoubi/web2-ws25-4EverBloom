@@ -1,7 +1,8 @@
-package de.fhdo.project.blumeo.controller.login;
+package de.fhdo.project.blumeo.controller.user;
 
-import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
-import de.fhdo.project.blumeo.dto.userService.UserDTO;
+
+import de.fhdo.project.blumeo.dto.user.RegisterRequest;
+import de.fhdo.project.blumeo.dto.user.UserDTO;
 import de.fhdo.project.blumeo.services.UserService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;

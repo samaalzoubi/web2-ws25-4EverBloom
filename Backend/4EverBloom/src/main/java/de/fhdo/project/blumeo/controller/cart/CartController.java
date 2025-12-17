@@ -8,13 +8,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//TODO + Javadoc + other controllers
+//TODO: Javadoc
 //Lab5
 @RestController
 @RequestMapping(
         value = "/api/v1/cart",
         produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }
 )
+@CrossOrigin
 public class CartController {
 
     private final CartService cartService;

@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.entity.user;
 
+import de.fhdo.project.blumeo.entity.order.Address;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +14,11 @@ import java.util.Date;
 public class User {
 
     private Double balance = 0.0;
+
+    @Embedded
+    private Address address;
+
+    private String description;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +42,6 @@ public class User {
 
     @NotBlank(message = "Shop name is required")
     private String shopName;
-
-    @NotBlank(message = "Address is required")
-    private String address;
-
-    private String description;
 
     @NotBlank(message = "Website link is required")
     private String link;

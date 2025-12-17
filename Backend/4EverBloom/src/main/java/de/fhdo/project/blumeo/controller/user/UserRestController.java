@@ -1,7 +1,7 @@
 package de.fhdo.project.blumeo.controller.user;
 
-import de.fhdo.project.blumeo.dto.userService.UserDTO;
-import de.fhdo.project.blumeo.dto.userService.RegisterRequest;
+import de.fhdo.project.blumeo.dto.user.UserDTO;
+import de.fhdo.project.blumeo.dto.user.RegisterRequest;
 import de.fhdo.project.blumeo.services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//Lab5
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserRestController {

@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.entity.bouquet;
 
+//Lab3
 public enum Occasion {
     BIRTHDAY,
     ANNIVERSARY,

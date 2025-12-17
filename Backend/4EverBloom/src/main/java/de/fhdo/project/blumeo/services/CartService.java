@@ -9,7 +9,7 @@ import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
 import de.fhdo.project.blumeo.repository.cart.CartItemRepository;
 import de.fhdo.project.blumeo.repository.cart.CartRepository;
-import de.fhdo.project.blumeo.utils.mapper.CartMapper;
+import de.fhdo.project.blumeo.utils.mapper.cart.CartMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Optional;
 
+//Lab3
 @Service
 public class CartService {
 
@@ -33,7 +34,6 @@ public class CartService {
         this.bouquetRepository = bouquetRepository;
     }
 
-    @Transactional
     public CartResponseDTO getActiveCartForUser(Long userId) {
         Optional<Cart> optionalCart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE);
 
@@ -132,8 +132,7 @@ public class CartService {
         Cart cart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE)
                 .orElseThrow(() -> new IllegalStateException("Cart not found"));
 
-        cart.getItems().clear();
-        cart.setShopOwner(null);
+        cart.setCartStatus(CartStatus.ORDERED);
         cartRepository.save(cart);
     }
 

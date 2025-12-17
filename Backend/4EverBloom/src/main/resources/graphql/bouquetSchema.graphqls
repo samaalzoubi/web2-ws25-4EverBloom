@@ -1,0 +1,99 @@
+#Lab6
+
+extend type Query {
+    bouquetsForShop(shopId: ID!): [PremadeBouquetSummary!]!
+    latestPremadeBouquetsPerShop: [ShopLatestPremadeBouquetsDTO!]!
+    #popularBouquetsForShop(shopId: ID!): [PremadeBouquetSummary!]!
+}
+
+extend type Mutation {
+    createPremadeBouquet(shopId: ID!, request: CreatePremadeBouquetRequest!): BouquetDetailsDTO!
+    createCustomBouquet(shopId: ID!, request: CreateCustomBouquetRequest!): BouquetDetailsDTO!
+    updatePremadeBouquetPrice(shopId: ID!, bouquetId: ID!, request: UpdateBouquetRequest!): BouquetDetailsDTO!
+    deleteBouquet(bouquetId: ID!): Boolean!
+}
+
+input CreatePremadeBouquetRequest {
+    name: String!
+    description: String
+    imageUrl: String!
+    fixedPrice: Float!
+    occasions: [Occasion!]
+}
+
+input CreateCustomBouquetRequest {
+    designedByUserId: ID!
+    name: String!
+    description: String
+    wrapping: Wrapping
+    items: [CustomBouquetItemRequest!]!
+}
+
+input CustomBouquetItemRequest {
+    stemId: ID!
+    quantity: Int!
+}
+
+input UpdateBouquetRequest {
+    newPrice: Float!
+}
+
+type BouquetDetailsDTO {
+    id: ID!
+    name: String!
+    description: String
+    imageUrl: String
+    price: Float!
+    shopId: ID!
+    wrapping: Wrapping
+    occasions: [Occasion!]
+    components: [BouquetComponentDTO!]!
+}
+
+type BouquetComponentDTO {
+    shopStemId: ID!
+    flowerId: ID!
+    flowerName: String!
+    quantity: Int!
+    stemPrice: Float!
+    stemImageUrl: String!
+}
+
+type PremadeBouquetSummary {
+    id: ID!
+    name: String!
+    imageUrl: String!
+    price: Float!
+    shopId: ID!
+    occasions: [Occasion!]
+}
+
+type ShopLatestPremadeBouquetsDTO {
+    shopId: ID!
+    #shopName: String!
+    bouquets: [BouquetDetailsDTO!]!
+}
+
+enum Occasion {
+    BIRTHDAY
+    ANNIVERSARY
+    VALENTINES_DAY
+    MOTHERS_DAY
+    WEDDING
+    NEW_BABY
+    GET_WELL_SOON
+    THANK_YOU
+    CONGRATULATIONS
+    SYMPATHY
+    CHRISTMAS
+    EASTER
+    GRADUATION
+    HOUSEWARMING
+    JUST_BECAUSE
+}
+
+enum Wrapping {
+    SIMPLE
+    PREMIUM
+    LUXURY
+}
