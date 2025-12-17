@@ -1,0 +1,43 @@
+
+enum Role {
+    USER
+    OWNER
+}
+
+type User {
+    id: ID!
+    username: String!
+    email: String!
+    role: Role!
+}
+
+extend type Query {
+    allUsers: [User!]!
+    userById(id: ID!): User
+}
+
+extend type Mutation {
+    registerUser(
+        username: String!,
+        email: String!,
+        password: String!,
+        role: String!
+    ): User!
+    login(email: String!, password: String!): User
+    updateUser(id: ID!, username: String, email: String, password: String, role: Role): User
+    deleteUser(id: ID!): Boolean!
+}
+
+input RegisterInput {
+    username: String!
+    email: String!
+    password: String!
+    role: Role!
+}
+
+input UpdateUserInput {
+    username: String
+    email: String
+    password: String
+    role: Role
+}
