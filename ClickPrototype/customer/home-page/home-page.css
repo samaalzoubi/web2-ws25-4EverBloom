@@ -442,6 +442,31 @@ main {
   color: var(--color-btn-hover);
 }
 
+.cart .clear-cart {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.cart .clear {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  margin: 8px 8px;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1.5px solid #c62828;
+  border-radius: 999px;
+  background-color: rgba(198, 40, 40, 0.06);
+  transition: all 0.2s ease;
+}
+
+.cart .clear:hover {
+  background-color: #c62828;
+  color: #ffffff;
+}
+
 @media(max-width: 900px){
   .content{ flex-direction:column; }
   .search-and-carousel {
