@@ -10,18 +10,18 @@ import de.fhdo.project.blumeo.dto.rating.RatingRequestDTO;
 import de.fhdo.project.blumeo.dto.rating.RatingResponseDTO;
 import de.fhdo.project.blumeo.entity.order.Order;
 import de.fhdo.project.blumeo.entity.rating.Rating;
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.order.OrderRepository;
 import de.fhdo.project.blumeo.repository.rating.RatingRepository;
-import de.fhdo.project.blumeo.repository.userService.UserRepository;
+import de.fhdo.project.blumeo.repository.user.UserRepository;
 
-// /**
-//  * Service layer for managing ratings.
-//  * Handles business logic for rating operations.
-//  * 
-//  * @author Blumeo Team
-//  * @version 1.0
-//  */
+/**
+ * Service layer for managing ratings.
+ * Handles business logic for rating operations.
+ * 
+ * @author Blumeo Team
+ * @version 1.0
+ */
 @Service
 @Transactional
 public class RatingService {

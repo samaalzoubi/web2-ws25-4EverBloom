@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 
 import de.fhdo.project.blumeo.entity.rating.Rating;
 
-// /**
-//  * Repository interface for Rating entity.
-//  * Provides database access methods for rating operations.
-//  * 
-//  * @author Blumeo Team
-//  * @version 1.0
-//  */
+/**
+ * Repository interface for Rating entity.
+ * Provides database access methods for rating operations.
+ * 
+ * @author Blumeo Team
+ * @version 1.0
+ */
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     

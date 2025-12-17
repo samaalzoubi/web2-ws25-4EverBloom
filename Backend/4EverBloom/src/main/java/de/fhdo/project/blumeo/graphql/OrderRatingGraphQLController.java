@@ -56,11 +56,14 @@ public class OrderRatingGraphQLController {
     }
 
     private OrderGraphQL toGraphQLOrder(Order order) {
+        String addressStr = order.getDeliveryAddress() != null 
+            ? order.getDeliveryAddress().getStreetAddress() + ", " + order.getDeliveryAddress().getCity() 
+            : null;
         return new OrderGraphQL(
                 order.getOrderId(),
                 order.getStatus() != null ? order.getStatus().name() : "",
                 order.getOrderDate() != null ? formatter.format(order.getOrderDate()) : null,
-                order.getDeliveryAddress(),
+                addressStr,
                 order.getTotalAmount(),
                 order.getOrderLines().stream()
                         .map(this::toGraphQLLine)

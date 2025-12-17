@@ -1,16 +1,17 @@
 package de.fhdo.project.blumeo.entity.bouquet;
 
-import de.fhdo.project.blumeo.entity.cart.CartItem;
+import de.fhdo.project.blumeo.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
+//Lab3
 @Entity
 @Table(name = "bouquet")
 @DiscriminatorColumn(name = "bouquet_type")
@@ -23,10 +24,9 @@ public abstract class Bouquet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bouquetId;
 
-    // FlowerShop relationship to be added when FlowerShop entity is implemented
-    /*@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "shop_id", nullable = false)
-    private FlowerShop shop;*/
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "shop_owner_id", nullable = false)
+    private User shopOwner;
 
     @NotBlank
     @Column(nullable = false)
@@ -39,24 +39,8 @@ public abstract class Bouquet {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @Size(max = 512)
-    @Column(length = 512)
-    private String imageUrl;
-
-    @OneToMany(mappedBy = "bouquet", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BouquetComponent> components = new ArrayList<>();
-
-    @OneToMany(mappedBy = "bouquet")
-    private List<CartItem> cartItems = new ArrayList<>();
-
-    public void addComponent(BouquetComponent c) {
-        c.setBouquet(this);
-        this.components.add(c);
-    }
-
-    public void removeComponent(BouquetComponent c) {
-        c.setBouquet(null);
-        this.components.remove(c);
-    }
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 }
 

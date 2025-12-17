@@ -1,9 +1,9 @@
-type Query {
+extend type Query {
   ordersByCustomer(customerId: ID!): [Order!]!
   ratingsByOrder(orderId: ID!): [Rating!]!
 }
 
-type Mutation {
+extend type Mutation {
   submitRating(input: RatingInput!): Rating!
 }
 

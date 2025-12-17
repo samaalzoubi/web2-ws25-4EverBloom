@@ -1,32 +1,39 @@
 package de.fhdo.project.blumeo.services;
 
 import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
+import de.fhdo.project.blumeo.entity.bouquet.Bouquet;
 import de.fhdo.project.blumeo.entity.cart.Cart;
 import de.fhdo.project.blumeo.entity.cart.CartItem;
 import de.fhdo.project.blumeo.entity.cart.CartStatus;
+import de.fhdo.project.blumeo.entity.user.User;
+import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
 import de.fhdo.project.blumeo.repository.cart.CartItemRepository;
 import de.fhdo.project.blumeo.repository.cart.CartRepository;
-import de.fhdo.project.blumeo.utils.mapper.CartMapper;
+import de.fhdo.project.blumeo.utils.mapper.cart.CartMapper;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+//Lab3
 @Service
 public class CartService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+
+    private final BouquetRepository bouquetRepository;
     private final CartMapper cartMapper;
 
-    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, CartMapper cartMapper) {
+    public CartService(CartRepository cartRepository, CartItemRepository cartItemRepository, CartMapper cartMapper, BouquetRepository bouquetRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.cartMapper = cartMapper;
+        this.bouquetRepository = bouquetRepository;
     }
 
-    @Transactional
     public CartResponseDTO getActiveCartForUser(Long userId) {
         Optional<Cart> optionalCart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE);
 
@@ -55,48 +62,51 @@ public class CartService {
             item.setQuantity(newQuantity);
         }
 
-        //Gesamtpreis neu berechnen
-        //recalcTotal(cart);
-
         Cart updated = cartRepository.save(cart);
         return cartMapper.toDto(updated);
     }
 
     @Transactional
-    public /*CartDto*/ Cart addItemToCart(Long userId /*AddCartItemRequest request*/) {
+    public CartResponseDTO addItemToCart(Long userId, Long bouquetId) {
+        Cart cart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE)
+                .orElseGet(() -> createEmptyCart(userId));
 
-        // method currently a placeholder; commented real logic
+        Bouquet bouquet = bouquetRepository.findById(bouquetId).orElseThrow(() -> new EntityNotFoundException("Bouquet not found"));
+        User bouquetShopOwner = bouquet.getShopOwner();
+        if (bouquetShopOwner == null) {
+            throw new IllegalStateException("Bouquet has no shop owner assigned.");
+        }
 
-        /*Bouquet bouquet = bouquetRepository.findById(request.getBouquetId()).orElseThrow(() -> new EntityNotFoundException("Bouquet not found"));*/
+        User cartShopOwner = cart.getShopOwner();
 
-        /*if (cart.getShop() == null) {
-            cart.setShop(bouquet.getShop());
-        } else if (!cart.getShop().getId().equals(bouquet.getShop().getId())) {
+        if (cartShopOwner == null) {
+            cart.setShopOwner(bouquetShopOwner);
+        } else if (!cartShopOwner.getId().equals(bouquetShopOwner.getId())) {
             throw new IllegalStateException("Cart already belongs to another shop. Clear cart first.");
-        }*/
+        }
 
-        /*CartItem item = cart.getItems().stream()
-                .filter(ci -> ci.getBouquet().getId().equals(bouquet.getId()))
+        CartItem item = cart.getItems().stream()
+                .filter(cartItem -> {
+                    Bouquet bouquetInCart = cartItem.getBouquet();
+                    return bouquetInCart != null && bouquetInCart.getBouquetId().equals(bouquet.getBouquetId());
+                })
                 .findFirst()
-                .orElse(null);*/
+                .orElse(null);
 
-        /*if (item == null) {
+        if (item == null) {
             item = new CartItem();
             item.setCart(cart);
             item.setBouquet(bouquet);
-            item.setQuantity(request.getQuantity());
-            item.setUnitPriceAtAddTime(bouquet.getPrice());
+            item.setQuantity(1);
+            item.setUnitPrice(bouquet.getPrice());
             cart.getItems().add(item);
         } else {
-            item.setQuantity(item.getQuantity() + request.getQuantity());
-        }*/
+            item.setQuantity(item.getQuantity() + 1);
+        }
 
-        //recalcTotal(cart);
+        Cart updated = cartRepository.save(cart);
 
-        //Cart updated = cartRepository.save(cart);
-
-        //return cartMapper.toDto(updated);
-        return null;
+        return cartMapper.toDto(updated);
     }
 
     @Transactional
@@ -112,8 +122,6 @@ public class CartService {
         cart.getItems().remove(item);
         cartItemRepository.delete(item);
 
-        //recalcTotal(cart);
-
         Cart updated = cartRepository.save(cart);
 
         return cartMapper.toDto(updated);
@@ -121,12 +129,11 @@ public class CartService {
 
     @Transactional
     public void clearCart(Long userId) {
+        Cart cart = cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE)
+                .orElseThrow(() -> new IllegalStateException("Cart not found"));
 
-        cartRepository.findByUserIdAndCartStatus(userId, CartStatus.ACTIVE)
-                .ifPresent(cart -> {
-                    cart.getItems().clear();
-                    //cart.setShop(null);
-                });
+        cart.setCartStatus(CartStatus.ORDERED);
+        cartRepository.save(cart);
     }
 
     private Cart createEmptyCart(Long userId) {

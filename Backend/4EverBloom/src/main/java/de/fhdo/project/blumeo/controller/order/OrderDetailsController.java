@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+//Lab4
 @Controller
 @RequestMapping("/orders")
 public class OrderDetailsController {
@@ -28,7 +29,8 @@ public class OrderDetailsController {
 
         model.addAttribute("order", order);
         model.addAttribute("orderLines", order.getOrderLines());
+        model.addAttribute("isLoggedIn", true);
 
-        return "order/order-details";  // -> templates/order/order-details.html
+        return "order/order-details";
     }
 }

@@ -344,6 +344,13 @@
       transform: none;
     }
     
+    .view-details-btn:hover {
+      background: var(--brand-primary) !important;
+      color: white !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(126, 75, 177, 0.3);
+    }
+    
     .rating-thank-you {
       animation: slideDown 0.5s ease;
     }
@@ -362,14 +369,53 @@
 </head>
 <body>
 
-    <!-- Header Fragment - Temporarily disabled -->
-    <!-- <div th:replace="~{fragments/header :: header}"></div> -->
+  <!-- Header -->
+  <header>
+    <a href="/ClickPrototype/customer/home-page/home-page.html">
+      <div class="logo">
+        <img th:src="@{/assets/Logo.png}" alt="Flower Logo" width="70" height="70">
+        <div class="logo-text-part">
+          <h1>BLÜMEO</h1>
+          <h3>Design. Bloom. Inspire</h3>
+        </div>
+      </div>
+    </a>
+
+    <nav>
+      <a id="login-link" href="/ClickPrototype/Login/Login.html" class="hidden">Login</a>
+
+      <div class="design-bouquet user-links hidden">
+        <a href="../Customer/DesignBouquet.html" title="Design a Bouquet">
+          <span class="fx-3d">3D</span>esign Bouquet 🪄
+        </a>
+      </div>
+      
+      <a class="user-links cart-link hidden" href="#" title="Cart">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <span class="cart-count">0</span>
+      </a>
+
+      <a id="userMenuButton" class="user-links hidden" href="#">
+        <span class="material-symbols-outlined">account_circle</span>
+      </a>
+
+      <div id="userMenu" class="user-menu">
+        <div class="profile-pic">
+          <img id="profileImage" src="" alt="Profile Image" class="hidden">
+        </div>
+        <p id="userEmail"></p> 
+        <a href="/ClickPrototype/Order/customer_orders.html" class="option-btn">My Orders</a>
+        <a href="/ClickPrototype/Profile/profile.html" class="option-btn">View Profile</a>
+        <a href="/ClickPrototype/Login/Login.html" class="option-btn logout-link">Logout</a>
+      </div>
+    </nav>
+  </header>
 
   
   <!-- Rest of the customer orders page content remains the same -->
   <div id="app">
     <main class="main-content">
-      <div class="customer-header">
+      <div class="customer-header" style ="margin-top: 6rem;">
         <h1>My Orders</h1>
         <p>Hello Alice! Here's your order history and current orders.</p>
       </div>
@@ -384,9 +430,6 @@
           <option value="Delivered">Delivered</option>
           <option value="Cancelled">Cancelled</option>
         </select>
-        <button class="create-order-btn" id="create-order-btn">
-          <i class="fas fa-plus"></i> Create New Order
-        </button>
       </div>
       
       <div class="orders-grid" id="orders-grid" th:attr="data-customer-id=${customerId}">
@@ -430,9 +473,13 @@
               Rating: <span class="current-rating">0</span>/5
             </div>
 
-            <div class="customer-actions">
+            <div class="customer-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
               <button class="rating-submit-btn" type="button" th:attr="data-order-id=${oid}">
                 Submit Rating
+              </button>
+              <button class="view-details-btn" type="button" th:attr="data-order-id=${oid}" 
+                      style="background: var(--brand-secondary); color: var(--text-dark); padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
+                <i class="fas fa-info-circle"></i> View Details
               </button>
             </div>
             <div class="rating-thank-you" th:attr="id=${'thank-you-' + oid}" style="display: none; margin-top: 1rem; padding: 1rem; background: #e8f5e9; border-radius: 8px; text-align: center; color: #2e7d32;">
@@ -548,6 +595,59 @@
   <!-- <div th:replace="~{fragments/footer :: footer}"></div> -->
 
   <script>
+    // OrderController API Integration
+    const OrderAPI = {
+      // Create a new order (POST /api/v1/orders/{userId})
+      async createOrder(userId, bouquetIds, quantities, address) {
+        const payload = {
+          bouquetIds,
+          quantities,
+          address
+        };
+
+        const response = await fetch(`/api/v1/orders/${userId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const error = await response.text();
+          throw new Error(error || `Request failed with status ${response.status}`);
+        }
+
+        return await response.json();
+      },
+
+      // Get order details (GET /api/v1/orders/{orderId})
+      async getOrder(orderId) {
+        const response = await fetch(`/api/v1/orders/${orderId}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch order ${orderId}: ${response.statusText}`);
+        }
+
+        return await response.json();
+      },
+
+      // Update order status (PATCH /api/v1/orders/{orderId}/status)
+      async updateOrderStatus(orderId, status) {
+        const response = await fetch(`/api/v1/orders/${orderId}/status?status=${status}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to update order status: ${response.statusText}`);
+        }
+
+        return await response.json();
+      }
+    };
+
     // Create Order Modal Functionality
     const createModal = document.getElementById('create-modal');
     const createForm = document.getElementById('create-form');
@@ -578,25 +678,16 @@
         return;
       }
 
-      const payload = {
-        bouquetIds: [bouquetId],
-        quantities: [quantity],
-        address
-      };
-
       try {
-        const res = await fetch(`/api/v1/orders/${customerId}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `Request failed with status ${res.status}`);
-        }
-
-        await res.json();
+        // Use OrderController API to create order
+        const orderData = await OrderAPI.createOrder(
+          customerId,
+          [bouquetId],
+          [quantity],
+          address
+        );
+        
+        console.log('Order created:', orderData);
         alert('Order created successfully!');
         closeCreate();
         window.location.reload();
@@ -606,11 +697,51 @@
       }
     }
     
+    // View Order Details using OrderController
+    async function viewOrderDetails(orderId) {
+      try {
+        const orderData = await OrderAPI.getOrder(orderId);
+        console.log('Order details:', orderData);
+        
+        // Display order details in an alert or modal
+        let detailsText = `Order #${orderData.orderId}\n`;
+        detailsText += `Status: ${orderData.status}\n`;
+        detailsText += `Date: ${orderData.orderDate}\n`;
+        detailsText += `Total: €${orderData.totalAmount}\n`;
+        detailsText += `\nItems:\n`;
+        
+        if (orderData.orderLines && orderData.orderLines.length > 0) {
+          orderData.orderLines.forEach(line => {
+            detailsText += `- ${line.bouquet.name} x${line.quantity} (€${line.price})\n`;
+          });
+        }
+        
+        alert(detailsText);
+      } catch (err) {
+        console.error('Failed to fetch order details:', err);
+        alert(`Failed to load order details: ${err.message}`);
+      }
+    }
+    
     // Event listeners for create order modal
     createOrderBtn?.addEventListener('click', handleCreateOrder);
     closeCreateModalBtn?.addEventListener('click', closeCreate);
     cancelCreateBtn?.addEventListener('click', closeCreate);
     createForm?.addEventListener('submit', submitNewOrder);
+    
+    // Event listeners for view details buttons
+    document.addEventListener('DOMContentLoaded', () => {
+      const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
+      viewDetailsButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const orderId = btn.getAttribute('data-order-id');
+          if (orderId) {
+            viewOrderDetails(orderId);
+          }
+        });
+      });
+    });
     
     // Close modal when clicking outside
     createModal?.addEventListener('click', (e) => {

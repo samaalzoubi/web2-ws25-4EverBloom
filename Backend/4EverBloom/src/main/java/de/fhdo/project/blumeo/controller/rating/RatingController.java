@@ -1,24 +1,31 @@
 package de.fhdo.project.blumeo.controller.rating;
 
-import de.fhdo.project.blumeo.dto.rating.RatingRequestDTO;
-import de.fhdo.project.blumeo.dto.rating.RatingResponseDTO;
-import de.fhdo.project.blumeo.services.RatingService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import de.fhdo.project.blumeo.dto.rating.RatingRequestDTO;
+import de.fhdo.project.blumeo.dto.rating.RatingResponseDTO;
+import de.fhdo.project.blumeo.services.RatingService;
 import jakarta.validation.Valid;
-import java.util.List;
 
-// /**
-//  * REST Controller for managing ratings.
-//  * Provides endpoints for submitting, retrieving, and deleting ratings.
-//  * 
-//  * @author Blumeo Team
-//  * @version 1.0
-//  */
+/**
+ * REST Controller for managing ratings.
+ * Provides endpoints for submitting, retrieving, and deleting ratings.
+ * 
+ * @author Blumeo Team
+ * @version 1.0
+ */
 @RestController
 @RequestMapping(
         value = "/api/v1/ratings",
@@ -28,7 +35,6 @@ public class RatingController {
     
     private final RatingService ratingService;
     
-    @Autowired
     public RatingController(RatingService ratingService) {
         this.ratingService = ratingService;
     }

@@ -5,10 +5,9 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
+//Lab3
 @Data
 public class CartResponseDTO {
-    private Long id;
-
     private Long userId;
 
     private List<CartItemDTO> items;

@@ -1,15 +1,16 @@
 package de.fhdo.project.blumeo.config;
 
-import de.fhdo.project.blumeo.entity.bouquet.CustomBouquet;
-import de.fhdo.project.blumeo.entity.bouquet.Wrapping;
-import de.fhdo.project.blumeo.entity.userService.Role;
-import de.fhdo.project.blumeo.entity.userService.User;
-import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
-import de.fhdo.project.blumeo.repository.userService.UserRepository;
+import java.math.BigDecimal;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+import de.fhdo.project.blumeo.entity.bouquet.CustomBouquet;
+import de.fhdo.project.blumeo.entity.bouquet.Wrapping;
+import de.fhdo.project.blumeo.entity.user.Role;
+import de.fhdo.project.blumeo.entity.user.User;
+import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
+import de.fhdo.project.blumeo.repository.user.UserRepository;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -30,7 +31,7 @@ public class DataInitializer implements CommandLineRunner {
             user.setUsername("Alice");
             user.setEmail("alice@example.com");
             user.setPassword("password123");
-            user.setRole(Role.USER);
+            user.setRole(Role.CUSTOMER);
             user.setBalance(500.0);
             userRepository.save(user);
             System.out.println("Test user created: Alice (ID: " + user.getId() + ")");

@@ -27,8 +27,6 @@ header {
   width: 100%;
   z-index: 2;
   display: flex;
-  position: fixed;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
   padding: 15px 60px;
@@ -177,9 +175,8 @@ nav {
   border: 1px solid var(--color-border);
   z-index: 50;
   text-align: center;
-  height: 150px;
+  min-height: 150px;
   align-items: center;
-
 }
 
 .dropdown-content .option-btn{
@@ -199,6 +196,7 @@ nav {
   font-weight: 500;
   transition: background 0.2s ease, color 0.2s ease;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .dropdown-content a:hover {
@@ -207,6 +205,9 @@ nav {
 }
 
 .dropdown-content a:first-child {
-    margin-bottom: 20px;
     margin-top: 10px;
+}
+
+.dropdown-content a:last-child {
+    margin-bottom: 10px;
 }

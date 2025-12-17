@@ -1,0 +1,38 @@
+#Lab6
+
+extend type Query {
+    shopStems(shopId: ID!): [ShopStemDTO!]!
+    shopStem(shopId: ID!, stemId: ID!): ShopStemDTO!
+}
+
+extend type Mutation {
+    createShopStem(shopId: ID!, request: CreateShopStemRequest!): ShopStemDTO!
+    updateShopStem(shopId: ID!, stemId: ID!, request: UpdateShopStemRequest!): ShopStemDTO!
+    removeShopStem(shopId: ID!, stemId: ID!): Boolean!
+}
+
+input CreateShopStemRequest {
+    flowerId: ID
+    flowerName: String
+    flowerColor: String
+    flowerSeason: String
+    price: Float!
+    quantity: Int!
+    imageUrl: String!
+}
+
+input UpdateShopStemRequest {
+    quantity: Int!
+    price: Float!
+}
+
+type ShopStemDTO {
+    stemId: ID!
+    shopId: ID!
+    flowerName: String!
+    flowerColor: String!
+    flowerSeason: String!
+    quantity: Int!
+    price: Float!
+    imageUrl: String!
+}

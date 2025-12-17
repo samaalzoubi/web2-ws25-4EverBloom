@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 
 import lombok.Data;
 
+//Lab3
 @Data
 public class CartItemDTO {
-
-    private Long id;
+    private Long itemId;
 
     private Long bouquetId;
 

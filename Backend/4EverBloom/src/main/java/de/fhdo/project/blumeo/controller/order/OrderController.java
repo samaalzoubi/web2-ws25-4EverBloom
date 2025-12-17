@@ -1,13 +1,13 @@
 package de.fhdo.project.blumeo.controller.order;
 
+import de.fhdo.project.blumeo.dto.order.CreateOrderRequest;
 import de.fhdo.project.blumeo.dto.order.OrderDTO;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
 import de.fhdo.project.blumeo.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+//Lab5
 @RestController
 @RequestMapping("/api/v1/orders")
 public class OrderController {
@@ -30,8 +30,6 @@ public class OrderController {
         );
         return ResponseEntity.ok(dto);
     }
-
-    record CreateOrderRequest(List<Long> bouquetIds, List<Integer> quantities, String address) {}
 
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<OrderDTO> updateStatus(

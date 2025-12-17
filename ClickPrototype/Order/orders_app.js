@@ -5,10 +5,6 @@ let searchTerm = "";
 let selectedStatus = "all";
 let showEdit = false;
 let editOrder = null;
-let chatbotOpen = false;
-let chatbotMessages = [
-  { type: 'bot', text: CHATBOT_MESSAGES.greeting }
-];
 
 // Stats Calculation
 const calculateStats = () => {
@@ -161,60 +157,7 @@ const saveEdit = () => {
   showNotification(`Order ${editOrder.id} updated successfully!`, 'success');
 };
 
-// Chatbot
-const toggleChatbot = () => {
-  chatbotOpen = !chatbotOpen;
-  renderApp();
-};
-
-const closeChatbot = () => {
-  chatbotOpen = false;
-  renderApp();
-};
-
-const sendChatMessage = (text) => {
-  if (!text.trim()) return;
-  
-  // Add user message
-  chatbotMessages.push({ type: 'user', text });
-  
-  // Simulate bot response
-  setTimeout(() => {
-    let response = CHATBOT_MESSAGES.help;
-    
-    if (text.toLowerCase().includes('status')) {
-      response = CHATBOT_MESSAGES.orderStatus;
-    } else if (text.toLowerCase().includes('deliver')) {
-      response = CHATBOT_MESSAGES.delivery;
-    } else if (text.toLowerCase().includes('recommend') || text.toLowerCase().includes('suggest')) {
-      response = CHATBOT_MESSAGES.recommendations;
-    } else if (text.toLowerCase().includes('hello') || text.toLowerCase().includes('hi')) {
-      response = "Hello! " + CHATBOT_MESSAGES.help;
-    }
-    
-    chatbotMessages.push({ type: 'bot', text: response });
-    renderApp();
-    scrollChatToBottom();
-  }, 1000);
-  
-  renderApp();
-  scrollChatToBottom();
-};
-
-const scrollChatToBottom = () => {
-  setTimeout(() => {
-    const chatBody = document.querySelector('.chatbot-body');
-    if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
-  }, 100);
-};
-
-const handleChatInput = (e) => {
-  if (e.key === 'Enter') {
-    const input = e.target;
-    sendChatMessage(input.value);
-    input.value = '';
-  }
-};
+// Chatbot functions removed - now using HTML-based chatbot with initChatbot()
 
 // Notification System
 const showNotification = (message, type = 'info') => {
@@ -241,19 +184,22 @@ const showNotification = (message, type = 'info') => {
 const renderStats = (stats) => `
 <div class="stats-overview">
   <div class="stat-card">
+    <div class="stat-icon">📦</div>
     <div class="stat-value">${stats.total}</div>
     <div class="stat-label">Total Orders</div>
   </div>
   <div class="stat-card">
+    <div class="stat-icon">💰</div>
     <div class="stat-value">${formatCurrency(stats.revenue)}</div>
     <div class="stat-label">Total Revenue</div>
   </div>
   <div class="stat-card">
+    <div class="stat-icon">⏳</div>
     <div class="stat-value">${stats.pending}</div>
     <div class="stat-label">Pending</div>
-    ${stats.pending > 0 ? `<button id="accept-pending" class="btn-accept">Accept</button>` : `<button id="accept-pending" class="btn-accept" disabled>Accept</button>`}
   </div>
   <div class="stat-card">
+    <div class="stat-icon">👨‍🍳</div>
     <div class="stat-value">${stats.preparing}</div>
     <div class="stat-label">Preparing</div>
   </div>
@@ -290,14 +236,12 @@ const renderOrderCard = (o) => `
   </div>
   <div class="order-total">${formatCurrency(o.total)}</div>
   <div class="order-actions">
-    ${
-      o.status === OrderStatus.PENDING || o.status === OrderStatus.PREPARING
-        ? `<button class="accept-btn" data-order-id="${o.id}"><i class="fas fa-check"></i>Accept</button>
-           <button class="cancel-btn" data-order-id="${o.id}"><i class="fas fa-times"></i>Cancel</button>`
-        : o.status === OrderStatus.OUT_FOR_DELIVERY
-        ? `<button class="cancel-btn" data-order-id="${o.id}"><i class="fas fa-times"></i>Cancel</button>`
-        : '<button disabled><i class="fas fa-lock"></i>Locked</button>'
-    }
+    <button class="accept-btn ${o.status !== OrderStatus.PENDING && o.status !== OrderStatus.PREPARING ? 'hidden' : ''}" data-order-id="${o.id}">
+      <i class="fas fa-check"></i>Accept
+    </button>
+    <button class="cancel-btn ${o.status === OrderStatus.DELIVERED || o.status === OrderStatus.CANCELLED ? 'hidden' : ''}" data-order-id="${o.id}">
+      <i class="fas fa-times"></i>Cancel
+    </button>
   </div>
 </div>`;
 
@@ -336,24 +280,7 @@ const renderEditModal = () => !showEdit ? "" : `
   </div>
 </div>`;
 
-const renderChatbot = () => `
-<div id="chatbot" class="chatbot ${chatbotOpen ? 'open' : ''}">
-  <div class="chatbot-header" onclick="toggleChatbot()">
-    💬 BLÜMEO Assistant
-    <span class="chatbot-close" onclick="event.stopPropagation(); closeChatbot();">✖</span>
-  </div>
-  <div class="chatbot-body">
-    ${chatbotMessages.map(msg => `
-      <div class="chatbot-message ${msg.type}">${msg.text}</div>
-    `).join('')}
-  </div>
-  <div class="chatbot-input">
-    <input type="text" placeholder="Type your message..." onkeypress="handleChatInput(event)" />
-    <button onclick="sendChatMessage(this.previousElementSibling.value); this.previousElementSibling.value='';">
-      <i class="fas fa-paper-plane"></i>
-    </button>
-  </div>
-</div>`;
+// renderChatbot removed - chatbot now in HTML file
 
 const renderApp = () => {
   const stats = calculateStats();
@@ -366,25 +293,6 @@ const renderApp = () => {
       ${renderOrdersGrid()}
     </main>
     ${renderEditModal()}
-    ${renderChatbot()}
-    <button class="chatbot-toggle" onclick="toggleChatbot()" style="
-      position: fixed; 
-      bottom: 20px; 
-      right: 20px; 
-      width: 60px; 
-      height: 60px; 
-      border-radius: 50%; 
-      background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%); 
-      color: white; 
-      border: none; 
-      cursor: pointer; 
-      box-shadow: var(--shadow-hover);
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      font-size: 1.5rem;
-      z-index: 999;
-    ">💬</button>
   `;
 
   // Event Listeners
@@ -479,8 +387,71 @@ const acceptPending = () => {
   showNotification(`Order ${order.id} accepted — now Preparing.`, 'success');
 };
 
+// // Chatbot functionality
+// const initChatbot = () => {
+//   const chatbot = document.getElementById('chatbot');
+//   const chatbotToggle = document.querySelector('.chatbot-toggle');
+//   const chatbotClose = document.querySelector('.chatbot-close');
+//   const chatInput = document.querySelector('.chatbot-input input');
+//   const sendButton = document.querySelector('.chatbot-input button');
+  
+//   if (!chatbot || !chatbotToggle || !chatbotClose || !chatInput || !sendButton) {
+//     return; // Elements not found, exit gracefully
+//   }
+  
+//   // Toggle chatbot
+//   chatbotToggle.addEventListener('click', function() {
+//     chatbot.classList.toggle('open');
+//   });
+  
+//   // Close chatbot
+//   chatbotClose.addEventListener('click', function() {
+//     chatbot.classList.remove('open');
+//   });
+  
+//   // Send message on Enter key
+//   chatInput.addEventListener('keypress', function(e) {
+//     if (e.key === 'Enter') {
+//       sendChatMessage();
+//     }
+//   });
+  
+//   // Send message on button click
+//   sendButton.addEventListener('click', sendChatMessage);
+  
+//   function sendChatMessage() {
+//     const message = chatInput.value.trim();
+//     if (message) {
+//       // Add user message
+//       const chatBody = document.querySelector('.chatbot-body');
+//       const userMessage = document.createElement('div');
+//       userMessage.className = 'chatbot-message user';
+//       userMessage.textContent = message;
+//       chatBody.appendChild(userMessage);
+      
+//       // Clear input
+//       chatInput.value = '';
+      
+//       // Scroll to bottom
+//       chatBody.scrollTop = chatBody.scrollHeight;
+      
+//       // Simulate bot response
+//       setTimeout(() => {
+//         const botMessage = document.createElement('div');
+//         botMessage.className = 'chatbot-message bot';
+//         botMessage.textContent = 'Thank you for your message! Our team will assist you shortly. 🌸';
+//         chatBody.appendChild(botMessage);
+//         chatBody.scrollTop = chatBody.scrollHeight;
+//       }, 1000);
+//     }
+//   }
+// };
+
 // Startup
-document.addEventListener("DOMContentLoaded", renderApp);
+document.addEventListener("DOMContentLoaded", () => {
+  renderApp();
+  initChatbot();
+});
 
 // Add some demo data manipulation for testing
 window.demoAddOrder = () => {

@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.entity.cart;
 
+import de.fhdo.project.blumeo.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//Lab3
 @Entity
 @Table(name = "cart")
 @Getter
@@ -29,10 +31,9 @@ public class Cart {
     @Enumerated(EnumType.STRING)
     private CartStatus cartStatus;
 
-    // FlowerShop relationship to be added when FlowerShop entity is implemented
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shop_id")
-    private FlowerShop shop;*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_owner_id")
+    private User shopOwner;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();

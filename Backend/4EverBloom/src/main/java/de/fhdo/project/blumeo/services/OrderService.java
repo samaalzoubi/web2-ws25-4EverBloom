@@ -2,21 +2,23 @@ package de.fhdo.project.blumeo.services;
 
 import de.fhdo.project.blumeo.dto.order.OrderDTO;
 import de.fhdo.project.blumeo.entity.bouquet.Bouquet;
+import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.order.Order;
 import de.fhdo.project.blumeo.entity.order.OrderLine;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
-import de.fhdo.project.blumeo.entity.userService.User;
+import de.fhdo.project.blumeo.entity.user.Role;
+import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
 import de.fhdo.project.blumeo.repository.order.OrderRepository;
-import de.fhdo.project.blumeo.repository.userService.UserRepository;
-import de.fhdo.project.blumeo.utils.mapper.OrderMapper;
+import de.fhdo.project.blumeo.repository.user.UserRepository;
+import de.fhdo.project.blumeo.utils.mapper.order.OrderMapper;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+//Lab3
 @Service
 public class OrderService {
 
@@ -34,10 +36,9 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDTO createOrder(Long userId, List<Long> bouquetIds, List<Integer> quantities, String address) {
+    public OrderDTO createOrder(Long userId, List<Long> bouquetIds, List<Integer> quantities, Address address) {
 
-        User customer = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User customer = userRepository.findByIdAndRole(userId, Role.CUSTOMER).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Order order = new Order();
         order.setCustomer(customer);

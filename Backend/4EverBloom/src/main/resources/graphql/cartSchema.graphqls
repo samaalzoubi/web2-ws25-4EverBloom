@@ -1,0 +1,44 @@
+#Lab6
+
+extend type Query {
+    activeCart(userId: ID!): CartResponseDTO!
+}
+
+extend type Mutation {
+    updateItemQuantity(
+        userId: ID!
+        itemId: ID!
+        quantityDelta: Int!
+    ): CartResponseDTO!
+
+    removeItem(
+        userId: ID!
+        itemId: ID!
+    ): CartResponseDTO!
+
+    clearCart(
+        userId: ID!
+    ): CartResponseDTO!
+
+    addItem(
+        userId: ID!
+        bouquetId: ID!
+    ): CartResponseDTO!
+}
+
+
+type CartResponseDTO {
+    userId: ID!
+    items: [CartItemDTO!]!
+    totalQuantity: Int!
+    totalPrice: Float!
+}
+
+type CartItemDTO {
+    bouquetId: ID!
+    bouquetName: String!
+    imageUrl: String!
+    quantity: Int!
+    unitPrice: Float!
+    lineTotal: Float!
+}

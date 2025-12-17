@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="map.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
@@ -75,5 +76,83 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 </script>
+
+    <!-- Chatbot -->
+    <div id="chatbot" class="chatbot">
+      <div class="chatbot-header">
+        💬 BLÜMEO Assistant
+        <span class="chatbot-close">✖</span>
+      </div>
+      <div class="chatbot-body">
+        <div class="chatbot-message bot">Hello and welcome to BLÜMEO 🌷 I'm your virtual floral assistant. I can help you find flower shops near you, track your order, or answer any questions about our services.</div>
+      </div>
+      <div class="chatbot-input">
+        <input type="text" placeholder="Ask me anything..." />
+        <button>
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+    
+    <button class="chatbot-toggle">💬</button>
+
+<script>
+  // Chatbot functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const chatbot = document.getElementById('chatbot');
+    const chatbotToggle = document.querySelector('.chatbot-toggle');
+    const chatbotClose = document.querySelector('.chatbot-close');
+    const chatInput = document.querySelector('.chatbot-input input');
+    const sendButton = document.querySelector('.chatbot-input button');
+    
+    // Toggle chatbot
+    chatbotToggle.addEventListener('click', function() {
+      chatbot.classList.toggle('open');
+    });
+    
+    // Close chatbot
+    chatbotClose.addEventListener('click', function() {
+      chatbot.classList.remove('open');
+    });
+    
+    // Send message on Enter key
+    chatInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+    
+    // Send message on button click
+    sendButton.addEventListener('click', sendMessage);
+    
+    function sendMessage() {
+      const message = chatInput.value.trim();
+      if (message) {
+        // Add user message
+        const chatBody = document.querySelector('.chatbot-body');
+        const userMessage = document.createElement('div');
+        userMessage.className = 'chatbot-message user';
+        userMessage.textContent = message;
+        chatBody.appendChild(userMessage);
+        
+        // Clear input
+        chatInput.value = '';
+        
+        // Scroll to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+        
+        // Simulate bot response
+        setTimeout(() => {
+          const botMessage = document.createElement('div');
+          botMessage.className = 'chatbot-message bot';
+          botMessage.textContent = 'Thank you for your message! Our team will assist you shortly. 🌸';
+          chatBody.appendChild(botMessage);
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }, 1000);
+      }
+    }
+  });
+</script>
+
 </body>
 </html>
