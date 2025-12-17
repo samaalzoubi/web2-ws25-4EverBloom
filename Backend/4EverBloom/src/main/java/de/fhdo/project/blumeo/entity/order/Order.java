@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//Lab3
 @Entity
 @Table(name = "orders")
 @Getter
@@ -30,8 +31,8 @@ public class Order {
 
     private LocalDateTime orderDate = LocalDateTime.now();
 
-    // Optional if you later implement delivery address entity
-    private String deliveryAddress;
+    @Embedded
+    private Address deliveryAddress;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderLine> orderLines = new ArrayList<>();

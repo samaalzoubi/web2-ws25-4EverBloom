@@ -2,6 +2,7 @@ package de.fhdo.project.blumeo.dto.payment;
 
 import lombok.Data;
 
+//Lab3
 @Data
 public class CheckoutFormDTO {
 
@@ -12,7 +13,6 @@ public class CheckoutFormDTO {
 
     // Delivery Information
     private String streetAddress;
-    private String country;
     private String city;
     private String state;
     private String zipCode;

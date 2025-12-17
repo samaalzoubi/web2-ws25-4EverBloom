@@ -1,4 +1,4 @@
-package de.fhdo.project.blumeo.utils.mapper;
+package de.fhdo.project.blumeo.utils.mapper.order;
 
 import de.fhdo.project.blumeo.dto.order.OrderDTO;
 import de.fhdo.project.blumeo.dto.order.OrderLineDTO;
@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 import java.util.stream.Collectors;
 
+//Lab3
 @Component
 public class OrderMapper {
 
@@ -22,7 +23,7 @@ private static final DateTimeFormatter FORMATTER =
         dto.setOrderId(order.getOrderId());
         dto.setCustomerId(order.getCustomer().getId());
         dto.setStatus(order.getStatus());
-        dto.setDeliveryAddress(order.getDeliveryAddress());
+        dto.setAddress(order.getDeliveryAddress());
         dto.setTotalAmount(order.getTotalAmount());
 
 

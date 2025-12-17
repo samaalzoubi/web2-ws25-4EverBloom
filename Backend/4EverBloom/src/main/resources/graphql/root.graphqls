@@ -1,3 +1,5 @@
+#Lab6
+
 type Query {
     _empty: String
 }

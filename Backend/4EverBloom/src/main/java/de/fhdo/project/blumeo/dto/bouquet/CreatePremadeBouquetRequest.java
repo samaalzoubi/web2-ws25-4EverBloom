@@ -1,15 +1,17 @@
 package de.fhdo.project.blumeo.dto.bouquet;
 
-import java.math.BigDecimal;
-import java.util.List;
+import de.fhdo.project.blumeo.entity.bouquet.Occasion;
 
+import java.math.BigDecimal;
+import java.util.Set;
+
+//Lab3
 public record CreatePremadeBouquetRequest(
         String name,
         String description,
         String imageUrl,
-        List<BouquetItemRequest> items,
         BigDecimal fixedPrice,
-        List<String> occasions
+        Set<Occasion> occasions
 ) {
 }
 
