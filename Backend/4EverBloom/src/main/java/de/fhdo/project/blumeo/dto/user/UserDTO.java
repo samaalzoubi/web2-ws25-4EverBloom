@@ -1,9 +1,11 @@
 package de.fhdo.project.blumeo.dto.user;
 
+import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.user.Role;
 import lombok.Data;
 
-//Lab3
+import java.util.Date;
+
 @Data
 public class UserDTO {
     private Long id;
@@ -11,4 +13,14 @@ public class UserDTO {
     private String email;
     private String password;
     private Role role; // OWNER or USER
+
+    private Integer number;
+    private Address address;
+    private String shopName;
+    private String description;
+    private Date date;
+    private String link;
+    private String flowerShopType;
+    private String logo;
+
 }
