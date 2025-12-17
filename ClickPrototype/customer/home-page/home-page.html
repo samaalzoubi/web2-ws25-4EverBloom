@@ -62,73 +62,31 @@
         </section>
     </main>
     <div class="cart">
+        <div class="clear-cart">
             <h2>CART</h2>
-            <div class="list-cart">
-            </div>
-            <div class="buttons">
-                <div class="close">CLOSE</div>
-                <div class="checkout">
-                    <a id="checkoutBtn">CHECKOUT</a>
-                </div>
+            <div class="clear">
+                <a id="clearCartBtn" class="clear-cart-btn">🗑️ CLEAR CART</a>
             </div>
         </div>
+        <div class="list-cart">
+        </div>
+        <div class="buttons">
+            <div class="close">CLOSE</div>
+            <div class="checkout">
+                <a id="checkoutBtn">CHECKOUT</a>
+            </div>
+        </div>
+    </div>
     <div id="footer"></div>
-    <script>
-      //Fetch header
-      fetch("../../Header/header.html")
-        .then(response => response.text())
-        .then(data => {
-            const mount = document.getElementById('header');
-            mount.innerHTML = data;
-            initHeader(mount);
-            document.dispatchEvent(new Event('header:ready'));
-        })
-        .catch(err => console.error("Header konnte nicht geladen werden:", err));
-
-        function initHeader() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-            const loginLink = document.querySelector('#login-link');
-            const userLinks = document.querySelectorAll('.user-links');
-            const designBouquetButton = document.querySelector('.design-bouquet')
-
-            if (isLoggedIn) {
-                loginLink?.classList.add('hidden');
-                userLinks.forEach(el => el.classList.remove('hidden'));
-                designBouquetButton?.classList.remove('hidden');
-            } else {
-                loginLink?.classList.remove('hidden');
-                userLinks.forEach(el => el.classList.add('hidden'));
-                designBouquetButton?.classList.add('hidden');
-            }
-
-            // Logout-Handler
-            const logout = document.querySelector('.logout-link');
-            if (logout) {
-                logout.addEventListener('click', (e) => {
-                e.preventDefault();
-                localStorage.setItem('isLoggedIn', "false");
-                localStorage.removeItem('login-email');
-                localStorage.removeItem('login-password');
-                localStorage.removeItem('totalCartQuantity');
-                window.location.href = '../../customer/home-page/home-page.html';
-                });
-            }
-        }
-
-        //Fetch footer
-        fetch("../../footer/footer.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('footer').innerHTML = data;
-        })
-        .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+    <script type="module">
+        import { loadLayout } from "/ClickPrototype/layout/layout.js";
+        loadLayout();
 
         //Slider of flower shops
         const slide  = document.querySelector(".carousel");
         const buttons = document.querySelectorAll(".carousel-button");
         buttons[0].style.display = "none";
-        firstImage = slide.querySelectorAll("img")[0]
+        const firstImage = slide.querySelectorAll("img")[0]
 
         const showHideButtons = () => {
             let scrollWidth = slide.scrollWidth - slide.clientWidth;
