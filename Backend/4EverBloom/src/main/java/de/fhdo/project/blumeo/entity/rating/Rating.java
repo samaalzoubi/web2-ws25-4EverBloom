@@ -1,83 +1,69 @@
 package de.fhdo.project.blumeo.entity.rating;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-//Lab3
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import de.fhdo.project.blumeo.entity.order.Order;
+import de.fhdo.project.blumeo.entity.user.User;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * Entity representing a customer rating for an order.
+ * 
+ * Database Attributes:
+ * - id: Primary key (auto-generated)
+ * - ratingScore: Score from 1-5
+ * - review: Optional text review/comment
+ * - createdAt: Timestamp when rating was created
+ * - customerId: Foreign key to Customer
+ * - orderId: Foreign key to Order
+ * 
+ * @author Blumeo Team
+ * @version 1.0
+ */
 @Entity
 @Table(name = "ratings")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Rating {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
-    private Long orderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
     
-    @Column(nullable = false)
-    private Long customerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private User customer;
     
-    @Column(nullable = false)
+    @Column(name = "rating_score", nullable = false)
     private Integer ratingScore;
     
-    @Column(length = 1000)
+    @Column(name = "review", length = 1000)
     private String review;
     
-    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-    
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public Long getOrderId() {
-        return orderId;
-    }
-    
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-    
-    public Long getCustomerId() {
-        return customerId;
-    }
-    
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-    
-    public Integer getRatingScore() {
-        return ratingScore;
-    }
-    
-    public void setRatingScore(Integer ratingScore) {
-        this.ratingScore = ratingScore;
-    }
-    
-    public String getReview() {
-        return review;
-    }
-    
-    public void setReview(String review) {
-        this.review = review;
-    }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

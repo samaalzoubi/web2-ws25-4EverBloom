@@ -1,39 +1,37 @@
 package de.fhdo.project.blumeo.bootstrap;
 
-import de.fhdo.project.blumeo.entity.bouquet.*;
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+
+import de.fhdo.project.blumeo.entity.bouquet.BouquetComponent;
+import de.fhdo.project.blumeo.entity.bouquet.CustomBouquet;
+import de.fhdo.project.blumeo.entity.bouquet.Occasion;
+import de.fhdo.project.blumeo.entity.bouquet.PremadeBouquet;
+import de.fhdo.project.blumeo.entity.bouquet.Wrapping;
 import de.fhdo.project.blumeo.entity.cart.Cart;
 import de.fhdo.project.blumeo.entity.cart.CartItem;
 import de.fhdo.project.blumeo.entity.cart.CartStatus;
+import de.fhdo.project.blumeo.entity.flower.Flower;
 import de.fhdo.project.blumeo.entity.inventory.ShopStem;
 import de.fhdo.project.blumeo.entity.order.Address;
-import de.fhdo.project.blumeo.entity.rating.Rating;
-import de.fhdo.project.blumeo.entity.user.Role;
-import de.fhdo.project.blumeo.entity.user.User;
-
-
 import de.fhdo.project.blumeo.entity.order.Order;
 import de.fhdo.project.blumeo.entity.order.OrderLine;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
-
+import de.fhdo.project.blumeo.entity.rating.Rating;
+import de.fhdo.project.blumeo.entity.user.Role;
+import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
 import de.fhdo.project.blumeo.repository.cart.CartRepository;
 import de.fhdo.project.blumeo.repository.flower.FlowerRepository;
 import de.fhdo.project.blumeo.repository.inventory.ShopStemRepository;
+import de.fhdo.project.blumeo.repository.order.OrderLineRepository;
+import de.fhdo.project.blumeo.repository.order.OrderRepository;
 import de.fhdo.project.blumeo.repository.rating.RatingRepository;
 import de.fhdo.project.blumeo.repository.user.UserRepository;
-
-import de.fhdo.project.blumeo.repository.order.OrderRepository;
-import de.fhdo.project.blumeo.repository.order.OrderLineRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
-import de.fhdo.project.blumeo.entity.flower.Flower;
-
-
-import java.math.BigDecimal;
-import java.util.List;
 
 //Lab3
 @Component
@@ -48,7 +46,6 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
     private final OrderRepository orderRepository;
     private final OrderLineRepository orderLineRepository;
 
-    @Autowired
     public DummyDataBootstrap(UserRepository userRepository, FlowerRepository flowerRepository, ShopStemRepository shopStemRepository, BouquetRepository bouquetRepository, CartRepository cartRepository, RatingRepository ratingRepository,  OrderRepository orderRepository,
                           OrderLineRepository orderLineRepository) {
         this.userRepository = userRepository;
@@ -225,15 +222,6 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
 
         cartRepository.save(cart);
 
-        //Create test Rating
-        Rating rating = new Rating();
-        rating.setOrderId(1L);
-        rating.setCustomerId(customer.getId());
-        rating.setRatingScore(5);
-        rating.setReview("Beautiful bouquet and fast delivery!");
-
-        ratingRepository.save(rating);
-
         //Create test Order
         Order order = new Order();
         order.setCustomer(customer);
@@ -241,6 +229,15 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         order.setStatus(OrderStatus.CREATED);
 
         order = orderRepository.save(order);
+
+        //Create test Rating
+        Rating rating = new Rating();
+        rating.setOrder(order);
+        rating.setCustomer(customer);
+        rating.setRatingScore(5);
+        rating.setReview("Beautiful bouquet and fast delivery!");
+
+        ratingRepository.save(rating);
 
         OrderLine line1 = new OrderLine();
         line1.setOrder(order);

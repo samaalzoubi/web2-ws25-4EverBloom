@@ -1,12 +1,12 @@
 package de.fhdo.project.blumeo.controller.cart;
 
-import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
-import de.fhdo.project.blumeo.services.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
+
+import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
+import de.fhdo.project.blumeo.services.CartService;
 
 //Lab6 (Schema-first-approach)
 //Standard HTTP-endpoint POST /graphql
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 public class CartGraphQLController {
     private final CartService cartService;
 
-    @Autowired
     public CartGraphQLController(CartService cartService) {
         this.cartService = cartService;
     }

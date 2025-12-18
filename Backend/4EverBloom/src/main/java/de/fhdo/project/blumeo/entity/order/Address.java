@@ -12,15 +12,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Address {
 
-    @Column(name = "street_address", nullable = false)
+    @Column(name = "street_address")
     private String streetAddress;
 
-    @Column(nullable = false)
+    @Column
     private String city;
 
     private String state;
 
-    @Column(name = "zip_code", nullable = false)
+    @Column(name = "zip_code")
     private String zipCode;
 
     public Address(String streetAddress, String city, String state, String zipCode) {

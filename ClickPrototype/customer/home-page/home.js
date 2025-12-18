@@ -1,5 +1,6 @@
-import { API_MODE } from "./api.config.js";
-import { fetchFlowersREST, addToCartREST, getActiveCartREST, patchCartItemQuantity } from "./home-rest.js";
+import { API_MODE } from "../../config/api.config.js";
+import { fetchFlowersREST, addToCartREST, getActiveCartREST, patchCartItemQuantity, clearCartREST } from "./home-rest.js";
+import { loadLayout } from "../../layout/layout.js";
 //import { fetchFlowersGraphQL } from "./home-graphql.js";
 
 let cartState = null;
@@ -70,18 +71,27 @@ function formatPriceEUR(value) {
   }).format(value);
 }
 
-
-document.addEventListener("DOMContentLoaded", async() => {
-  //TODO: dummy; remove when login-authentication-logic is implemented
+document.addEventListener("DOMContentLoaded", async () => {
   localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userId", 2)
+  localStorage.setItem("userId", 2);
 
-  const cartIcon = document.querySelector('#header .cart-link');
-  const cartMenu = document.querySelector('.cart');
-  const close = document.querySelector(".close")
-  const checkoutButton = document.getElementById("checkoutBtn")
-
+  await loadLayout();
   loadHome();
+
+  const btn = document.getElementById("open-map");
+  btn?.addEventListener("click", () => {
+    window.location.href = "../map/map.html";
+  });
+});
+
+document.addEventListener("header:ready", async () => {
+  const cartIcon = document.querySelector("#header .cart-link");
+  const cartMenu = document.querySelector(".cart");
+  const close = document.querySelector(".close");
+  const checkoutButton = document.getElementById("checkoutBtn");
+  const clearBtn = document.getElementById("clearCartBtn");
+
+  if (!cartIcon || !cartMenu || !close) return;
 
   const userId = localStorage.getItem("userId");
   if (!userId) return;
@@ -96,37 +106,44 @@ document.addEventListener("DOMContentLoaded", async() => {
   cartIcon.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (cartMenu.style.right == "-100%") {
-      cartMenu.style.right = "0"
-    }
-    else {
-      cartMenu.style.right = "-100%"
-    }
-  })
+    cartMenu.style.right = (cartMenu.style.right === "0px" || cartMenu.style.right === "0") ? "-100%" : "0";
+  });
 
   close.addEventListener("click", () => {
-    cartMenu.style.right = "-100%"
-  })
+    cartMenu.style.right = "-100%";
+  });
 
-  checkoutButton.addEventListener("click", () => {
-  const cachedCartState = sessionStorage.getItem("cartState");
+  checkoutButton?.addEventListener("click", (e) => {
+    e.preventDefault();
 
-  if (!cachedCartState) {
-    alert("Your cart is empty.");
-    return;
-  }
+    const cached = sessionStorage.getItem("cartState");
+    const state = cached ? JSON.parse(cached) : null;
 
-  const cartState = JSON.parse(cachedCartState);
+    if (!state?.items?.length) {
+      alert("Your cart is empty.");
+      return;
+    }
 
-  if (!cartState.items || cartState.items.length === 0) {
-    alert("Your cart is empty.");
-    return;
-  }
+    window.location.href = "/ClickPrototype/customer/checkout/checkout.html";
+  });
 
-  window.location.href = "/ClickPrototype/customer/checkout/checkout.html";
+  clearBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    try {
+      await clearCartREST(userId);
+      document.querySelector(".list-cart").innerHTML = "";
+
+      cartState = await getActiveCartREST(userId);
+      addCartToHTML(cartState);
+
+    } catch (err) {
+      console.error(err);
+      alert("Cart could not be emptied.");
+    }
+  });
 });
 
-});
 
 //Toggle map button to be redirected to the map-page
 const btn = document.getElementById('open-map');

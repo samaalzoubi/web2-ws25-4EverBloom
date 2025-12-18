@@ -1,12 +1,19 @@
 package de.fhdo.project.blumeo.entity.user;
 
+import java.util.Date;
+
 import de.fhdo.project.blumeo.entity.order.Address;
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-import java.util.Date;
 
 @Entity
 @Table(name = "users")
@@ -37,24 +44,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @NotBlank(message = "Number is required")
     private Integer number;
 
-    @NotBlank(message = "Shop name is required")
     private String shopName;
 
-    @NotBlank(message = "Website link is required")
     private String link;
 
-    @NotBlank(message = "Flower shop type is required")
     private String flowerShopType;
 
-    @Email(message = "Invalid picture type")
-    @NotBlank(message = "Logo is required")
     private String logo;
 
-    @Email(message = "Invalid date format")
-    @NotBlank(message = "opening date is required")
     private Date date;
 
 

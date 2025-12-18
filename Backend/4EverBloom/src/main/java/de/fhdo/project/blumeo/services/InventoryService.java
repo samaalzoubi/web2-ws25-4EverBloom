@@ -1,5 +1,10 @@
 package de.fhdo.project.blumeo.services;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import de.fhdo.project.blumeo.dto.inventory.CreateShopStemRequest;
 import de.fhdo.project.blumeo.dto.inventory.ShopStemDTO;
 import de.fhdo.project.blumeo.dto.inventory.UpdateShopStemRequest;
@@ -11,11 +16,6 @@ import de.fhdo.project.blumeo.repository.flower.FlowerRepository;
 import de.fhdo.project.blumeo.repository.inventory.ShopStemRepository;
 import de.fhdo.project.blumeo.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 //Lab3
 @Service
@@ -25,7 +25,6 @@ public class InventoryService {
     private final UserRepository userRepository;
     private final FlowerRepository flowerRepository;
 
-    @Autowired
     public InventoryService(ShopStemRepository shopStemRepository, FlowerRepository flowerRepository, UserRepository userRepository) {
         this.shopStemRepository = shopStemRepository;
         this.flowerRepository = flowerRepository;
@@ -87,7 +86,7 @@ public class InventoryService {
 
     @Transactional
     public ShopStemDTO updateStem(Long shopId, Long stemId, UpdateShopStemRequest request) {
-        User shop = userRepository.findByIdAndRole(shopId, Role.OWNER).orElseThrow(() -> new IllegalArgumentException("Shop not found: " + shopId));
+        userRepository.findByIdAndRole(shopId, Role.OWNER).orElseThrow(() -> new IllegalArgumentException("Shop not found: " + shopId));
 
         ShopStem stem = shopStemRepository.findByStemIdAndShopOwner_Id(stemId, shopId).orElseThrow(() -> new IllegalArgumentException("Stem not found for shopId=" + shopId + ", stemId=" + stemId));
 

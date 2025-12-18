@@ -1,14 +1,18 @@
 package de.fhdo.project.blumeo.utils.mapper.bouquet;
 
-import de.fhdo.project.blumeo.dto.bouquet.BouquetDetailsDTO;
-import de.fhdo.project.blumeo.dto.bouquet.PremadeBouquetSummary;
-import de.fhdo.project.blumeo.entity.bouquet.*;
-import de.fhdo.project.blumeo.entity.flower.Flower;
-import de.fhdo.project.blumeo.entity.inventory.ShopStem;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.stereotype.Component;
+
+import de.fhdo.project.blumeo.dto.bouquet.BouquetDetailsDTO;
+import de.fhdo.project.blumeo.entity.bouquet.Bouquet;
+import de.fhdo.project.blumeo.entity.bouquet.CustomBouquet;
+import de.fhdo.project.blumeo.entity.bouquet.Occasion;
+import de.fhdo.project.blumeo.entity.bouquet.PremadeBouquet;
+import de.fhdo.project.blumeo.entity.bouquet.Wrapping;
+import de.fhdo.project.blumeo.entity.flower.Flower;
+import de.fhdo.project.blumeo.entity.inventory.ShopStem;
 
 //Lab3
 @Component

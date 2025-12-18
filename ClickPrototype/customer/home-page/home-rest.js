@@ -1,4 +1,4 @@
-import { REST_BASE } from "./api.config.js";
+import { REST_BASE } from "../../config/api.config.js";
 
 export async function fetchFlowersREST() {
     const url = `${REST_BASE}/bouquet/premade/latest`;
@@ -54,4 +54,21 @@ export async function patchCartItemQuantity(userId, itemId, quantityDelta) {
   }
 
   return await response.json();
+}
+
+export async function clearCartREST(userId) {
+  const url = `${REST_BASE}/cart/${userId}`;
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json"
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Clear cart failed (${response.status})`);
+  }
+
+  return true;
 }

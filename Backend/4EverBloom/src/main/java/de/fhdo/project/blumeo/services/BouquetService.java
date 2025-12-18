@@ -1,7 +1,25 @@
 package de.fhdo.project.blumeo.services;
 
-import de.fhdo.project.blumeo.dto.bouquet.*;
-import de.fhdo.project.blumeo.entity.bouquet.*;
+import java.math.BigDecimal;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import de.fhdo.project.blumeo.dto.bouquet.BouquetDetailsDTO;
+import de.fhdo.project.blumeo.dto.bouquet.CreateCustomBouquetRequest;
+import de.fhdo.project.blumeo.dto.bouquet.CreatePremadeBouquetRequest;
+import de.fhdo.project.blumeo.dto.bouquet.PremadeBouquetSummary;
+import de.fhdo.project.blumeo.dto.bouquet.ShopLatestPremadeBouquetsDTO;
+import de.fhdo.project.blumeo.dto.bouquet.UpdateBouquetRequest;
+import de.fhdo.project.blumeo.entity.bouquet.Bouquet;
+import de.fhdo.project.blumeo.entity.bouquet.BouquetComponent;
+import de.fhdo.project.blumeo.entity.bouquet.CustomBouquet;
+import de.fhdo.project.blumeo.entity.bouquet.PremadeBouquet;
+import de.fhdo.project.blumeo.entity.bouquet.Wrapping;
 import de.fhdo.project.blumeo.entity.inventory.ShopStem;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
 import de.fhdo.project.blumeo.entity.user.Role;
@@ -13,15 +31,6 @@ import de.fhdo.project.blumeo.repository.order.OrderLineRepository;
 import de.fhdo.project.blumeo.repository.user.UserRepository;
 import de.fhdo.project.blumeo.utils.mapper.bouquet.BouquetMapper;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
 
 //Lab3
 @Service
@@ -33,7 +42,6 @@ public class BouquetService {
     private final OrderLineRepository orderLineRepository;
     private final BouquetMapper bouquetMapper;
 
-    @Autowired
     public BouquetService(BouquetRepository bouquetRepository, ShopStemRepository shopStemRepository, UserRepository userRepository, BouquetMapper bouquetMapper, OrderLineRepository orderLineRepository) {
         this.bouquetRepository = bouquetRepository;
         this.shopStemRepository = shopStemRepository;
