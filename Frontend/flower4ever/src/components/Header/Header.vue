@@ -1,4 +1,5 @@
 <template>
+  <div>
   <header>
     <router-link to="/flower4ever/src/components/CustomerShopView/" class="logo">
       <img src="@/assets/Logo.png" alt="Flower Logo" width="70" height="70" />
@@ -13,8 +14,7 @@
         <span class="fx-3d">3D </span> esign Bouquet 🪄
       </router-link>
 
-      <router-link to="/cart" class="cart-link">
-        <i class="fa fa-shopping-basket" aria-hidden="true" style="transform: scale(1.2);"></i>
+      <router-link to="/cart" class="fa fa-shopping-basket" style="transform: scale(1.2)">
         <span class="cart-count">{{ cartCount }}</span>
       </router-link>
 
@@ -22,26 +22,38 @@
         <i class="fa fa-user-circle-o sfa-4x;" style="transform: scale(1.3);" aria-hidden="true"></i>
         
         <div v-if="isOpen" class="dropdown-menu">
-          <div class="dropdown-item" @click="goTo('orders')">
-            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-            <span>My Orders</span>
+          <div class="dropdown-item">
+            <router-link 
+                to="/order" 
+                class="fa fa-shopping-bag"
+                @click.stop>My Orders
+            </router-link>
           </div>
-          <div class="dropdown-item" @click="goTo('profile')">
-            <i class="fa fa-user-o" aria-hidden="true"></i>
-            <span>View Profile</span>
+          <div class="dropdown-item">
+            <router-link 
+                to="/userProfile" 
+                class="fa fa-user-o" 
+                @click.stop>View Profile
+            </router-link>
           </div>
-          <div class="dropdown-item" @click="logout">
-            <i class="fa fa-sign-out" aria-hidden="true"></i>
-            <span>Logout</span>
+          <div class="dropdown-item">
+            <router-link 
+                to="/login" 
+                class="fa fa-sign-out"  
+                @click.stop>Logout
+            </router-link>
           </div>
         </div>
       </div>
     </nav>
   </header>
+    </div>
 </template>
 
 
 <script>
+  import router from '@/router/router';
+
 export default {
   name: "HeaderComponent",
   data() {
@@ -54,17 +66,8 @@ export default {
     toggleMenu() {
       this.isOpen = !this.isOpen;
     },
-    //Hier muss noch die Links hinzugefügt werden
-    goTo(route) {
-      if (route === "orders") {
-        this.$router.push("/");
-      } else if (route === "profile") {
-        this.$router.push("/");
-      } else if (route === "logout") {
-        this.$router.push("/");
-      }
-      this.isOpen = false;
-    },
+    
+    
   },
 };
 </script>
@@ -204,6 +207,8 @@ nav i:hover{
   gap: 10px; /* Abstand zwischen Icon und Text */
   cursor: pointer;
   transition: background 0.2s;
+  justify-content: space-between;
+  color: black !important;
 }
 
 .dropdown-item:hover {
