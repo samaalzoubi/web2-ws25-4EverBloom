@@ -1,7 +1,7 @@
 <template> 
     <div class="title"> 
       <router-link to="/"> <button>Back</button> </router-link>
-      <h1>Edit Profile</h1> 
+      <h1>Private Information </h1> 
 
     <div class="user-profile-container">
       <form>
@@ -11,6 +11,17 @@
               <label>Upload New Picture: </label>
               <input type="file" accept="image/*">
             </div>
+        </div>
+
+        
+        <div>
+          <label>Shop Name: </label>
+          <input placeholder="e.g. Rosenduft & Co" required>
+        </div>
+        
+        <div>
+          <label>Number: </label>
+          <input type="number" placeholder="+49 xxx ">>
         </div>
 
         <div>
