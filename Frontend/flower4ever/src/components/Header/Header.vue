@@ -1,53 +1,49 @@
 <template>
-  <div>
-  <header>
-    <router-link to="/flower4ever/src/components/CustomerShopView/" class="logo">
+  <header class="main-header">
+    <router-link to="/" class="logo-container">
       <img src="@/assets/Logo.png" alt="Flower Logo" width="70" height="70" />
-     </router-link>
-     <div>
-        <h1 class="material-symbols-outlined">BLÜMEO</h1>
+      <div class="logo-text">
+        <h1>BLÜMEO</h1>
         <h3>Design. Bloom. Inspire</h3>
       </div>
+    </router-link>
    
     <nav>
       <router-link to="" class="design-bouquet">
-        <span class="fx-3d">3D </span> esign Bouquet 🪄
+        <span class="fx-3d">3D</span>esign Bouquet 🪄
       </router-link>
 
-      <router-link to="/cart" class="fa fa-shopping-basket" style="transform: scale(1.2)">
+      <router-link to="/cart" class="cart-link">
+        <i class="fas fa-shopping-cart"></i>
         <span class="cart-count">{{ cartCount }}</span>
       </router-link>
 
       <div class="user-menu" @click="toggleMenu">
-        <i class="fa fa-user-circle-o sfa-4x;" style="transform: scale(1.3);" aria-hidden="true"></i>
+        <i class="fas fa-user-circle"></i>
         
         <div v-if="isOpen" class="dropdown-menu">
           <div class="dropdown-item">
-            <router-link 
-                to="/order" 
-                class="fa fa-shopping-bag"
-                @click.stop>My Orders
+            <router-link to="/customer-orders" @click.stop>
+              <i class="fas fa-shopping-bag"></i>
+              <span>My Orders</span>
             </router-link>
           </div>
           <div class="dropdown-item">
-            <router-link 
-                to="/userProfile" 
-                class="fa fa-user-o" 
-                @click.stop>View Profile
+            <router-link to="/userProfile" @click.stop>
+              <i class="fas fa-user"></i>
+              <span>View Profile</span>
             </router-link>
           </div>
           <div class="dropdown-item">
-            <router-link 
-                to="/login" 
-                class="fa fa-sign-out"  
-                @click.stop>Logout
+            <router-link to="/login" @click.stop>
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
             </router-link>
           </div>
         </div>
       </div>
     </nav>
   </header>
-    </div>
 </template>
 
 
@@ -72,50 +68,77 @@ export default {
 };
 </script>
 
-<style scoped>
-*{
-  margin: 0;
-  font-family: 'Poppins';
+<style>
+* {
+  box-sizing: border-box;
 }
 
-div h1{
-  padding-top: 14px;
-  padding-left: 28px;
-  font-size: 32px;
-  color: #7e4bb1;
-  font-weight: 1200;
+.main-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  min-height: 100px !important;
+  height: auto !important;
+  background-color: white !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  padding: 20px 30px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  z-index: 9999 !important;
+  margin: 0 !important;
 }
 
-div h3{
-  font-size: 18px;
-  padding-left: 28px;
-  padding-top: 10px;
-  color: #7e4bb1; 
-  font-weight: 1200;
+.main-header * {
+  box-sizing: border-box !important;
 }
 
-header {
-  display: flex;
-  width: 100%;
-  height: 100px;
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+.logo-container {
+  display: flex !important;
+  align-items: center !important;
+  gap: 15px !important;
+  text-decoration: none !important;
+  min-height: 70px !important;
 }
 
-img {
-  align-items: center;
-  padding-top: 10px;
-  text-decoration: none;
-  padding-left: 20px;
+.logo-container img {
+  padding: 0 !important;
+  display: block !important;
+  width: 70px !important;
+  height: 70px !important;
+  flex-shrink: 0 !important;
+}
+
+.logo-text {
+  display: block !important;
+  min-width: 200px !important;
+}
+
+.logo-text h1 {
+  padding: 0 !important;
+  font-size: 32px !important;
+  color: #7e4bb1 !important;
+  font-weight: 700 !important;
+  margin: 0 0 5px 0 !important;
+  line-height: 1.2 !important;
+  display: block !important;
+}
+
+.logo-text h3 {
+  font-size: 14px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #7e4bb1 !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  display: block !important;
 }
 
 nav {
- margin-left: auto;   /* DAS schiebt die Nav ganz nach rechts */
- display: flex;
- align-items: center;
- gap: 22px;
- padding-right: 30px;
+  display: flex !important;
+  align-items: center !important;
+  gap: 25px !important;
+  min-height: 50px !important;
 }
 
 nav a {
@@ -124,9 +147,16 @@ nav a {
   font-weight: 500;
   transition: color 0.3s;
   display: inline-flex;
+  align-items: center;
 }
 
-nav i:hover{
+nav i {
+  font-size: 24px;
+  color: #4b3c8a;
+  transition: color 0.3s;
+}
+
+nav i:hover {
   color: #b79bd3;
 }
 
@@ -134,17 +164,19 @@ nav i:hover{
   border: 3px solid transparent;
   border-radius: 1em;
   background: linear-gradient(white, white) padding-box,
-              linear-gradient(to left,  #7e4bb1, rgb(241, 194, 236)) border-box;
-  padding: 6px 12px;
+              linear-gradient(to left, #7e4bb1, rgb(241, 194, 236)) border-box;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .design-bouquet:hover {
-  background: linear-gradient( #d4bdf0,  #d4bdf0) padding-box,
-              linear-gradient(to left,  #7e4bb1, rgb(241, 194, 236)) border-box;
+  background: linear-gradient(#d4bdf0, #d4bdf0) padding-box,
+              linear-gradient(to left, #7e4bb1, rgb(241, 194, 236)) border-box;
 }
 
 .fx-3d {
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: .05em;
   background: linear-gradient(180deg, #fff, #f7f1ff 90%, #d2c6ff);
   -webkit-background-clip: text;
@@ -158,61 +190,79 @@ nav i:hover{
 
 .cart-link {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .cart-count {
   position: absolute;
-  top: -6px;
-  right: 0;
-  color: #4b3c8a;
-  font-size: 0.7rem;
-  font-weight: 600;
+  top: -8px;
+  right: -8px;
+  background-color: #7e4bb1;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
   border-radius: 50%;
-  padding: 1px 3px;
-  min-width: 17px;
+  padding: 2px 6px;
+  min-width: 18px;
   text-align: center;
   pointer-events: none;
-  transform: translateX(13px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .user-menu {
   position: relative;
   cursor: pointer;
-  color: #4b3c8a;
+}
+
+.user-menu i {
+  font-size: 28px;
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 150%;
+  top: calc(100% + 15px);
   right: 0;
-  color: black;
   background-color: white;
-  border: 1px solid #cccccc;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 180px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 200px;
   display: flex;
-  flex-direction: column; /* Wichtig: vertikal */
-  padding: 10px 0;
-  z-index: 50;
+  flex-direction: column;
+  padding: 8px 0;
+  z-index: 1000;
 }
 
 .dropdown-item {
+  transition: background 0.2s;
+}
+
+.dropdown-item a {
   display: flex;
   align-items: center;
-  padding: 8px 16px;
-  gap: 10px; /* Abstand zwischen Icon und Text */
-  cursor: pointer;
-  transition: background 0.2s;
-  justify-content: space-between;
-  color: black !important;
+  gap: 12px;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .dropdown-item:hover {
-  background-color: #d4bdf0;
-  color: white;
+  background-color: #f5f0ff;
+}
+
+.dropdown-item:hover a {
+  color: #7e4bb1;
+}
+
+.dropdown-item i {
+  font-size: 16px;
+  width: 20px;
+}
+
+.dropdown-item span {
+  font-size: 14px;
+  font-weight: 500;
 }
 </style>

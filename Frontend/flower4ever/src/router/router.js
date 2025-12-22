@@ -4,6 +4,8 @@ import Register from '../components/Login/Register.vue';
 import OwnerProfile from "@/components/Profile/OwnerProfile.vue";
 import UserProfile from "@/components/Profile/UserProfile.vue";
 import OwnerAccount from "@/components/Profile/OwnerAccount.vue";
+import CustomerOrders from "@/components/OrderVue/CustomerOrders.vue";
+import AdminOrders from "@/components/OrderVue/AdminOrders.vue";
 
 const routes = [
   {
@@ -26,6 +28,16 @@ const routes = [
     path: '/ownerAccount',
     component: OwnerAccount
   },
+  {
+    path: '/admin-orders',
+    name: 'CustomerOrders',
+    component: CustomerOrders
+  },
+  {
+    path: '/customer-orders',
+    name: 'AdminOrders',
+    component: AdminOrders
+  }
 ]
 
 export default createRouter({

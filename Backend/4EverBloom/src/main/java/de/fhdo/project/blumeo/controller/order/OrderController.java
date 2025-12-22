@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 //Lab5
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/orders")
 public class OrderController {
