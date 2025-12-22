@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test Page - BLÜMEO</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #e8d5f2 0%, #d4bdf0 50%, #c5b3e6 100%);
+        }
+        h1 {
+            color: #4b3c8a;
+        }
+        .test-section {
+            background: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #b79bd3;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+        button:hover {
+            background: #7e4bb1;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .status {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 BLÜMEO API Test Page</h1>
+    <p>Use this page to test your backend APIs before running the main application.</p>
+
+    <!-- Backend Status -->
+    <div class="test-section">
+        <h2>🔌 Backend Connection Test</h2>
+        <button onclick="testBackendConnection()">Test Backend (Port 8080)</button>
+        <div id="backend-result" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- REST API Tests -->
+    <div class="test-section">
+        <h2>🔴 REST API Tests</h2>
+        
+        <h3>Get Ratings by Customer</h3>
+        <label>Customer ID: <input type="number" id="rest-customer-id" value="1"></label>
+        <button onclick="testRESTGetRatingsByCustomer()">Test GET /api/v1/ratings/customer/{id}</button>
+        <div id="rest-customer-result" class="result" style="display:none;"></div>
+
+        <h3>Submit Rating</h3>
+        <label>Order ID: <input type="number" id="rest-order-id" value="1"></label>
+        <label>Customer ID: <input type="number" id="rest-submit-customer-id" value="1"></label>
+        <label>Rating (1-5): <input type="number" id="rest-rating" value="5" min="1" max="5"></label>
+        <label>Review: <input type="text" id="rest-review" value="Great service!" style="width:300px;"></label>
+        <button onclick="testRESTSubmitRating()">Test POST /api/v1/ratings</button>
+        <div id="rest-submit-result" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- GraphQL Tests -->
+    <div class="test-section">
+        <h2>🟣 GraphQL API Tests</h2>
+        
+        <h3>Get Orders by Customer</h3>
+        <label>Customer ID: <input type="number" id="graphql-customer-id" value="1"></label>
+        <button onclick="testGraphQLGetOrders()">Test Query: ordersByCustomer</button>
+        <div id="graphql-orders-result" class="result" style="display:none;"></div>
+
+        <h3>Get Ratings by Order</h3>
+        <label>Order ID: <input type="number" id="graphql-order-id" value="1"></label>
+        <button onclick="testGraphQLGetRatings()">Test Query: ratingsByOrder</button>
+        <div id="graphql-ratings-result" class="result" style="display:none;"></div>
+
+        <h3>Submit Rating</h3>
+        <label>Order ID: <input type="number" id="graphql-submit-order-id" value="1"></label>
+        <label>Customer ID: <input type="number" id="graphql-submit-customer-id" value="1"></label>
+        <label>Rating (1-5): <input type="number" id="graphql-rating" value="5" min="1" max="5"></label>
+        <label>Review: <input type="text" id="graphql-review" value="Excellent!" style="width:300px;"></label>
+        <button onclick="testGraphQLSubmitRating()">Test Mutation: submitRating</button>
+        <div id="graphql-submit-result" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        const REST_BASE = 'http://localhost:8080/api/v1';
+        const GRAPHQL_URL = 'http://localhost:8080/graphql';
+
+        function showResult(elementId, content, isSuccess) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = 'result ' + (isSuccess ? 'success' : 'error');
+            element.innerHTML = content;
+        }
+
+        async function testBackendConnection() {
+            try {
+                const response = await fetch('http://localhost:8080/actuator/health')
+                    .catch(() => fetch('http://localhost:8080/'));
+                
+                if (response.ok) {
+                    showResult('backend-result', 
+                        '✅ SUCCESS\n\nBackend is running on http://localhost:8080\nStatus: ' + response.status,
+                        true);
+                } else {
+                    showResult('backend-result', 
+                        '⚠️ WARNING\n\nBackend responded but with status: ' + response.status,
+                        false);
+                }
+            } catch (error) {
+                showResult('backend-result', 
+                    '❌ ERROR\n\nCannot connect to backend at http://localhost:8080\n\nMake sure Spring Boot is running:\ncd Backend/4EverBloom\n./mvnw spring-boot:run\n\nError: ' + error.message,
+                    false);
+            }
+        }
+
+        async function testRESTGetRatingsByCustomer() {
+            const customerId = document.getElementById('rest-customer-id').value;
+            try {
+                const response = await fetch(`${REST_BASE}/ratings/customer/${customerId}`);
+                const data = await response.json();
+                
+                showResult('rest-customer-result', 
+                    `✅ SUCCESS\n\nGET /api/v1/ratings/customer/${customerId}\nStatus: ${response.status}\n\nResponse:\n${JSON.stringify(data, null, 2)}`,
+                    true);
+            } catch (error) {
+                showResult('rest-customer-result', 
+                    `❌ ERROR\n\n${error.message}\n\nCheck:\n1. Backend is running\n2. CORS is enabled (@CrossOrigin annotation)\n3. Customer ${customerId} exists`,
+                    false);
+            }
+        }
+
+        async function testRESTSubmitRating() {
+            const orderId = document.getElementById('rest-order-id').value;
+            const customerId = document.getElementById('rest-submit-customer-id').value;
+            const rating = document.getElementById('rest-rating').value;
+            const review = document.getElementById('rest-review').value;
+
+            const data = {
+                orderId: parseInt(orderId),
+                customerId: parseInt(customerId),
+                ratingScore: parseInt(rating),
+                review: review
+            };
+
+            try {
+                const response = await fetch(`${REST_BASE}/ratings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                showResult('rest-submit-result', 
+                    `✅ SUCCESS\n\nPOST /api/v1/ratings\nStatus: ${response.status}\n\nRequest:\n${JSON.stringify(data, null, 2)}\n\nResponse:\n${JSON.stringify(result, null, 2)}`,
+                    true);
+            } catch (error) {
+                showResult('rest-submit-result', 
+                    `❌ ERROR\n\n${error.message}`,
+                    false);
+            }
+        }
+
+        async function executeGraphQL(query, variables) {
+            const response = await fetch(GRAPHQL_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query, variables })
+            });
+            
+            const result = await response.json();
+            if (result.errors) {
+                throw new Error(result.errors[0].message);
+            }
+            return result.data;
+        }
+
+        async function testGraphQLGetOrders() {
+            const customerId = document.getElementById('graphql-customer-id').value;
+            const query = `
+                query OrdersByCustomer($customerId: ID!) {
+                    ordersByCustomer(customerId: $customerId) {
+                        id
+                        orderDate
+                        totalAmount
+                        status
+                        items {
+                            bouquetName
+                            quantity
+                            price
+                        }
+                    }
+                }
+            `;
+
+            try {
+                const data = await executeGraphQL(query, { customerId });
+                showResult('graphql-orders-result', 
+                    `✅ SUCCESS\n\nQuery: ordersByCustomer(customerId: "${customerId}")\n\nResponse:\n${JSON.stringify(data, null, 2)}`,
+                    true);
+            } catch (error) {
+                showResult('graphql-orders-result', 
+                    `❌ ERROR\n\n${error.message}\n\nCheck:\n1. GraphQL endpoint is enabled\n2. Schema file exists (orders.graphqls)\n3. Customer ${customerId} has orders`,
+                    false);
+            }
+        }
+
+        async function testGraphQLGetRatings() {
+            const orderId = document.getElementById('graphql-order-id').value;
+            const query = `
+                query RatingsByOrder($orderId: ID!) {
+                    ratingsByOrder(orderId: $orderId) {
+                        id
+                        ratingScore
+                        review
+                        orderId
+                        customerId
+                    }
+                }
+            `;
+
+            try {
+                const data = await executeGraphQL(query, { orderId });
+                showResult('graphql-ratings-result', 
+                    `✅ SUCCESS\n\nQuery: ratingsByOrder(orderId: "${orderId}")\n\nResponse:\n${JSON.stringify(data, null, 2)}`,
+                    true);
+            } catch (error) {
+                showResult('graphql-ratings-result', 
+                    `❌ ERROR\n\n${error.message}`,
+                    false);
+            }
+        }
+
+        async function testGraphQLSubmitRating() {
+            const orderId = document.getElementById('graphql-submit-order-id').value;
+            const customerId = document.getElementById('graphql-submit-customer-id').value;
+            const rating = document.getElementById('graphql-rating').value;
+            const review = document.getElementById('graphql-review').value;
+
+            const mutation = `
+                mutation SubmitRating($input: RatingInput!) {
+                    submitRating(input: $input) {
+                        id
+                        ratingScore
+                        review
+                        orderId
+                        customerId
+                    }
+                }
+            `;
+
+            const input = {
+                orderId: orderId,
+                customerId: customerId,
+                ratingScore: parseInt(rating),
+                review: review
+            };
+
+            try {
+                const data = await executeGraphQL(mutation, { input });
+                showResult('graphql-submit-result', 
+                    `✅ SUCCESS\n\nMutation: submitRating\nInput:\n${JSON.stringify(input, null, 2)}\n\nResponse:\n${JSON.stringify(data, null, 2)}`,
+                    true);
+            } catch (error) {
+                showResult('graphql-submit-result', 
+                    `❌ ERROR\n\n${error.message}`,
+                    false);
+            }
+        }
+
+        // Auto-test backend on load
+        window.onload = () => {
+            testBackendConnection();
+        };
+    </script>
+</body>
+</html>
