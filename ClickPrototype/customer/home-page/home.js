@@ -1,5 +1,5 @@
 import { API_MODE } from "../../config/api.config.js";
-import { fetchFlowersREST, addToCartREST, getActiveCartREST, patchCartItemQuantity, clearCartREST } from "./home-rest.js";
+import { fetchFlowersREST, addToCartREST, getActiveCartREST, patchCartItemQuantity, clearCartREST, fetchShopsREST } from "./home-rest.js";
 import { loadLayout } from "../../layout/layout.js";
 //import { fetchFlowersGraphQL } from "./home-graphql.js";
 
@@ -8,16 +8,22 @@ const DEFAULT_BOUQUET_IMAGE = "https://peoplesflowers.imgix.net/images/itemVaria
 
 async function loadHome() {
   try {
-    const data =
+    const bouquets =
       API_MODE === "REST"
         ? await fetchFlowersREST()
         : await fetchFlowersGraphQL();
 
-      
-    renderFlowers(data);
+    renderFlowers(bouquets);
+
+    const shops =
+      API_MODE === "REST"
+        ? await fetchShopsREST()
+        : await fetchShopsGraphQL();
+
+    renderShopsCarousel(shops);
   } catch (err) {
     console.error("Failed to load home", err);
-    showError("Could not load bouquets. Please try again.");
+    showError("Could not load home data. Please try again.");
   }
 }
 
@@ -25,11 +31,12 @@ function renderFlowers(shopsData) {
   let listProductHTML = document.querySelector('.flower-suggestions');
   listProductHTML.innerHTML = '';
 
-  //shopsData: [{ shopId, shopName?, bouquets: [...] }, ...]
+  //shopsData: [{ shopId, shopLogo?, bouquets: [...] }, ...]
   const bouquets = shopsData.flatMap(shop =>
     (shop.bouquets || []).map(b => ({
-      ...b
-      //shopName: shop.shopName
+      ...b,
+      shopLogo: shop.shopLogo,
+      shopId: shop.shopId
     }))
   );
 
@@ -37,7 +44,8 @@ function renderFlowers(shopsData) {
     let newProduct = document.createElement('li');
     newProduct.classList.add("bouquet-card");
 
-    //TODO: add shop name/logo, description and occasions into the template
+    const logoSrc = product.shopLogo || "../../assets/default-flower-shop-logo.png";
+
     newProduct.innerHTML = `
       <div class="bouquet-card__link">
         <figure class="bouquet-card__media">
@@ -47,14 +55,99 @@ function renderFlowers(shopsData) {
         <figcaption class="bouquet-card__caption">
           <span class="bouquet-card__name">${product.name}</span>
           <span class="bouquet-card__price"> ${formatPriceEUR(product.price)}</span>
-          <button class="add-to-cart-btn" type="button">Add to Cart</button>
+          <div class="bouquet-card__bottom-row">
+            <button class="add-to-cart-btn" type="button">Add to Cart</button>
+            <div class="bouquet-card__shop">
+              <img
+                class="bouquet-card__shop-logo"
+                src="${logoSrc}"
+                alt="Shop logo"
+              />
+            </div>
+          </div>
         </figcaption>
       </div>`
 
-      newProduct.querySelector(".add-to-cart-btn").addEventListener("click", () => addToCart(product.id));
+    const logoEl = newProduct.querySelector(".bouquet-card__shop-logo");
+    logoEl.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (product.shopId) {
+        window.location.href =
+          `../../customer-shop-view/shop-profile.html?shopId=${product.shopId}`;
+      }
+    });
+
+    newProduct.querySelector(".add-to-cart-btn").addEventListener("click", () => addToCart(product.id));
 
     listProductHTML.appendChild(newProduct)
   })
+}
+
+function renderShopsCarousel(shops) {
+  const carousel = document.getElementById("shop-carousel");
+  if (!carousel) return;
+
+  carousel.innerHTML = "";
+
+  shops.forEach((shop) => {
+    const img = document.createElement("img");
+
+    if (shop.logo) {
+      img.src = shop.logo;
+    } else {
+      //TODO
+      //img.src = "../../assets/default-flower-shop-logo.png"; // Fallback
+    }
+
+    img.alt = shop.shopName || "Flower Shop";
+    img.style.cursor = "pointer";
+
+    //TODO
+    img.addEventListener("click", () => {
+      window.location.href =
+        `../../customer-shop-view/shop-profile.html?shopId=${shop.id}`;
+    });
+
+    carousel.appendChild(img);
+  });
+
+  initShopCarousel();
+}
+
+function initShopCarousel() {
+  const slide  = document.getElementById("shop-carousel");
+  const buttons = document.querySelectorAll(".carousel-button");
+  if (!slide || buttons.length < 2) return;
+
+  const firstImage = slide.querySelector("img");
+  if (!firstImage) return;
+
+  const showHideButtons = () => {
+    const scrollWidth = slide.scrollWidth - slide.clientWidth;
+
+    if (scrollWidth <= 0) {
+      buttons[0].style.display = "none";
+      buttons[1].style.display = "block";
+      return;
+    }
+
+    buttons[0].style.display = slide.scrollLeft === 0 ? "none" : "block";
+    buttons[1].style.display =
+      slide.scrollLeft >= scrollWidth ? "none" : "block";
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const firstImageWidth = firstImage.clientWidth + 35;
+      slide.scrollLeft +=
+        button.getAttribute("data-carousel-button") === "next"
+          ? firstImageWidth
+          : -firstImageWidth;
+      setTimeout(showHideButtons, 60);
+    });
+  });
+
+  setTimeout(showHideButtons, 150);
 }
 
 function showError(msg) {
@@ -239,6 +332,3 @@ window.changeQuantity = async function changeQuantity($idProduct, $operationType
     alert(e.message);
   }
 }
-
-//TODO: remove item from cart button
-//TODO: clear cart button

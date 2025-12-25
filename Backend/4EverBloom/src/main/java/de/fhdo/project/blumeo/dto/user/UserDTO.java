@@ -14,7 +14,7 @@ public class UserDTO {
     private String password;
     private Role role; // OWNER or USER
 
-    private Integer number;
+    private String phoneNumber;
     private Address address;
     private String shopName;
     private String description;
@@ -22,5 +22,4 @@ public class UserDTO {
     private String link;
     private String flowerShopType;
     private String logo;
-
 }

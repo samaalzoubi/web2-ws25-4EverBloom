@@ -3,7 +3,6 @@
 extend type Query {
     bouquetsForShop(shopId: ID!): [PremadeBouquetSummary!]!
     latestPremadeBouquetsPerShop: [ShopLatestPremadeBouquetsDTO!]!
-    #popularBouquetsForShop(shopId: ID!): [PremadeBouquetSummary!]!
 }
 
 extend type Mutation {
@@ -70,7 +69,7 @@ type PremadeBouquetSummary {
 
 type ShopLatestPremadeBouquetsDTO {
     shopId: ID!
-    #shopName: String!
+    shopLogo: String!
     bouquets: [BouquetDetailsDTO!]!
 }
 

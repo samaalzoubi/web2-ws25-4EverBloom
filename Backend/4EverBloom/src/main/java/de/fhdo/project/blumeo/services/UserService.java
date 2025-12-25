@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.services;
 
+import de.fhdo.project.blumeo.entity.user.Role;
 import de.fhdo.project.blumeo.utils.mapper.user.UserMapper;
 import de.fhdo.project.blumeo.dto.user.RegisterRequest;
 import de.fhdo.project.blumeo.dto.user.UserDTO;
@@ -22,8 +23,9 @@ public class UserService {
         this.userConverter = userConverter;
     }
 
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
+    public List<UserDTO> getAllOwners() {
+        return userRepository.findAllByRole(Role.OWNER)
+                .stream()
                 .map(userConverter::toDTO)
                 .toList();
     }

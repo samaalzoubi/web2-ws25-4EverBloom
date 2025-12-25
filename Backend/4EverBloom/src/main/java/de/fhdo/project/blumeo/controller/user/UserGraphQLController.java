@@ -22,8 +22,8 @@ public class UserGraphQLController {
 
     // -------------------- Queries --------------------
     @QueryMapping
-    public List<UserDTO> allUsers() {
-        return userService.getAllUsers();
+    public List<UserDTO> allOwners() {
+        return userService.getAllOwners();
     }
 
     @QueryMapping
@@ -54,15 +54,12 @@ public class UserGraphQLController {
     public UserDTO updateUser(@Argument Long id,
                               @Argument String username,
                               @Argument String email,
-                              @Argument String password,
-                              @Argument String role) {
+                              @Argument String password) {
         UserDTO dto = new UserDTO();
         dto.setUsername(username);
         dto.setEmail(email);
         dto.setPassword(password);
-        if (role != null) {
-            dto.setRole(Enum.valueOf(de.fhdo.project.blumeo.entity.user.Role.class, role));
-        }
+
         return userService.updateUser(id, dto);
     }
 

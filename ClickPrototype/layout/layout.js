@@ -6,7 +6,7 @@ export async function loadLayout() {
 }
 
 async function loadHeader() {
-  const response = await fetch("../../Header/header.html");
+  const response = await fetch("/ClickPrototype/Header/header.html");
   const html = await response.text();
 
   const mount = document.getElementById("header");
@@ -18,7 +18,7 @@ async function loadHeader() {
 }
 
 async function loadFooter() {
-  const response = await fetch("../../footer/footer.html");
+  const response = await fetch("/ClickPrototype/footer/footer.html");
   const html = await response.text();
 
   const mount = document.getElementById("footer");

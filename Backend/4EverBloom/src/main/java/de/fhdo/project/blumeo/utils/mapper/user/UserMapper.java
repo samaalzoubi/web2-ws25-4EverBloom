@@ -15,6 +15,14 @@ public class UserMapper {
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole());
+        dto.setDate(user.getDate());
+        dto.setAddress(user.getAddress());
+        dto.setLogo(user.getLogo());
+        dto.setLink(user.getLink());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setDescription(user.getDescription());
+        dto.setShopName(user.getShopName());
+        dto.setFlowerShopType(user.getFlowerShopType());
         return dto;
     }
 
@@ -30,6 +38,6 @@ public class UserMapper {
     public void updateEntity(User user, UserDTO dto) {
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
-        user.setRole(dto.getRole());
+        user.setPassword(dto.getPassword());
     }
 }

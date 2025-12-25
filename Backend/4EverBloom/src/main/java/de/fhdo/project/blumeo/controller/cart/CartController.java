@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import de.fhdo.project.blumeo.dto.cart.CartResponseDTO;
 import de.fhdo.project.blumeo.services.CartService;
 
-//TODO: Javadoc
+import java.util.Map;
+
 //Lab5
 @RestController
 @RequestMapping(
@@ -58,9 +59,14 @@ public class CartController {
     }
 
      @PostMapping("/{userId}/items")
-     public ResponseEntity<CartResponseDTO> addItem(@PathVariable Long userId, @RequestParam Long bouquetId) {
-          CartResponseDTO dto = cartService.addItemToCart(userId, bouquetId);
-          return new ResponseEntity<>(dto, HttpStatus.CREATED);
+     public ResponseEntity<?> addItem(@PathVariable Long userId, @RequestParam Long bouquetId) {
+         try {
+             CartResponseDTO dto = cartService.addItemToCart(userId, bouquetId);
+             return new ResponseEntity<>(dto, HttpStatus.CREATED);
+         } catch (IllegalStateException ex) {
+             Map<String, String> errorBody = Map.of("message", ex.getMessage());
+             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorBody);
+         }
     }
 }
 

@@ -25,7 +25,13 @@ export async function addToCartREST(userId, bouquetId) {
   });
 
   if (!response.ok) {
-    throw new Error(`Add to cart failed: ${response.status}`);
+    let message = "Could not add item to cart.";
+    const errorBody = await response.json();
+    if (errorBody && errorBody.message) {
+      message = errorBody.message;
+    }
+
+    throw new Error(message);
   }
 
   return await response.json();
@@ -72,3 +78,17 @@ export async function clearCartREST(userId) {
 
   return true;
 }
+
+export async function fetchShopsREST() {
+  const url = `${REST_BASE}/users/owners`;
+
+  const response = await fetch(url, {
+    headers: { Accept: "application/json" }
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch owners");
+  }
+  return await response.json();
+}
+

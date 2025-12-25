@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//TODO: Exception handling, JavaDoc
 //Lab5
 @RestController
 @RequestMapping(
@@ -74,12 +73,5 @@ public class BouquetController {
 
         return ResponseEntity.ok(result);
     }
-
-
-    /*@GetMapping("/shops/{shopId}/popular")
-    public ResponseEntity<List<PremadeBouquetSummary>> getPopularBouquetsForShop(@PathVariable Long shopId) {
-        List<PremadeBouquetSummary> list = bouquetService.getPopularBouquetsForShop(shopId);
-        return ResponseEntity.ok(list);
-    }*/
 }
 

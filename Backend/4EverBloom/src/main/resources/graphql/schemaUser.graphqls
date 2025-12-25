@@ -12,7 +12,7 @@ type User {
 }
 
 extend type Query {
-    allUsers: [User!]!
+    allOwners: [User!]!
     userById(id: ID!): User
 }
 
@@ -24,7 +24,7 @@ extend type Mutation {
         role: String!
     ): User!
     login(email: String!, password: String!): User
-    updateUser(id: ID!, username: String, email: String, password: String, role: Role): User
+    updateUser(id: ID!, username: String, email: String, password: String): User
     deleteUser(id: ID!): Boolean!
 }
 

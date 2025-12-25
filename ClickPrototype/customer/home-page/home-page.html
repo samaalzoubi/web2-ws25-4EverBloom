@@ -44,16 +44,7 @@
             <h3>Happiness Hubs</h3>
             <button class="carousel-button prev" data-carousel-button="prev">&#10594;</button>
             <button class="carousel-button next" data-carousel-button="next">&#10596;</button>
-            <div class="carousel">
-                <img src="../../assets/flower-shop-logo-1.jpg" alt="Flower Shop Logo 1">
-                <img src="../../assets/flower-shop-logo-2.jpg" alt="Flower Shop Logo 2">
-                <img src="../../assets/flower-shop-logo-3.webp" alt="Flower Shop Logo 3">
-                <img src="../../assets/flower-shop-logo-4.jpg" alt="Flower Shop Logo 4">
-                <img src="../../assets/flower-shop-logo-5.webp" alt="Flower Shop Logo 5">
-                <img src="../../assets/flower-shop-logo-6.avif" alt="Flower Shop Logo 6">
-                <img src="../../assets/flower-shop-logo-7.jpg.avif" alt="Flower Shop Logo 7">
-                <img src="../../assets/flower-shop-logo-8.png" alt="Flower Shop Logo 8">
-            </div>
+            <div class="carousel" id="shop-carousel"></div>
         </div>
 
         <section class="petals-of-happiness">
@@ -79,45 +70,6 @@
         </div>
     </div>
     <div id="footer"></div>
-    <script type="module">
-        import { loadLayout } from "/ClickPrototype/layout/layout.js";
-        loadLayout();
-
-        //Slider of flower shops
-        const slide  = document.querySelector(".carousel");
-        const buttons = document.querySelectorAll(".carousel-button");
-        buttons[0].style.display = "none";
-        const firstImage = slide.querySelectorAll("img")[0]
-
-        const showHideButtons = () => {
-            let scrollWidth = slide.scrollWidth - slide.clientWidth;
-            buttons[0].style.display = slide.scrollLeft === 0 ? "none" : "block";
-            buttons[1].style.display = slide.scrollLeft === scrollWidth ? "none" : "block";
-        }
-        
-        buttons.forEach(button => {
-            button.addEventListener("click", () => {
-                let firstImageWidth = firstImage.clientWidth + 35;
-                slide.scrollLeft +=  button.getAttribute("data-carousel-button") === "next" ? firstImageWidth : -firstImageWidth;
-                setTimeout(() => showHideButtons(), 60)
-            })
-        });
-
-        //Toggle profile of the first flower shop
-        document.addEventListener("DOMContentLoaded", () => {
-        const firstLogo = document.querySelector(".carousel img:first-child");
-        if (!firstLogo) return;
-
-        firstLogo.style.cursor = "pointer"; // Hand-Cursor anzeigen
-
-        firstLogo.addEventListener("click", () => {
-            window.location.href = "../../customer-shop-view/shop-profile.html";
-        });
-        });
-
-        //TODO: load shops dynamically from backend
-
-</script>
 
     <!-- Chatbot -->
     <div id="chatbot" class="chatbot">
@@ -138,62 +90,66 @@
     
     <button class="chatbot-toggle">💬</button>
 
-<script>
-  // Chatbot functionality
-  document.addEventListener('DOMContentLoaded', function() {
-    const chatbot = document.getElementById('chatbot');
-    const chatbotToggle = document.querySelector('.chatbot-toggle');
-    const chatbotClose = document.querySelector('.chatbot-close');
-    const chatInput = document.querySelector('.chatbot-input input');
-    const sendButton = document.querySelector('.chatbot-input button');
+<script type="module">
+import { loadLayout } from "/ClickPrototype/layout/layout.js";
+
+loadLayout();
+
+// Chatbot functionality
+document.addEventListener('DOMContentLoaded', function() {
+const chatbot = document.getElementById('chatbot');
+const chatbotToggle = document.querySelector('.chatbot-toggle');
+const chatbotClose = document.querySelector('.chatbot-close');
+const chatInput = document.querySelector('.chatbot-input input');
+const sendButton = document.querySelector('.chatbot-input button');
     
-    // Toggle chatbot
-    chatbotToggle.addEventListener('click', function() {
-      chatbot.classList.toggle('open');
-    });
+// Toggle chatbot
+chatbotToggle.addEventListener('click', function() {
+  chatbot.classList.toggle('open');
+});
     
-    // Close chatbot
-    chatbotClose.addEventListener('click', function() {
-      chatbot.classList.remove('open');
-    });
+// Close chatbot
+chatbotClose.addEventListener('click', function() {
+  chatbot.classList.remove('open');
+});
     
-    // Send message on Enter key
-    chatInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
-    });
+// Send message on Enter key
+chatInput.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    sendMessage();
+  }
+});
     
-    // Send message on button click
-    sendButton.addEventListener('click', sendMessage);
+// Send message on button click
+sendButton.addEventListener('click', sendMessage);
     
-    function sendMessage() {
-      const message = chatInput.value.trim();
-      if (message) {
-        // Add user message
-        const chatBody = document.querySelector('.chatbot-body');
-        const userMessage = document.createElement('div');
-        userMessage.className = 'chatbot-message user';
-        userMessage.textContent = message;
-        chatBody.appendChild(userMessage);
+function sendMessage() {
+  const message = chatInput.value.trim();
+  if (message) {
+  // Add user message
+    const chatBody = document.querySelector('.chatbot-body');
+    const userMessage = document.createElement('div');
+    userMessage.className = 'chatbot-message user';
+    userMessage.textContent = message;
+    chatBody.appendChild(userMessage);
         
-        // Clear input
-        chatInput.value = '';
+    // Clear input
+    chatInput.value = '';
         
-        // Scroll to bottom
-        chatBody.scrollTop = chatBody.scrollHeight;
+    // Scroll to bottom
+    chatBody.scrollTop = chatBody.scrollHeight;
         
-        // Simulate bot response
-        setTimeout(() => {
-          const botMessage = document.createElement('div');
-          botMessage.className = 'chatbot-message bot';
-          botMessage.textContent = 'Thank you for your message! Our team will assist you shortly. 🌸';
-          chatBody.appendChild(botMessage);
-          chatBody.scrollTop = chatBody.scrollHeight;
-        }, 1000);
-      }
-    }
-  });
+    // Simulate bot response
+    setTimeout(() => {
+      const botMessage = document.createElement('div');
+      botMessage.className = 'chatbot-message bot';
+      botMessage.textContent = 'Thank you for your message! Our team will assist you shortly. 🌸';
+      chatBody.appendChild(botMessage);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }, 1000);
+  }
+}
+});
 </script>
 
 <script type="module" src="./home.js"></script>

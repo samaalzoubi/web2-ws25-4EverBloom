@@ -49,6 +49,7 @@ main {
 
 .checkoutLayout .list img {
     height: 80px;
+    width: 100px;
     border-radius: 10px;
 }
 
