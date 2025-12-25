@@ -38,13 +38,23 @@ public class OrderService {
     @Transactional
     public OrderDTO createOrder(Long userId, List<Long> bouquetIds, List<Integer> quantities, Address address) {
 
+
+        // ---- Basic validation 
+        if (bouquetIds == null || quantities == null || bouquetIds.isEmpty()) {
+            throw new IllegalArgumentException("Order must contain at least one item");
+        }
+        if (bouquetIds.size() != quantities.size()) {
+            throw new IllegalArgumentException("Bouquet IDs and quantities must have same size");
+        }
+
+
         User customer = userRepository.findByIdAndRole(userId, Role.CUSTOMER).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Order order = new Order();
         order.setCustomer(customer);
         order.setDeliveryAddress(address);
         order.setStatus(OrderStatus.CREATED);
-
+// total represents totalamount
         double total = 0;
 
         for (int i = 0; i < bouquetIds.size(); i++) {
@@ -69,12 +79,22 @@ public class OrderService {
         Order saved = orderRepository.save(order);
 
         return orderMapper.toDto(saved);
-    }
+}
 
     public OrderDTO getOrder(Long id) {
         return orderRepository.findById(id)
                 .map(orderMapper::toDto)
                 .orElse(null);
+    }
+    /**
+     * Get all orders for a customer (Lab 5 REST endpoint)
+     */
+    public List<OrderDTO> getOrdersByCustomer(Long customerId) {
+        return orderRepository
+                .findByCustomer_Id(customerId)
+                .stream()
+                .map(orderMapper::toDto)
+                .toList();
     }
 
     @Transactional

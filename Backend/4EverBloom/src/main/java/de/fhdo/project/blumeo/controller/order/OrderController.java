@@ -4,6 +4,8 @@ import de.fhdo.project.blumeo.dto.order.CreateOrderRequest;
 import de.fhdo.project.blumeo.dto.order.OrderDTO;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
 import de.fhdo.project.blumeo.services.OrderService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,7 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
-
-    @PostMapping("/{userId}")
+  @PostMapping("/{userId}")
     public ResponseEntity<OrderDTO> createOrder(
             @PathVariable Long userId,
             @RequestBody CreateOrderRequest request) {
@@ -29,7 +30,8 @@ public class OrderController {
                 request.quantities(),
                 request.address()
         );
-        return ResponseEntity.ok(dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @PatchMapping("/{orderId}/status")
@@ -40,8 +42,14 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateStatus(orderId, status));
     }
 
-    @GetMapping("/{orderId}")
+       @GetMapping("/{orderId}")
     public ResponseEntity<OrderDTO> getOrder(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderService.getOrder(orderId));
+
+        OrderDTO dto = orderService.getOrder(orderId);
+        if (dto == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(dto);
     }
 }
