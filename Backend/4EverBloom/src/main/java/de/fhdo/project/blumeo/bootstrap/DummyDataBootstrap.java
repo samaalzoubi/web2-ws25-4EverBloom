@@ -87,8 +87,8 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
 
         Address ownerAddress = new Address();
         ownerAddress.setCity("Dortmund");
-        ownerAddress.setStreetAddress("Musterstraße 12");
-        ownerAddress.setZipCode("44137");
+        ownerAddress.setStreetAddress("Viktoriastraße 15");
+        ownerAddress.setZipCode("44135");
         ownerAddress.setState("North Rhine-Westphalia");
         owner.setAddress(ownerAddress);
 
@@ -127,9 +127,9 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         owner2.setDate(new Date());
 
         Address owner2Address = new Address();
-        owner2Address.setCity("Bochum");
-        owner2Address.setStreetAddress("Blumenallee 5");
-        owner2Address.setZipCode("44787");
+        owner2Address.setCity("Düsseldorf");
+        owner2Address.setStreetAddress("Schwanenmarkt 24");
+        owner2Address.setZipCode("40213");
         owner2Address.setState("North Rhine-Westphalia");
         owner2.setAddress(owner2Address);
 

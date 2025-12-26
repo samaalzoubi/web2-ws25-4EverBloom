@@ -16,6 +16,8 @@ public class UserDTO {
 
     private String phoneNumber;
     private Address address;
+    private Double latitude;
+    private Double longitude;
     private String shopName;
     private String description;
     private Date date;

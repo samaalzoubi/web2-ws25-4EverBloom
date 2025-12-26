@@ -8,6 +8,48 @@
     box-shadow: #9696de 0px 5px 15px;
 }
 
+.popup-content {
+  text-align: center;
+  padding: 6px;
+}
+
+.popup-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 6px;
+  border: 2px solid var(--color-accent-light);
+}
+
+.popup-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.popup-address {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.popup-btn {
+  background: var(--color-accent-light);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+.popup-btn:hover {
+  opacity: 0.85;
+  background-color: var(--color-btn-hover);
+}
+
 /* Chatbot Styles */
 .chatbot {
   position: fixed;
