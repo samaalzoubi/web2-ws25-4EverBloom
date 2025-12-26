@@ -1,47 +1,21 @@
-:root {
-  /* Colors */
-  --color-header-background: rgba(255, 255, 255, 0.7);
-  --color-background: #ffffff;
-  --color-background-secondary: #d4bdf0;
-  --color-text-dark: #333333;
-  --color-hover: #b79bd3;
-  --color-box-shadows: rgba(0, 0, 0, 0.05);
-
-  /* Accent & Text Colors */
-  --color-accent-dark: #4b3c8a;
-  --color-accent-light: #7e4bb1;
-  --color-accent-hover: #5b2e91;
-  --color-subtitle: #666666;
-  --color-border: #cccccc;
-  --color-footer-bg: rgba(255, 255, 255, 0.6);
-  --color-footer-text: #666666;
-  --color-toggle-text: #555555;
-  --color-btn-hover: #9f7cc1;
-}
-
-
- body {
-      background-color: var(--color-background);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      color: var(--color-text-dark);
-    }
-
     .container {
-      max-width: 900px;
-      margin: 50px auto;
+      width: 100%;
+      margin-top: 150px;
       padding: 20px;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     /* Back Button */
     .back-btn {
       position: absolute;
       top: 0;
-      left: 0;
+      left: 0px;
       padding: 10px 20px;
-      margin: 10px;
+      margin: 40px;
       border: none;
       border-radius: 12px;
       background-color: var(--color-accent-light);
@@ -57,7 +31,7 @@
       transform: scale(1.05);
     }
 
-    h1 {
+    .container .profile-settings-title {
       text-align: center;
       color: var(--color-accent-dark);
       margin-bottom: 40px;
@@ -70,6 +44,7 @@
       margin-bottom: 30px;
       box-shadow: 0 8px 20px var(--color-box-shadows);
       transition: transform 0.3s;
+      width: 70vw;
     }
 
     .card:hover {

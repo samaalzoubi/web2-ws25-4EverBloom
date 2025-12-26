@@ -10,11 +10,13 @@
 
 <body>
 
+  <div id="header"></div>
+
   <div class="container">
     <!-- Back Button -->
-    <a href="/ClickPrototype/customer-view/home-page/home-page.html" class="back-btn"> Back</a>
+    <a href="/ClickPrototype/customer-view/home-page/home-page.html" class="back-btn">Back</a>
 
-    <h1>Profile Settings</h1>
+    <h1 class="profile-settings-title">Profile Settings</h1>
 
     <!-- Change Profile Picture -->
     <div class="card">
@@ -45,5 +47,13 @@
 
   </div>
 
+<div id="footer"></div>
+<script type="module"> 
+import { loadLayout } from '/ClickPrototype/layout/layout.js'
+
+document.addEventListener('DOMContentLoaded', async() => {
+    await loadLayout(); 
+});
+</script>
 </body>
 </html>

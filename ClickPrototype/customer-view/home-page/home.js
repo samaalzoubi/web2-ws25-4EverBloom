@@ -1,10 +1,9 @@
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
-import { fetchFlowersREST, addToCartREST, getActiveCartREST, patchCartItemQuantity, clearCartREST, fetchShopsREST } from "./home-rest.js";
+import { fetchFlowersREST, fetchShopsREST } from "./home-rest.js";
 import { loadLayout } from "/ClickPrototype/layout/layout.js";
+import { addToCart } from "../../layout/cart.js"
 //import { fetchFlowersGraphQL, fetchShopsGraphQL } from "./home-graphql.js";
 
-let cartState = null;
-const DEFAULT_BOUQUET_IMAGE = "https://peoplesflowers.imgix.net/images/itemVariation/designers-choice-7983070-2-200515317401-21021884408.jpg?w=600&h=720&fit=crop&dpr=2";
 const DEFAULT_SHOP_LOGO = "https://images.scalebranding.com/flower-shop-logo-2a1cfde0-daf2-417f-a0a6-de1d596a23d7.jpg";
 
 async function loadHome() {
@@ -78,7 +77,7 @@ function renderFlowers(shopsData) {
       }
     });
 
-    newProduct.querySelector(".add-to-cart-btn").addEventListener("click", () => addToCart(product.id));
+    newProduct.querySelector(".add-to-cart-btn").addEventListener("click", async () => addToCart(product.id));
 
     listProductHTML.appendChild(newProduct)
   })
@@ -172,157 +171,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-document.addEventListener("header:ready", async () => {
-  const cartIcon = document.querySelector("#header .cart-link");
-  const cartMenu = document.querySelector(".cart");
-  const close = document.querySelector(".close");
-  const checkoutButton = document.getElementById("checkoutBtn");
-  const clearBtn = document.getElementById("clearCartBtn");
-
-  if (!cartIcon || !cartMenu || !close) return;
-
-  const userId = localStorage.getItem("userId");
-  if (!userId) return;
-
-  try {
-    cartState = await getActiveCartREST(userId);
-    addCartToHTML(cartState);
-  } catch (e) {
-    console.error("Could not load cart", e);
-  }
-
-  cartIcon.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    cartMenu.style.right = (cartMenu.style.right === "0px" || cartMenu.style.right === "0") ? "-100%" : "0";
-  });
-
-  close.addEventListener("click", () => {
-    cartMenu.style.right = "-100%";
-  });
-
-  checkoutButton?.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const cached = sessionStorage.getItem("cartState");
-    const state = cached ? JSON.parse(cached) : null;
-
-    if (!state?.items?.length) {
-      alert("Your cart is empty.");
-      return;
-    }
-
-    window.location.href = "/ClickPrototype/customer-view/checkout/checkout.html";
-  });
-
-  clearBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-
-    try {
-      await clearCartREST(userId);
-      document.querySelector(".list-cart").innerHTML = "";
-
-      cartState = await getActiveCartREST(userId);
-      addCartToHTML(cartState);
-
-    } catch (err) {
-      console.error(err);
-      alert("Cart could not be emptied.");
-    }
-  });
-});
-
 //Toggle map button to be redirected to the map-page
 const btn = document.getElementById('open-map');
 btn.addEventListener("click", () => {
   window.location.href = "/ClickPrototype/customer-view/map/map.html";
 })
-
-//Toggle "Add to cart"-button
-async function addToCart(bouquetId) {
-  if (localStorage.getItem("isLoggedIn") !== "true") {
-    alert("Log in first!");
-    return;
-  }
-
-  const userId = localStorage.getItem("userId");
-  if (!userId) {
-    alert("Missing userId. Please log in again.");
-    return;
-  }
-
-  try {
-    cartState = await addToCartREST(userId, bouquetId);
-    addCartToHTML(cartState);
-  } catch (e) {
-    console.error(e);
-    alert(e.message);
-  }
-}
-
-
-function addCartToHTML(cartState) {
-  //TODO: delete from storage by logout
-  sessionStorage.setItem("cartState", JSON.stringify(cartState));
-
-  let listProductHTML = document.querySelector('.list-cart');
-  listProductHTML.innerHTML = '';
-
-  let totalHTML = document.querySelector('#header .cart-count')
-
-  const items = cartState?.items ?? [];
-  if (items.length === 0) {
-    listProductHTML.innerHTML = `<div class="empty-cart">Cart is empty</div>`;
-    return;
-  }
-            
-  items.forEach(product => {
-    if (product) {
-      const imageUrl = product.imageUrl || DEFAULT_BOUQUET_IMAGE;
-
-      let newCartItemHTML = document.createElement("div");
-      newCartItemHTML.classList.add("item")
-      newCartItemHTML.innerHTML = `
-        <img src="${imageUrl}" alt="${product.bouquetName}">
-        <div class="content">
-          <div class="name">
-            ${product.bouquetName}
-          </div>
-          <div class="price">
-            ${formatPriceEUR(product.unitPrice)}
-          </div>
-        </div>
-        <div class="quantity">
-          <button onclick="changeQuantity(${product.itemId}, '-')">-</button>
-          <span class="value">${product.quantity}</span>
-            <button onclick="changeQuantity(${product.itemId}, '+')">+</button>
-        </div>`
-              
-      listProductHTML.appendChild(newCartItemHTML)
-    }
-  })
-  totalHTML.innerHTML = cartState.totalQuantity;
-}
-
-window.changeQuantity = async function changeQuantity($idProduct, $operationType) {
-  if (localStorage.getItem("isLoggedIn") !== "true") {
-    alert("Log in first!");
-    return;
-  }
-
-  const userId = localStorage.getItem("userId");
-  if (!userId) {
-    alert("Missing userId. Please log in again.");
-    return;
-  }
-
-  const delta = $operationType === "+" ? 1 : -1;
-
-  try {
-    cartState = await patchCartItemQuantity(userId, $idProduct, delta);
-    addCartToHTML(cartState);
-  } catch (e) {
-    console.error(e);
-    alert(e.message);
-  }
-}

@@ -1,7 +1,10 @@
+import { initCart } from "./cart.js";
+
 export async function loadLayout() {
   await Promise.all([
     loadHeader(),
-    loadFooter()
+    loadFooter(),
+    initCart()
   ]);
 }
 
@@ -46,7 +49,7 @@ function initHeader() {
     designBouquetButton?.classList.add("hidden");
   }
 
-  if (page === "checkout" && cartIcon) {
+  if ((page === "checkout" && cartIcon) || (page === "owner" && cartIcon)) {
     cartIcon.style.display = "none";
   }
 

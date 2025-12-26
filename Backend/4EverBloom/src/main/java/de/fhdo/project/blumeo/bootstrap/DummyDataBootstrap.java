@@ -96,6 +96,24 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
 
         owner = userRepository.save(owner);
 
+        //Create test user-customer
+        User customer = new User();
+        customer.setUsername("alice");
+        customer.setEmail("alice@blumeo.test");
+        customer.setPassword("customerpassword");
+        customer.setRole(Role.CUSTOMER);
+        customer.setDate(new Date());
+        customer.setPhoneNumber("+491112223334");
+
+        Address customerAddress = new Address();
+        customerAddress.setCity("Berlin");
+        customerAddress.setStreetAddress("Blumenweg 7");
+        customerAddress.setZipCode("10115");
+        customer.setAddress(customerAddress);
+
+        customer = userRepository.save(customer);
+
+        //Create test user-owner 2.0
         User owner2 = new User();
         owner2.setUsername("petals_paradise");
         owner2.setEmail("petals.paradise@blumeo.test");
@@ -118,23 +136,6 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         owner2.setPhoneNumber("+492345678910");
 
         owner2 = userRepository.save(owner2);
-
-        //Create test user-customer
-        User customer = new User();
-        customer.setUsername("alice");
-        customer.setEmail("alice@blumeo.test");
-        customer.setPassword("customerpassword");
-        customer.setRole(Role.CUSTOMER);
-        customer.setDate(new Date());
-        customer.setPhoneNumber("+491112223334");
-
-        Address customerAddress = new Address();
-        customerAddress.setCity("Berlin");
-        customerAddress.setStreetAddress("Blumenweg 7");
-        customerAddress.setZipCode("10115");
-        customer.setAddress(customerAddress);
-
-        customer = userRepository.save(customer);
 
         //Create three test flowers
         Flower redRose = new Flower();
