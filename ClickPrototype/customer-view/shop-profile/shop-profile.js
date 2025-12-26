@@ -1,5 +1,6 @@
 import { loadLayout } from "/ClickPrototype/layout/layout.js";
 import { fetchShopByIdREST, fetchShopBouquets } from "./shop-profile-rest.js"
+import { addToCart } from "../../layout/cart.js"
 
 const DEFAULT_BOUQUET_IMAGE = "https://peoplesflowers.imgix.net/images/itemVariation/designers-choice-7983070-2-200515317401-21021884408.jpg?w=600&h=720&fit=crop&dpr=2";
 const DEFAULT_SHOP_LOGO = "https://images.scalebranding.com/flower-shop-logo-2a1cfde0-daf2-417f-a0a6-de1d596a23d7.jpg";
@@ -119,11 +120,7 @@ function renderBouquetGrid(bouquets) {
       <button class="add-to-cart-btn" type="button">Add to Cart</button>
     `;
 
-    //TODO: addToCart-Funktionalitaet
-    const btn = card.querySelector(".add-to-cart-btn");
-    if (btn && typeof addToCart === "function" && bouquet.id != null) {
-      btn.addEventListener("click", () => addToCart(bouquet.id));
-    }
+    card.querySelector(".add-to-cart-btn").addEventListener("click", async () => addToCart(bouquet.id));
 
     grid.appendChild(card);
   });
