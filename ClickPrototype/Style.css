@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-@import url("/ClickPrototype/Header/header.css");
-@import url("/ClickPrototype/footer/footer.css");
+@import url("/ClickPrototype/common-view/header/header.css");
+@import url("/ClickPrototype/common-view/footer/footer.css");
 
 :root {
   /* Colors */
@@ -23,7 +23,7 @@
   --color-btn-hover: #9f7cc1;
 }
 
-/* Reset & Base */
+/* Base */
 * {
   margin: 0;
   padding: 0;

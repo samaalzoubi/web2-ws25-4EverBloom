@@ -6,7 +6,7 @@ export async function loadLayout() {
 }
 
 async function loadHeader() {
-  const response = await fetch("/ClickPrototype/Header/header.html");
+  const response = await fetch("/ClickPrototype/common-view/header/header.html");
   const html = await response.text();
 
   const mount = document.getElementById("header");
@@ -18,7 +18,7 @@ async function loadHeader() {
 }
 
 async function loadFooter() {
-  const response = await fetch("/ClickPrototype/footer/footer.html");
+  const response = await fetch("/ClickPrototype/common-view/footer/footer.html");
   const html = await response.text();
 
   const mount = document.getElementById("footer");
@@ -53,6 +53,6 @@ function initHeader() {
   document.querySelector(".logout-link")?.addEventListener("click", e => {
     e.preventDefault();
     localStorage.clear();
-    window.location.href = "/ClickPrototype/Login/Login.html";
+    window.location.href = "/ClickPrototype/common-view/login/login.html";
   });
 }

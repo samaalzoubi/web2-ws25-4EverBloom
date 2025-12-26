@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLÜMEO – Orders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="/ClickPrototype/style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="orders_styles.css?v=3" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+
+</head>
+<body>
+  <div id="header"></div>
+     
+  <div id="app"></div>
+
+  <!-- Chatbot -->
+  <div id="chatbot" class="chatbot">
+    <div class="chatbot-header">
+      💬 BLÜMEO Assistant
+      <span class="chatbot-close">✖</span>
+    </div>
+    <div class="chatbot-body">
+      <div class="chatbot-message bot">Hello and welcome to BLÜMEO 🌷 I'm your virtual floral assistant. I can help you find flower shops near you, track your order, or answer any questions about our services.</div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" placeholder="Ask me anything..." />
+      <button>
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+    
+  <button class="chatbot-toggle">💬</button>
+
+  <div id="footer"></div>
+
+<script src="orders_constants.js"></script>
+<script src="orders_app.js"></script>
+<script type="module">
+  import { loadLayout } from '/ClickPrototype/layout/layout.js'
+
+  // Chatbot functionality
+  document.addEventListener('DOMContentLoaded', async() => {
+    await loadLayout(); 
+    
+    const chatbot = document.getElementById('chatbot');
+    const chatbotToggle = document.querySelector('.chatbot-toggle');
+    const chatbotClose = document.querySelector('.chatbot-close');
+    const chatInput = document.querySelector('.chatbot-input input');
+    const sendButton = document.querySelector('.chatbot-input button');
+    
+    // Toggle chatbot
+    chatbotToggle.addEventListener('click', function() {
+      chatbot.classList.toggle('open');
+    });
+    
+    // Close chatbot
+    chatbotClose.addEventListener('click', function() {
+      chatbot.classList.remove('open');
+    });
+    
+    // Send message on Enter key
+    chatInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+    
+    // Send message on button click
+    sendButton.addEventListener('click', sendMessage);
+    
+    function sendMessage() {
+      const message = chatInput.value.trim();
+      if (message) {
+        // Add user message
+        const chatBody = document.querySelector('.chatbot-body');
+        const userMessage = document.createElement('div');
+        userMessage.className = 'chatbot-message user';
+        userMessage.textContent = message;
+        chatBody.appendChild(userMessage);
+        
+        // Clear input
+        chatInput.value = '';
+        
+        // Scroll to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+        
+        // Simulate bot response
+        setTimeout(() => {
+          const botMessage = document.createElement('div');
+          botMessage.className = 'chatbot-message bot';
+          botMessage.textContent = 'Thank you for your message! Our team will assist you shortly. 🌸';
+          chatBody.appendChild(botMessage);
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }, 1000);
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
