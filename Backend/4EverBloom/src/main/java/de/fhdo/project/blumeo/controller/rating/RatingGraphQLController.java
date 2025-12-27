@@ -1,4 +1,4 @@
-package de.fhdo.project.blumeo.graphql;
+package de.fhdo.project.blumeo.controller.rating;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,13 +17,13 @@ import de.fhdo.project.blumeo.repository.order.OrderRepository;
 import de.fhdo.project.blumeo.services.RatingService;
 
 @Controller
-public class OrderRatingGraphQLController {
+public class RatingGraphQLController {
 
     private final OrderRepository orderRepository;
     private final RatingService ratingService;
     private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    public OrderRatingGraphQLController(OrderRepository orderRepository, RatingService ratingService) {
+    public RatingGraphQLController(OrderRepository orderRepository, RatingService ratingService) {
         this.orderRepository = orderRepository;
         this.ratingService = ratingService;
     }
