@@ -1,6 +1,5 @@
 package de.fhdo.project.blumeo.controller.user;
 
-
 import de.fhdo.project.blumeo.dto.user.RegisterRequest;
 import de.fhdo.project.blumeo.dto.user.UserDTO;
 import de.fhdo.project.blumeo.services.UserService;
@@ -20,7 +19,6 @@ public class UserGraphQLController {
         this.userService = userService;
     }
 
-    // -------------------- Queries --------------------
     @QueryMapping
     public List<UserDTO> allOwners() {
         return userService.getAllOwners();
@@ -31,17 +29,8 @@ public class UserGraphQLController {
         return userService.getUserById(id);
     }
 
-    // -------------------- Mutations --------------------
     @MutationMapping
-    public UserDTO registerUser(@Argument String username,
-                                @Argument String email,
-                                @Argument String password,
-                                @Argument String role) {
-        RegisterRequest request = new RegisterRequest();
-        request.setUsername(username);
-        request.setEmail(email);
-        request.setPassword(password);
-        request.setRole(Enum.valueOf(de.fhdo.project.blumeo.entity.user.Role.class, role));
+    public UserDTO registerUser(@Argument RegisterRequest request) {
         return userService.createUser(request);
     }
 

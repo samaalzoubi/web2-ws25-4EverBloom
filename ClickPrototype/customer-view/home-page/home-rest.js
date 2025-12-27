@@ -47,7 +47,7 @@ export async function getActiveCartREST(userId) {
   return await response.json();
 }
 
-export async function patchCartItemQuantity(userId, itemId, quantityDelta) {
+export async function patchCartItemQuantityREST(userId, itemId, quantityDelta) {
   const url = `${REST_BASE}/cart/${userId}/items/${itemId}?quantityDelta=${encodeURIComponent(quantityDelta)}`;
 
   const response = await fetch(url, {

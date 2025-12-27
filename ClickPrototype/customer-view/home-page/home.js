@@ -1,8 +1,8 @@
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
 import { fetchFlowersREST, fetchShopsREST } from "./home-rest.js";
+import { fetchFlowersGraphQL, fetchShopsGraphQL } from "./home-graphql.js";
 import { loadLayout } from "/ClickPrototype/layout/layout.js";
 import { addToCart } from "../../layout/cart.js"
-//import { fetchFlowersGraphQL, fetchShopsGraphQL } from "./home-graphql.js";
 
 const DEFAULT_SHOP_LOGO = "https://images.scalebranding.com/flower-shop-logo-2a1cfde0-daf2-417f-a0a6-de1d596a23d7.jpg";
 

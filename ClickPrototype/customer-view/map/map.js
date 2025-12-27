@@ -1,15 +1,19 @@
-import { loadLayout } from "../../layout/layout.js";
-import { fetchShopsREST } from "../home-page/home-rest.js";
+import { API_MODE } from "/ClickPrototype/config/api.config.js";
+import { loadLayout } from "/ClickPrototype/layout/layout.js";
+import { fetchShopsREST } from "/ClickPrototype/customer-view/home-page/home-rest.js";
+import { fetchShopsGraphQL } from "/ClickPrototype/customer-view/home-page/home-graphql.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Demo-Login
   localStorage.setItem("isLoggedIn", "true");
   localStorage.setItem("userId", 2);
 
   await loadLayout();
 
   const map = initMap();
-  const owners = await fetchShopsREST();
+  const owners = 
+    API_MODE === "REST"
+          ? await fetchShopsREST()
+          : await fetchShopsGraphQL();
   addOwnersToMap(map, owners);
 });
 
@@ -26,7 +30,6 @@ function initMap() {
 }
 
 function addOwnersToMap(map, owners) {
-  console.log(owners)
   const bounds = [];
 
   owners.forEach((owner) => {

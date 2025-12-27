@@ -1,7 +1,10 @@
-import { addToCartREST, getActiveCartREST, patchCartItemQuantity, clearCartREST } from "/ClickPrototype/customer-view/home-page/home-rest.js";
+import { API_MODE } from "/ClickPrototype/config/api.config.js";
+import {addToCartREST, getActiveCartREST, patchCartItemQuantityREST, clearCartREST} from "/ClickPrototype/customer-view/home-page/home-rest.js";
+import {addToCartGraphQL, getActiveCartGraphQL, patchCartItemQuantityGraphQL, clearCartGraphQL} from "/ClickPrototype/customer-view/home-page/home-graphql.js";
 
 let cartState = null;
 const DEFAULT_BOUQUET_IMAGE = "https://peoplesflowers.imgix.net/images/itemVariation/designers-choice-7983070-2-200515317401-21021884408.jpg?w=600&h=720&fit=crop&dpr=2";
+const USE_REST = API_MODE === "REST";
 
 export function initCart() {
   document.addEventListener("header:ready", setupCartAfterHeader);
@@ -14,13 +17,15 @@ async function setupCartAfterHeader() {
   const checkoutButton = document.getElementById("checkoutBtn");
   const clearBtn = document.getElementById("clearCartBtn");
 
+  const getActive = USE_REST ? getActiveCartREST : getActiveCartGraphQL;
+
   if (!cartIcon || !cartMenu || !close) return;
 
   const userId = localStorage.getItem("userId");
   if (!userId) return;
 
   try {
-    cartState = await getActiveCartREST(userId);
+    cartState = await getActive(userId);
     addCartToHTML(cartState);
   } catch (e) {
     console.error("Could not load cart", e);
@@ -31,8 +36,7 @@ async function setupCartAfterHeader() {
     e.preventDefault();
     e.stopPropagation();
     const current = cartMenu.style.right;
-    cartMenu.style.right =
-      current === "0px" || current === "0" ? "-100%" : "0";
+    cartMenu.style.right = current === "0px" || current === "0" ? "-100%" : "0";
   });
 
   close.addEventListener("click", () => {
@@ -51,19 +55,19 @@ async function setupCartAfterHeader() {
       return;
     }
 
-    window.location.href =
-      "/ClickPrototype/customer-view/checkout/checkout.html";
+    window.location.href = "/ClickPrototype/customer-view/checkout/checkout.html";
   });
 
-  // Clear cart
+  //Clear cart
   clearBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
 
     try {
-      await clearCartREST(userId);
+      const clearFunc = USE_REST ? clearCartREST : clearCartGraphQL;
+      cartState = await clearFunc(userId);
+
       document.querySelector(".list-cart").innerHTML = "";
 
-      cartState = await getActiveCartREST(userId);
       addCartToHTML(cartState);
     } catch (err) {
       console.error(err);
@@ -90,7 +94,8 @@ export async function addToCart(bouquetId) {
   if (!userId) return;
 
   try {
-    cartState = await addToCartREST(userId, bouquetId);
+    const addFunc = USE_REST ? addToCartREST : addToCartGraphQL;
+    cartState = await addFunc(userId, bouquetId);
     addCartToHTML(cartState);
   } catch (e) {
     console.error(e);
@@ -141,7 +146,7 @@ function addCartToHTML(cartState) {
     listProductHTML.appendChild(newCartItemHTML);
   });
 
-  listProductHTML.addEventListener("click", onQuantityClick, { once: true });
+  listProductHTML.addEventListener("click", onQuantityClick);
 
   if (totalHTML) {
     totalHTML.textContent = cartState.totalQuantity;
@@ -164,7 +169,9 @@ async function changeQuantity(itemId, operationType) {
   const delta = operationType === "+" ? 1 : -1;
 
   try {
-    cartState = await patchCartItemQuantity(userId, itemId, delta);
+    const patchFunc = USE_REST ? patchCartItemQuantityREST : patchCartItemQuantityGraphQL;
+
+    cartState = await patchFunc(userId, itemId, delta);
     addCartToHTML(cartState);
   } catch (e) {
     console.error(e);
