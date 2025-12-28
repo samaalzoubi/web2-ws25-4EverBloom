@@ -1,6 +1,5 @@
 <template>
   <div class="admin-orders-page">
-    <Header />
     <div class="orders-container">
       <div class="customer-header">
         <h1>Customer Orders Management</h1>
@@ -219,7 +218,6 @@
 </template>
 
 <script>
-import Header from '@/components/Header/Header.vue';
 import Chatbot from './Chatbot.vue';
 import orderService from '@/services/orderService';
 
@@ -235,7 +233,6 @@ const AVAILABLE_ITEMS = [
 export default {
   name: 'AdminOrders',
   components: { 
-    Header,
     Chatbot 
   },
   data() {
