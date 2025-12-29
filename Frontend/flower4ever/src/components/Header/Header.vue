@@ -14,6 +14,7 @@
       </router-link>
 
       <a
+        v-if="route.name !== 'checkout'"
         class="user-links cart-link"
         href="#"
         title="Cart"
@@ -49,7 +50,7 @@
       </div>
     </nav>
 
-    <CartSidebar></CartSidebar>
+    <CartSidebar v-if="route.name !== 'checkout'"></CartSidebar>
   </header>
 </template>
 
@@ -57,6 +58,7 @@
 <script>
 import { useCartStore } from '@/stores/cartStore'
 import CartSidebar from '@/components/CartSidebar.vue'
+import { useRoute } from 'vue-router'
 
 //TODO: v-if="userStore.isLoggedIn"
 //import { useUserStore } from '@/stores/userStore'
@@ -67,28 +69,18 @@ export default {
   components: {
     CartSidebar
   },
+  setup() {
+    const cartStore = useCartStore()
+    const route = useRoute()
+
+    return { cartStore, route }
+  },
   data() {
     return {
       isOpen: false,
-      cartCount: 0, 
-      cartStore: null
+      cartCount: 0
     };
   },
-  created() {
-    // Store initialisieren
-    this.cartStore = useCartStore()
-
-    // Beim Laden Cart aus Backend holen
-    //this.cartStore.loadActiveCart()
-
-    // Badge automatisch aktualisieren (über Watcher)
-    /*this.$watch(
-      () => this.cartStore.totalQuantity,
-      (newVal) => { this.cartCount = newVal },
-      { immediate: true }
-    )*/
-  },
-
   methods: {
     toggleMenu() {
       this.isOpen = !this.isOpen;

@@ -8,6 +8,7 @@ import CustomerOrders from "@/components/OrderVue/CustomerOrders.vue";
 import AdminOrders from "@/components/OrderVue/AdminOrders.vue";
 import HomePage from "@/views/customer-views/HomePage.vue";
 import Map from "@/views/customer-views/Map.vue";
+import Checkout from "@/views/customer-views/Checkout.vue";
 
 const routes = [
   {
@@ -43,11 +44,18 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomePage},
+    component: HomePage
+  },
   { 
     path: '/map', 
     name: 'map', 
-    component: Map }
+    component: Map 
+  },
+  { 
+    path: '/checkout', 
+    name: 'checkout', 
+    component: Checkout 
+  }
 ]
 
 export default createRouter({

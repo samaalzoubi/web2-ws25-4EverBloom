@@ -2,12 +2,13 @@
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cartStore'
+import CartItemList from './CartItemList.vue'
 
 const cartStore = useCartStore()
 const router = useRouter()
 
-onMounted(() => {
-  cartStore.loadActiveCart()
+onMounted(async () => {
+  await cartStore.loadActiveCart()
 })
 
 const cartClasses = computed(() => ({
@@ -17,9 +18,7 @@ const cartClasses = computed(() => ({
 
 function handleCheckout() {
   cartStore.close()
-  //TODO: checkout-page
-  console.log("Checkout triggered")
-  //router.push({ name: 'checkout' })
+  router.push({ name: 'checkout' })
 }
 
 function changeQty(itemId, op) {
@@ -48,46 +47,20 @@ function formatPrice(value) {
     </div>
     </div>
 
-    <div class="list-cart">
-      <div v-if="cartStore.loading" class="cart-status">Loading cart…</div>
-      <div v-else-if="cartStore.items.length === 0" class="empty-cart">
-        Cart is empty
-      </div>
-      <template v-else>
-        <div
-          v-for="item in cartStore.items"
-          :key="item.itemId"
-          class="item"
+    <CartItemList
+        :items="cartStore.items"
+        :loading="cartStore.loading"
         >
-          <img :src="item.imageUrl" :alt="item.bouquetName" />
-          <div class="content">
-            <div class="name">
-              {{ item.bouquetName }}
+
+        <template #actions="{ item }">
+            <div class="item__quantity">
+              <button @click="changeQty(item.itemId, '-')">-</button>
+              <span class="value">{{ item.quantity }}</span>
+              <button @click="changeQty(item.itemId, '+')">+</button>
             </div>
-            <div class="price">
-              {{ formatPrice(item.unitPrice) }}
-            </div>
-          </div>
-          <div class="quantity">
-            <button
-              class="qty-btn"
-              type="button"
-              @click="changeQty(item.itemId, '-')"
-            >
-              -
-            </button>
-            <span class="value">{{ item.quantity }}</span>
-            <button
-              class="qty-btn"
-              type="button"
-              @click="changeQty(item.itemId, '+')"
-            >
-              +
-            </button>
-          </div>
-        </div>
-      </template>
-    </div>
+        </template>
+
+    </CartItemList>
 
     <div class="cart-total">
         <span class="cart-total__label">Total:</span>
@@ -98,7 +71,7 @@ function formatPrice(value) {
         <div @click="cartStore.close" class="close">CLOSE</div>
         <div 
             @click="handleCheckout" 
-            :class="{ 'checkout--disabled': cartStore.items.length === 0 }"
+            :class="{ 'checkout--disabled': !cartStore.items.length }"
             class="checkout">
             <a id="checkoutBtn">CHECKOUT</a>
         </div>
@@ -126,13 +99,9 @@ function formatPrice(value) {
   right: 0;
 }
 
-.cart .list-cart{
+.cart :deep(.cart-item-list) {
   overflow: auto;
   padding: 20px;
-}
-
-.cart .listCart::-webkit-scrollbar {
-  width: 0;
 }
 
 .cart h2 {
@@ -141,37 +110,50 @@ function formatPrice(value) {
   color: rgb(255, 255, 255);
 }
 
-.cart .list-cart .item .name, .cart .list-cart .item .price {
+.cart :deep(.item__name), .cart :deep(.item__price) {
   font-weight: bold;
 }
 
-.cart .list-cart .item .quantity {
+.cart :deep(.item__quantity) {
   display: flex;
   justify-content: end;
   align-items: center;
-  padding-right: 10px;
+  padding-right: 13px;
+  gap: 6px;
 }
 
-.cart .list-cart .item span {
-  display: block;
-  width: 50px;
-  text-align: center;
+.cart :deep(.item__quantity button) {
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  border-radius: 20%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
+.cart :deep(.item__quantity button:hover) {
+  background: var(--color-accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
 
-.cart .list-cart .item {
+.cart :deep(.item) {
   display: grid;
   grid-template-columns: 50px 1fr 70px;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.cart .list-cart img {
-  width: 100%;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 10px;
+  gap: 25px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.282);
 }
 
 .cart .buttons {
@@ -233,9 +215,8 @@ function formatPrice(value) {
   margin: 8px 8px;
   text-decoration: none;
   cursor: pointer;
-  border: 1.5px solid #c62828;
+  border: 2px solid #c80c0c65;
   border-radius: 999px;
-  background-color: rgba(198, 40, 40, 0.06);
   transition: all 0.2s ease;
 }
 
