@@ -128,12 +128,12 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
         
         // Update fields as needed
-        if (orderUpdate.deliveryAddress() != null) {
-            order.setDeliveryAddress(orderUpdate.deliveryAddress());
+        if (orderUpdate.getAddress() != null) {
+            order.setDeliveryAddress(orderUpdate.getAddress());
         }
         
-        if (orderUpdate.totalAmount() != null) {
-            order.setTotalAmount(orderUpdate.totalAmount());
+        if (orderUpdate.getTotalAmount() != null) {
+            order.setTotalAmount(orderUpdate.getTotalAmount());
         }
         
         // Note: Updating order lines would require more complex logic
