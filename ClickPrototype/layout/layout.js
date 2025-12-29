@@ -1,12 +1,15 @@
+import { initCart } from "./cart.js";
+
 export async function loadLayout() {
   await Promise.all([
     loadHeader(),
-    loadFooter()
+    loadFooter(),
+    initCart()
   ]);
 }
 
 async function loadHeader() {
-  const response = await fetch("../../Header/header.html");
+  const response = await fetch("/ClickPrototype/common-view/header/header.html");
   const html = await response.text();
 
   const mount = document.getElementById("header");
@@ -18,7 +21,7 @@ async function loadHeader() {
 }
 
 async function loadFooter() {
-  const response = await fetch("../../footer/footer.html");
+  const response = await fetch("/ClickPrototype/common-view/footer/footer.html");
   const html = await response.text();
 
   const mount = document.getElementById("footer");
@@ -46,13 +49,13 @@ function initHeader() {
     designBouquetButton?.classList.add("hidden");
   }
 
-  if (page === "checkout" && cartIcon) {
+  if ((page === "checkout" && cartIcon) || (page === "owner" && cartIcon)) {
     cartIcon.style.display = "none";
   }
 
   document.querySelector(".logout-link")?.addEventListener("click", e => {
     e.preventDefault();
     localStorage.clear();
-    window.location.href = "/ClickPrototype/Login/Login.html";
+    window.location.href = "/ClickPrototype/common-view/login/login.html";
   });
 }

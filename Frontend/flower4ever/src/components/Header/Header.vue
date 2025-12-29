@@ -13,10 +13,15 @@
         <span class="fx-3d">3D</span>esign Bouquet 🪄
       </router-link>
 
-      <router-link to="/cart" class="cart-link">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-count">{{ cartCount }}</span>
-      </router-link>
+      <a
+        class="user-links cart-link"
+        href="#"
+        title="Cart"
+        @click="onCartClick"
+      >
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <span class="cart-count">{{ cartStore.totalQuantity }}</span>
+      </a>
 
       <div class="user-menu" @click="toggleMenu">
         <i class="fas fa-user-circle"></i>
@@ -43,35 +48,63 @@
         </div>
       </div>
     </nav>
+
+    <CartSidebar></CartSidebar>
   </header>
 </template>
 
 
 <script>
-  import router from '@/router/router';
+import { useCartStore } from '@/stores/cartStore'
+import CartSidebar from '@/components/CartSidebar.vue'
+
+//TODO: v-if="userStore.isLoggedIn"
+//import { useUserStore } from '@/stores/userStore'
+//const userStore = useUserStore()
 
 export default {
   name: "HeaderComponent",
+  components: {
+    CartSidebar
+  },
   data() {
     return {
       isOpen: false,
       cartCount: 0, 
+      cartStore: null
     };
   },
+  created() {
+    // Store initialisieren
+    this.cartStore = useCartStore()
+
+    // Beim Laden Cart aus Backend holen
+    //this.cartStore.loadActiveCart()
+
+    // Badge automatisch aktualisieren (über Watcher)
+    /*this.$watch(
+      () => this.cartStore.totalQuantity,
+      (newVal) => { this.cartCount = newVal },
+      { immediate: true }
+    )*/
+  },
+
   methods: {
     toggleMenu() {
       this.isOpen = !this.isOpen;
     },
     
-    
+    onCartClick(event) {
+      event.preventDefault()
+      console.log("TEST ME")
+      this.cartStore.toggle()
+      console.log(this.cartStore.isOpen)
+    }
   },
 };
 </script>
 
 <style>
-* {
-  box-sizing: border-box;
-}
 
 .main-header {
   display: flex !important;

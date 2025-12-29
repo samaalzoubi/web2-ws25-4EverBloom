@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="/ClickPrototype/style.css">
+    <link rel="stylesheet" href="checkout.css">
+</head>
+<body data-page="checkout">
+    <div id="header"></div>
+    <main>
+        <div class="checkoutLayout">
+            <div class="returnCart">
+                <a href="/ClickPrototype/customer-view/home-page/home-page.html">Keep shopping</a>
+                <h1>List Product in Cart</h1>
+                <div class="list">
+                </div>
+            </div>
+
+            <div class="checkout">
+                <h1>CHECKOUT</h1>
+                <form action="" class="checkout-form">
+                    <div class="checkout-card">
+                        <h2 class="section-title">
+                            <span class="icon">👤</span> Contact Information
+                        </h2>
+                        <div class="form">
+                            <div class="group">
+                                <label>
+                                    Full Name
+                                    <input type="text">
+                                </label>
+                            </div>
+                            <div class="group">
+                                <label>
+                                    Email
+                                    <input type="text">
+                                </label>
+                            </div>
+                            <div class="group">
+                                <label>
+                                    Phone Number
+                                    <input type="text">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkout-card">
+                        <h2 class="section-title">
+                            <span class="icon">📍</span> Delivery Information
+                        </h2>
+                        <div class="form">
+                            <div class="group">
+                                <label>
+                                    Street Address
+                                    <input type="text">
+                                </label>
+                            </div>
+
+                            <div class="group">
+                                <label>
+                                    City
+                                    <input type="text">
+                                </label>
+                            </div>
+                            <div class="group">
+                                <label>
+                                    State
+                                    <select>
+                                        <option>Select state</option>
+                                        <option value="Baden-Württemberg">Baden-Württemberg</option>
+                                        <option value="Bavaria">Bavaria</option>
+                                        <option value="Berlin">Berlin</option>
+                                        <option value="Brandenburg">Brandenburg</option>
+                                        <option value="Bremen">Bremen</option>
+                                        <option value="Hamburg">Hamburg</option>
+                                        <option value="Hesse">Hesse</option>
+                                        <option value="Mecklenburg-Vorpommern">Mecklenburg-Vorpommern</option>
+                                        <option value="Lower Saxony">Lower Saxony</option>
+                                        <option value="North Rhine-Westphalia">North Rhine-Westphalia</option>
+                                        <option value="Rhineland-Palatinate">Rhineland-Palatinate</option>
+                                        <option value="Saarland">Saarland</option>
+                                        <option value="Saxony">Saxony</option>
+                                        <option value="Saxony-Anhalt">Saxony-Anhalt</option>
+                                        <option value="Schleswig-Holstein">Schleswig-Holstein</option>
+                                        <option value="Thuringia ">Thuringia</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="group">
+                                <label>
+                                    ZIP Code
+                                    <input type="text">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkout-card">
+                        <h2 class="section-title">
+                            <span class="icon">💳</span> Payment Information
+                        </h2>
+                        <div class="form">
+                            <div class="group">
+                                <label>
+                                    Card Number
+                                    <input type="text" placeholder="1234 5678 9012 3456">
+                                </label>
+                            </div>
+                            <div class="group">
+                                <label>
+                                    Cardholder Name
+                                    <input type="text" placeholder="John Doe">
+                                </label>
+                            </div>
+                            <div class="group">
+                                <label>
+                                    Expiry Date
+                                    <input type="text" placeholder="MM/YY">
+                                </label>
+                            </div>
+                            <div class="group">
+                                <label>
+                                    CVV
+                                    <input type="text" placeholder="123">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="secure-msg">
+                            🔒 Secure Payment - Your payment information is encrypted and safe.
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="return">
+                    <div class="row">
+                        <div>Total Quantity</div>
+                        <div class="totalQuantity">0</div>
+                    </div>
+                    <div class="row">
+                        <div>Total Price</div>
+                        <div class="totalPrice">0 €</div>
+                    </div>
+                </div>
+                <button class="buttonOrder">
+                    Place Order
+                </button>
+            </div>
+        </div>
+    </main>
+    <div id="footer"></div>
+<script type="module" src="./checkout.js"></script>
+</body>
+</html>

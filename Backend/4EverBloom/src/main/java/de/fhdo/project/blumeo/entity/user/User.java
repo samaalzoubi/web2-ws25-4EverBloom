@@ -20,13 +20,6 @@ import lombok.Data;
 @Data
 public class User {
 
-    private Double balance = 0.0;
-
-    @Embedded
-    private Address address;
-
-    private String description;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,7 +37,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Integer number;
+    @Embedded
+    private Address address;
+
+    private String description;
+
+    private String phoneNumber;
 
     private String shopName;
 
@@ -55,8 +53,4 @@ public class User {
     private String logo;
 
     private Date date;
-
-
-
-
 }

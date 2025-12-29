@@ -5,25 +5,10 @@ extend type Query {
 }
 
 extend type Mutation {
-    updateItemQuantity(
-        userId: ID!
-        itemId: ID!
-        quantityDelta: Int!
-    ): CartResponseDTO!
-
-    removeItem(
-        userId: ID!
-        itemId: ID!
-    ): CartResponseDTO!
-
-    clearCart(
-        userId: ID!
-    ): CartResponseDTO!
-
-    addItem(
-        userId: ID!
-        bouquetId: ID!
-    ): CartResponseDTO!
+    updateItemQuantity(userId: ID!, itemId: ID!, quantityDelta: Int!): CartResponseDTO!
+    removeItem(userId: ID!, itemId: ID!): CartResponseDTO!
+    clearCart(userId: ID!): CartResponseDTO!
+    addItem(userId: ID!, bouquetId: ID!): CartResponseDTO!
 }
 
 
@@ -35,9 +20,10 @@ type CartResponseDTO {
 }
 
 type CartItemDTO {
+    itemId: Int!
     bouquetId: ID!
     bouquetName: String!
-    imageUrl: String!
+    imageUrl: String
     quantity: Int!
     unitPrice: Float!
     lineTotal: Float!

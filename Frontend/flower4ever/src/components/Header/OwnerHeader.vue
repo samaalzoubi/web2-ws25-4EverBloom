@@ -1,7 +1,7 @@
 <template>
   <div>
   <header>
-    <router-link to="/flower4ever/src/components/CustomerShopView/" class="logo">
+    <router-link to="/" class="logo">
       <img src="@/assets/Logo.png" alt="Flower Logo" width="70" height="70" />
      </router-link>
      <div>
@@ -10,10 +10,6 @@
       </div>
    
     <nav>
-      <router-link to="" class="design-bouquet">
-        <span class="fx-3d">3D </span> esign Bouquet 🪄
-      </router-link>
-
       <div class="user-menu" @click="toggleMenu">
         <i class="fa fa-user-circle-o sfa-4x;" style="transform: scale(1.3);" aria-hidden="true"></i>
         

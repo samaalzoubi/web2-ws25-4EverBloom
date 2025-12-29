@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blümeo | Florist Profile</title>
+
+  <link rel="stylesheet" href="/ClickPrototype/style.css">
+  <link rel="stylesheet" href="shop-profile.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div id="header"></div>
+
+  <!-- ===== SHOP INFO ===== -->
+  <main>
+    <section class="shop-info">
+
+      <!-- TODO: maybe add average rating -->
+      <div class="shop-details"></div>
+      </div>
+    </section>
+
+    <!-- ===== NAVIGATION TABS ===== -->
+    <nav class="shop-tabs">
+      <a href="#" class="active">Catalog</a>
+      <a href="#">About</a>
+      <a href="#">Subscriptions</a>
+      <a href="#">Reviews (85)</a>
+      <a href="#">Delivery Info</a>
+    </nav>
+
+    <!-- ===== BOUQUETS GRID ===== -->
+    <section class="bouquet-section">
+      <h2>Catalog</h2>
+      <div class="bouquet-grid"> 
+      </div>
+    </section>
+  </main>
+
+  <!-- Chatbot -->
+  <div id="chatbot" class="chatbot">
+    <div class="chatbot-header">
+      💬 BLÜMEO Assistant
+      <span class="chatbot-close">✖</span>
+    </div>
+    <div class="chatbot-body">
+      <div class="chatbot-message bot">Hello and welcome to BLÜMEO 🌷 I'm your virtual floral assistant. I can help you with bouquet recommendations, shop information, or answer any questions about our services.</div>
+      <div class="chatbot-message user">Can you help me choose a bouquet?</div>
+      <div class="chatbot-message bot">Of course 🌸 I'd be happy to help! What's the occasion? Are you looking for something romantic, cheerful, or elegant?</div>
+    </div>
+    <div class="chatbot-input">
+      <input type="text" placeholder="Ask about bouquets..." />
+      <button>
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+  
+  <button class="chatbot-toggle">💬</button>
+
+  <div id="footer"></div>
+
+  <script>
+      // Chatbot functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const chatbot = document.getElementById('chatbot');
+        const chatbotToggle = document.querySelector('.chatbot-toggle');
+        const chatbotClose = document.querySelector('.chatbot-close');
+        const chatInput = document.querySelector('.chatbot-input input');
+        const sendButton = document.querySelector('.chatbot-input button');
+        
+        // Toggle chatbot
+        chatbotToggle.addEventListener('click', function() {
+          chatbot.classList.toggle('open');
+        });
+        
+        // Close chatbot
+        chatbotClose.addEventListener('click', function() {
+          chatbot.classList.remove('open');
+        });
+        
+        // Send message on Enter key
+        chatInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            sendMessage();
+          }
+        });
+        
+        // Send message on button click
+        sendButton.addEventListener('click', sendMessage);
+        
+        function sendMessage() {
+          const message = chatInput.value.trim();
+          if (message) {
+            // Add user message
+            const chatBody = document.querySelector('.chatbot-body');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'chatbot-message user';
+            userMessage.textContent = message;
+            chatBody.appendChild(userMessage);
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Scroll to bottom
+            chatBody.scrollTop = chatBody.scrollHeight;
+            
+            // Simulate bot response
+            setTimeout(() => {
+              const botMessage = document.createElement('div');
+              botMessage.className = 'chatbot-message bot';
+              botMessage.textContent = 'Thank you for your message! Our team will assist you shortly. 🌸';
+              chatBody.appendChild(botMessage);
+              chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1000);
+          }
+        }
+      });
+  </script>
+  <script type="module" src="./shop-profile.js"></script>
+
+</body>
+</html>

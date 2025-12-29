@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owner Profile – Flowerly</title>
+  <link rel="stylesheet" href="/ClickPrototype/style.css" />
+  <link rel="stylesheet" href="ownerProfile.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body data-page="owner">
+  <!-- HEADER (auto-loaded) -->
+  <div id="header"></div>
+
+  <main class="main">
+    <section class="owner-profile">
+      <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Profile picture" class="owner-img">
+      <div>
+        <h2>Rosenduft</h2>
+        <p>Manage your shops & products easily 🌸</p>
+      </div>
+    </section>
+
+    <section class="card add-shop">
+      <h3>Edit Profile</h3>
+      <form class="form">
+        <div class="form-group">
+          <label>Shop Name</label>
+          <input type="text" placeholder="e.g. Rosenduft & Co" required>
+        </div>
+
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" placeholder="e.g. Main Street 12, Berlin" required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea rows="3" placeholder="Short description of your flower shop..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Shop Image</label>
+          <input type="file" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn-primary">💐 Save Profile</button>
+      </form>
+    </section>
+
+    <section class="card my-shops">
+      <h3>My Shops</h3>
+      <div class="shop-list">
+        <div class="shop-item">
+          <div class="shop-info">
+            <h4>Rosenduft & Co</h4>
+            <p>Berlin • since 2023</p>
+          </div>
+          <button class="edit-btn" onclick="window.location.href='ownerProfile.html'">Edit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (auto-loaded) -->
+  <div id="footer"></div>
+
+  <!--HEADER + FOOTER LOADING SCRIPT-->
+  <script type="module">
+    import { loadLayout } from '/ClickPrototype/layout/layout.js'
+
+    document.addEventListener('DOMContentLoaded', async() => {
+      await loadLayout();      
+    });
+  </script>
+
+</body>
+</html>

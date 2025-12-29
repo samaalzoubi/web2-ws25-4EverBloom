@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-orders-page">
+  <div class="admin-orders-page">
     <div class="orders-container">
       <!-- Header -->
       <div class="customer-header">

@@ -1,43 +1,47 @@
-
 enum Role {
-    USER
+    CUSTOMER
     OWNER
 }
 
-type User {
+type Address {
+    streetAddress: String
+    zipCode: String
+    city: String
+    state: String
+}
+
+type UserDTO {
     id: ID!
     username: String!
     email: String!
     role: Role!
+    phoneNumber: String
+    address: Address
+    latitude: Float
+    longitude: Float
+    shopName: String
+    description: String
+    date: String
+    link: String
+    flowerShopType: String
+    logo: String
 }
 
-extend type Query {
-    allUsers: [User!]!
-    userById(id: ID!): User
-}
-
-extend type Mutation {
-    registerUser(
-        username: String!,
-        email: String!,
-        password: String!,
-        role: String!
-    ): User!
-    login(email: String!, password: String!): User
-    updateUser(id: ID!, username: String, email: String, password: String, role: Role): User
-    deleteUser(id: ID!): Boolean!
-}
-
-input RegisterInput {
+input RegisterRequest {
     username: String!
     email: String!
     password: String!
     role: Role!
 }
 
-input UpdateUserInput {
-    username: String
-    email: String
-    password: String
-    role: Role
+extend type Query {
+    allOwners: [UserDTO!]!
+    userById(id: ID!): UserDTO
+}
+
+extend type Mutation {
+    registerUser(request: RegisterRequest!): UserDTO!
+    login(email: String!, password: String!): UserDTO
+    updateUser(id: ID!, username: String, email: String, password: String): UserDTO
+    deleteUser(id: ID!): Boolean!
 }
