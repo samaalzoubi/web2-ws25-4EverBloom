@@ -7,17 +7,14 @@ import API_CONFIG from './api-config.js';
 
 /**
  * Fetch orders for a specific customer using REST API
- * This would typically come from an orders endpoint
- * For now, we'll use a mock response since the backend primarily uses ordersByCustomer
  */
 export async function fetchOrdersREST(customerId = API_CONFIG.DEFAULT_CUSTOMER_ID) {
     try {
         console.log(`[REST] Fetching orders for customer ${customerId}...`);
         
-        // Since there's no direct REST endpoint for orders by customer in your backend,
-        // we'll fetch ratings and construct order information
+        // Use the actual orders endpoint with userId query parameter
         const response = await fetch(
-            `${API_CONFIG.REST_BASE_URL}${API_CONFIG.endpoints.ratingsByCustomer(customerId)}`,
+            `${API_CONFIG.REST_BASE_URL}/orders?userId=${customerId}`,
             {
                 method: 'GET',
                 headers: {
@@ -31,31 +28,19 @@ export async function fetchOrdersREST(customerId = API_CONFIG.DEFAULT_CUSTOMER_I
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        const ratings = await response.json();
-        console.log('[REST] Ratings fetched successfully:', ratings);
+        const orders = await response.json();
+        console.log('[REST] Orders fetched successfully:', orders);
         
-        // Transform ratings into order format
-        const ordersMap = new Map();
-        
-        ratings.forEach(rating => {
-            if (!ordersMap.has(rating.orderId)) {
-                ordersMap.set(rating.orderId, {
-                    id: rating.orderId,
-                    customerId: rating.customerId,
-                    orderDate: new Date().toISOString(), // Mock date
-                    status: 'DELIVERED',
-                    totalPrice: 0,
-                    items: [],
-                    rating: {
-                        id: rating.id,
-                        score: rating.ratingScore,
-                        review: rating.review
-                    }
-                });
-            }
-        });
-        
-        return Array.from(ordersMap.values());
+        // Transform orders to match expected format
+        return orders.map(order => ({
+            id: order.orderId,
+            customerId: order.customerId,
+            orderDate: order.orderDate,
+            status: order.status,
+            totalPrice: order.totalAmount,
+            address: order.address,
+            orderLines: order.orderLines || []
+        }));
     } catch (error) {
         console.error('[REST] Error fetching orders:', error);
         throw error;

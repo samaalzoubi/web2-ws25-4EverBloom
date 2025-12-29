@@ -11,10 +11,13 @@ import { renderOrders, showLoading, showError } from './dom-renderer.js';
 
 // Application state
 const AppState = {
-    currentAPI: 'rest', // 'rest' or 'graphql'
     customerId: API_CONFIG.DEFAULT_CUSTOMER_ID,
     orders: [],
-    ratings: new Map()
+    ratings: new Map(),
+    apiResults: {
+        rest: null,
+        graphql: null
+    }
 };
 
 /**
@@ -23,47 +26,62 @@ const AppState = {
 async function init() {
     console.log('🚀 Initializing Customer Rating Application...');
     
-    // Check URL parameters for API type
-    const urlParams = new URLSearchParams(window.location.search);
-    const apiType = urlParams.get('api');
-    
-    if (apiType === 'graphql') {
-        AppState.currentAPI = 'graphql';
-    }
-    
     // Get customer ID from URL or use default
+    const urlParams = new URLSearchParams(window.location.search);
     const customerId = urlParams.get('customerId');
     if (customerId) {
         AppState.customerId = parseInt(customerId);
     }
     
-    // Update UI to show current API
-    updateAPIIndicator();
-    
     // Setup event listeners
     setupEventListeners();
     
-    // Load orders
+    // Load orders from both APIs
     await loadOrders();
     
     console.log('✅ Application initialized successfully');
 }
 
 /**
- * Load orders based on current API selection
+ * Load orders from both REST and GraphQL APIs automatically
  */
 async function loadOrders() {
     try {
         showLoading();
         
-        console.log(`📡 Loading orders using ${AppState.currentAPI.toUpperCase()} API...`);
+        console.log('📡 Loading orders using both REST and GraphQL APIs...');
         
-        let orders;
-        if (AppState.currentAPI === 'graphql') {
-            orders = await fetchOrdersGraphQL(AppState.customerId);
+        // Fetch from both APIs in parallel
+        const [restOrders, graphqlOrders] = await Promise.allSettled([
+            fetchOrdersREST(AppState.customerId),
+            fetchOrdersGraphQL(AppState.customerId)
+        ]);
+        
+        // Store API results
+        AppState.apiResults.rest = restOrders.status === 'fulfilled' ? restOrders.value : null;
+        AppState.apiResults.graphql = graphqlOrders.status === 'fulfilled' ? graphqlOrders.value : null;
+        
+        // Log results from both APIs
+        if (restOrders.status === 'fulfilled') {
+            console.log(`✅ REST API: Loaded ${restOrders.value.length} orders`);
         } else {
-            // For REST, we'll combine orders with ratings
-            orders = await fetchOrdersREST(AppState.customerId);
+            console.warn('⚠️ REST API failed:', restOrders.reason);
+        }
+        
+        if (graphqlOrders.status === 'fulfilled') {
+            console.log(`✅ GraphQL API: Loaded ${graphqlOrders.value.length} orders`);
+        } else {
+            console.warn('⚠️ GraphQL API failed:', graphqlOrders.reason);
+        }
+        
+        // Use GraphQL data as primary source, fallback to REST if needed
+        let orders = [];
+        if (AppState.apiResults.graphql && AppState.apiResults.graphql.length > 0) {
+            orders = AppState.apiResults.graphql;
+            console.log('📊 Using GraphQL data as primary source');
+        } else if (AppState.apiResults.rest && AppState.apiResults.rest.length > 0) {
+            orders = AppState.apiResults.rest;
+            console.log('📊 Using REST data as fallback');
         }
         
         AppState.orders = orders;
@@ -71,7 +89,7 @@ async function loadOrders() {
         // Render orders to DOM
         renderOrders(orders);
         
-        console.log(`✅ Loaded ${orders.length} orders`);
+        console.log(`✅ Loaded ${orders.length} orders total`);
     } catch (error) {
         console.error('❌ Failed to load orders:', error);
         showError('Failed to load orders. Please check your connection and try again.');
@@ -105,18 +123,21 @@ async function submitRating(orderId) {
             review: review
         };
         
-        console.log(`📤 Submitting rating using ${AppState.currentAPI.toUpperCase()} API:`, ratingData);
+        console.log('📤 Submitting rating:', ratingData);
         
         // Disable button during submission
         submitButton.disabled = true;
         submitButton.textContent = 'Submitting...';
         
-        // Submit using appropriate API
+        // Try GraphQL first, fallback to REST
         let result;
-        if (AppState.currentAPI === 'graphql') {
+        try {
             result = await submitRatingGraphQL(ratingData);
-        } else {
+            console.log('✅ Rating submitted via GraphQL');
+        } catch (graphqlError) {
+            console.warn('⚠️ GraphQL submission failed, trying REST:', graphqlError);
             result = await submitRatingREST(ratingData);
+            console.log('✅ Rating submitted via REST');
         }
         
         console.log('✅ Rating submitted successfully:', result);
@@ -143,58 +164,12 @@ async function submitRating(orderId) {
     }
 }
 
-/**
- * Switch between REST and GraphQL APIs
- */
-async function switchAPI() {
-    const newAPI = AppState.currentAPI === 'rest' ? 'graphql' : 'rest';
-    
-    console.log(`🔄 Switching from ${AppState.currentAPI.toUpperCase()} to ${newAPI.toUpperCase()}...`);
-    
-    AppState.currentAPI = newAPI;
-    updateAPIIndicator();
-    
-    // Update URL without reloading
-    const url = new URL(window.location);
-    if (newAPI === 'graphql') {
-        url.searchParams.set('api', 'graphql');
-    } else {
-        url.searchParams.delete('api');
-    }
-    window.history.pushState({}, '', url);
-    
-    // Reload orders with new API
-    await loadOrders();
-}
 
-/**
- * Update API indicator in UI
- */
-function updateAPIIndicator() {
-    const indicator = document.getElementById('api-indicator');
-    const toggleBtn = document.getElementById('toggle-api-btn');
-    
-    if (indicator) {
-        indicator.textContent = AppState.currentAPI.toUpperCase();
-        indicator.className = `api-badge api-${AppState.currentAPI}`;
-    }
-    
-    if (toggleBtn) {
-        const nextAPI = AppState.currentAPI === 'rest' ? 'GraphQL' : 'REST';
-        toggleBtn.textContent = `Switch to ${nextAPI}`;
-    }
-}
 
 /**
  * Setup event listeners
  */
 function setupEventListeners() {
-    // API toggle button
-    const toggleBtn = document.getElementById('toggle-api-btn');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', switchAPI);
-    }
-    
     // Rating submit event
     document.addEventListener('rating-submit', (event) => {
         submitRating(event.detail.orderId);
@@ -232,4 +207,4 @@ if (document.readyState === 'loading') {
 }
 
 // Export for testing/debugging
-export { AppState, loadOrders, submitRating, switchAPI };
+export { AppState, loadOrders, submitRating };

@@ -63,6 +63,13 @@ export async function fetchOrdersGraphQL(customerId = API_CONFIG.DEFAULT_CUSTOME
     try {
         console.log(`[GraphQL] Fetching orders for customer ${customerId}...`);
         const data = await executeGraphQL(query, { customerId: customerId.toString() });
+        console.log('[GraphQL] Raw response:', data);
+        
+        if (!data || !data.ordersByCustomer) {
+            console.warn('[GraphQL] No orders found in response');
+            return [];
+        }
+        
         console.log('[GraphQL] Orders fetched successfully:', data.ordersByCustomer);
         
         // Transform to match expected format
@@ -71,8 +78,9 @@ export async function fetchOrdersGraphQL(customerId = API_CONFIG.DEFAULT_CUSTOME
             orderDate: order.orderDate,
             totalPrice: order.totalAmount,
             status: order.status,
+            address: order.deliveryAddress,
             customerId: customerId,
-            orderLines: order.items.map(item => ({
+            orderLines: (order.items || []).map(item => ({
                 itemName: item.bouquetName,
                 quantity: item.quantity,
                 price: item.price
