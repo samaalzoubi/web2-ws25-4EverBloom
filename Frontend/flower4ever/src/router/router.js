@@ -29,12 +29,12 @@ const routes = [
     component: OwnerAccount
   },
   {
-    path: '/admin-orders',
+    path: '/customer-orders',
     name: 'CustomerOrders',
     component: CustomerOrders
   },
   {
-    path: '/customer-orders',
+    path: '/admin-orders',
     name: 'AdminOrders',
     component: AdminOrders
   }

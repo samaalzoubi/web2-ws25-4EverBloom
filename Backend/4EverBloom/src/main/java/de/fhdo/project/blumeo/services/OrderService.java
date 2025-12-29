@@ -84,4 +84,41 @@ public class OrderService {
         order.setStatus(status);
         return orderMapper.toDto(order);
     }
+
+    // Get all orders (for admin)
+    public List<OrderDTO> getAllOrders() {
+        return orderRepository.findAll()
+                .stream()
+                .map(orderMapper::toDto)
+                .toList();
+    }
+
+    // Get orders by user ID (for customer)
+    public List<OrderDTO> getOrdersByUserId(Long userId) {
+        return orderRepository.findByCustomer_Id(userId)
+                .stream()
+                .map(orderMapper::toDto)
+                .toList();
+    }
+
+    // Update order (items, total, etc.)
+    @Transactional
+    public OrderDTO updateOrder(Long orderId, OrderDTO orderUpdate) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        
+        // Update fields as needed
+        if (orderUpdate.deliveryAddress() != null) {
+            order.setDeliveryAddress(orderUpdate.deliveryAddress());
+        }
+        
+        if (orderUpdate.totalAmount() != null) {
+            order.setTotalAmount(orderUpdate.totalAmount());
+        }
+        
+        // Note: Updating order lines would require more complex logic
+        // For now, we're keeping it simple
+        
+        return orderMapper.toDto(order);
+    }
 }

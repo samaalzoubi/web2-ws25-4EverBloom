@@ -142,7 +142,7 @@ export default {
   box-shadow: 0 8px 32px rgba(123, 104, 173, 0.3);
   display: none;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 2000;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -248,7 +248,7 @@ export default {
   font-size: 1.8rem;
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(123, 104, 173, 0.4);
-  z-index: 999;
+  z-index: 1999;
   transition: all 0.3s;
 }
 

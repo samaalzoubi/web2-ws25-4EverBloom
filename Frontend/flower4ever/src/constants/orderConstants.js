@@ -17,5 +17,5 @@ export const API_ENDPOINTS = {
   ORDER_BY_ID: (id) => `/orders/${id}`,
   UPDATE_STATUS: (id) => `/orders/${id}/status`,
   CREATE_ORDER: (userId) => `/orders/${userId}`,
-  RATING: '/rating'
+  RATING: '/ratings'
 };

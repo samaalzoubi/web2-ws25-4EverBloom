@@ -1,11 +1,23 @@
 package de.fhdo.project.blumeo.controller.order;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import de.fhdo.project.blumeo.dto.order.CreateOrderRequest;
 import de.fhdo.project.blumeo.dto.order.OrderDTO;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
 import de.fhdo.project.blumeo.services.OrderService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 //Lab5
 @CrossOrigin
@@ -16,6 +28,20 @@ public class OrderController {
     private final OrderService orderService;
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    // Get all orders or filter by userId
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getAllOrders(
+            @RequestParam(required = false) Long userId) {
+        
+        if (userId != null) {
+            // Get orders for specific customer
+            return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
+        }
+        
+        // Get all orders (for admin)
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @PostMapping("/{userId}")
@@ -43,5 +69,14 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDTO> getOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.getOrder(orderId));
+    }
+
+    // Update order (items, total, etc.)
+    @PutMapping("/{orderId}")
+    public ResponseEntity<OrderDTO> updateOrder(
+            @PathVariable Long orderId,
+            @RequestBody OrderDTO orderUpdate) {
+        
+        return ResponseEntity.ok(orderService.updateOrder(orderId, orderUpdate));
     }
 }
