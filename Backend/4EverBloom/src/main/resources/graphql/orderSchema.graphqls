@@ -1,0 +1,55 @@
+# Lab6 - Orders GraphQL schema -- Akanksha's backend component
+
+extend type Query {
+  order(orderId: ID!): OrderDTO
+  ordersByUser(userId: ID!): [OrderDTO!]!
+  allOrders: [OrderDTO!]!
+}
+
+extend type Mutation {
+  createOrder(userId: ID!, request: CreateOrderRequest!): OrderDTO!
+  updateOrderStatus(orderId: ID!, status: OrderStatus!): OrderDTO!
+}
+
+# Reused existing DTO idea
+type OrderDTO {
+  orderId: ID!
+  customerId: ID!
+  status: OrderStatus!
+  orderDate: String
+  deliveryDate: String
+  address: Address
+  totalAmount: Float
+  orderLines: [OrderLineDTO!]!
+}
+
+type OrderLineDTO {
+  orderLineId: ID!
+  bouquetId: ID!
+  bouquetName: String!
+  quantity: Int!
+  price: Float
+}
+
+input CreateOrderRequest {
+  bouquetIds: [ID!]!
+  quantities: [Int!]!
+  address: AddressInput!
+}
+
+input AddressInput {
+  streetAddress: String!
+  city: String!
+  state: String
+  zipCode: String!
+}
+
+# Keep enum aligned with Java enum
+enum OrderStatus {
+  CREATED
+  CONFIRMED
+  IN_DELIVERY
+  DELIVERED
+  CANCELLED
+  PAID
+}

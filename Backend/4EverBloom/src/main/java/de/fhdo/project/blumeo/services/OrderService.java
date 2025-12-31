@@ -97,14 +97,13 @@ public class OrderService {
                 .toList();
     }
 
-    @Transactional
-    public OrderDTO updateStatus(Long orderId, OrderStatus status) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow();
-        order.setStatus(status);
-        return orderMapper.toDto(order);
-    }
-
+@Transactional
+public OrderDTO updateStatus(Long orderId, OrderStatus status) {
+    Order order = orderRepository.findById(orderId).orElseThrow();
+    order.setStatus(status);
+    Order saved = orderRepository.save(order);
+    return orderMapper.toDto(saved);
+}
     // Get all orders (for admin)
     public List<OrderDTO> getAllOrders() {
         return orderRepository.findAll()
