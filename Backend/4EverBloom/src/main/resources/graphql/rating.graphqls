@@ -1,6 +1,6 @@
 extend type Query {
-  ordersByCustomer(customerId: ID!): [Order!]!
-  ratingsByOrder(orderId: ID!): [Rating!]!
+  ordersByCustomer(customerId: Int!): [Order!]!
+  ratingsByOrder(orderId: Int!): [Rating!]!
 }
 
 extend type Mutation {
@@ -8,8 +8,8 @@ extend type Mutation {
 }
 
 input RatingInput {
-  orderId: ID!
-  customerId: ID!
+  orderId: Int!
+  customerId: Int!
   ratingScore: Int!
   review: String
 }
@@ -18,8 +18,8 @@ type Rating {
   id: ID!
   ratingScore: Int!
   review: String
-  orderId: ID!
-  customerId: ID!
+  orderId: Int!
+  customerId: Int!
 }
 
 type Order {
