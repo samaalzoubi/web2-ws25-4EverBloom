@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
  try {
   const shop = await fetchShopByIdGraphQL(shopId);
 
-  // 🔎 DEBUG LINE (TEMPORARY)
+
   console.log("SHOP OBJECT FROM GRAPHQL:", shop);
 
   if (!shop) {
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // 🔑 ROLE CHECK (UX FIX)
+
   if (shop.role !== "OWNER") {
     showError("This profile does not belong to a flower shop.");
     return;
