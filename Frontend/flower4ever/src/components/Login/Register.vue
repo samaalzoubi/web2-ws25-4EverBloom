@@ -1,32 +1,34 @@
 <template>
   <div class="register-container">
+
+    <!-- ROLE SELECTION -->
     <div
       v-if="!selectedRole"
-      class="register"
-      style="text-align:center; padding:30px; border-radius:20px; background:white; max-width:450px; margin:120px auto; box-shadow:0 5px 20px rgba(0,0,0,0.1);"
+      class="register role-select"
     >
-      <h2 style="margin-bottom:20px; font-size:20px; font-weight:600;">
-        Please choose your account type:
-      </h2>
-      <button class="main-btn" @click="selectedRole = 'user'">Private</button>
-      <button class="main-btn" @click="selectedRole = 'owner'">Business</button>
+      <h2>Please choose your account type:</h2>
+      <button class="main-btn" @click="selectedRole = 'CUSTOMER'">Private</button>
+      <button class="main-btn" @click="selectedRole = 'OWNER'">Business</button>
     </div>
 
-    <!-- Private User Registrierung -->
-    <div v-if="selectedRole === 'user'" class="register">
+    <!-- CUSTOMER REGISTRATION -->
+    <div v-if="selectedRole === 'CUSTOMER'" class="register">
       <h1>Create Account</h1>
       <h3>Join our blooming community</h3>
-      <form @submit.prevent="registerUser">
+
+      <form @submit.prevent="registerCustomer">
         <label>Username</label>
-        <input type="text" v-model="user.username" placeholder="Choose a username" required />
+        <input v-model="customer.username" required />
 
         <label>Email</label>
-        <input type="email" v-model="user.email" placeholder="example@gmail.com" required />
+        <input type="email" v-model="customer.email" required />
 
         <label>Password</label>
-        <input type="password" v-model="user.password" placeholder="Create password" required />
+        <input type="password" v-model="customer.password" required />
 
-        <button type="submit" @click="registerUser()">Register</button>
+        <button type="submit" :disabled="loading">
+          {{ loading ? 'Creating account...' : 'Register' }}
+        </button>
 
         <p class="register-text">
           Already have an account?
@@ -35,87 +37,92 @@
       </form>
     </div>
 
-    <!-- Business Owner Registrierung -->
-    <div v-if="selectedRole === 'owner'" class="register">
+    <!-- OWNER REGISTRATION -->
+    <div v-if="selectedRole === 'OWNER'" class="register">
       <h1>Create Business Account</h1>
+
       <form @submit.prevent="registerOwner">
         <label>Username</label>
-        <input type="text" v-model="owner.username" placeholder="Choose a username" required />
+        <input v-model="owner.username" required />
 
         <label>Email</label>
-        <input type="email" v-model="owner.email" placeholder="example@gmail.com" required />
+        <input type="email" v-model="owner.email" required />
 
         <label>Password</label>
-        <input type="password" v-model="owner.password" placeholder="Create password" required />
+        <input type="password" v-model="owner.password" required />
 
-        <!-- Business Felder -->
-        <div id="business-fields">
-          <label>Shop Name</label>
-          <input type="text" v-model="owner.shopName" placeholder="Your shop name" />
+        <label>Shop Name</label>
+        <input v-model="owner.shopName" />
 
-          <label>Shop Address</label>
-          <input type="text" v-model="owner.shopAddress" placeholder="Street, City, ZIP" />
+        <label>Shop Address</label>
+        <input v-model="owner.shopAddress" />
 
-          <label>What do you offer?</label>
-          <textarea v-model="owner.offer" placeholder="Describe your services or products" style="height:80px;"></textarea>
+        <label>What do you offer?</label>
+        <textarea v-model="owner.offer"></textarea>
 
-          <label>Upload Certificate</label>
-          <input type="file" @change="handleFileUpload($event, 'certificate')" accept="image/*,application/pdf" />
+        <label>Certificate</label>
+        <input type="file" @change="handleFileUpload($event, 'certificate')" />
 
-          <label>Opening Hours</label>
-          <input type="text" v-model="owner.hours" placeholder="e.g. Mon–Fri: 09:00–18:00" />
+        <label>Opening Hours</label>
+        <input v-model="owner.hours" />
 
-          <label>Phone Number</label>
-          <input type="text" v-model="owner.phone" placeholder="Contact number" />
+        <label>Phone</label>
+        <input v-model="owner.phone" />
 
-          <label>Website / Social Media</label>
-          <input type="text" v-model="owner.social" placeholder="Website or Instagram page" />
+        <label>Website / Social</label>
+        <input v-model="owner.social" />
 
-          <label>Flower Shop Type</label>
-          <select v-model="owner.type">
-            <option value="">Select type</option>
-            <option value="bouquet">Bouquet Shop</option>
-            <option value="wedding">Wedding Flowers</option>
-            <option value="event">Event Decoration</option>
-            <option value="garden">Garden Plants</option>
-            <option value="houseplants">Houseplants</option>
-            <option value="mixed">Mixed Flower Shop</option>
-            <option value="other">Other</option>
-          </select>
+        <label>Shop Type</label>
+        <select v-model="owner.type">
+          <option value="">Select</option>
+          <option value="bouquet">Bouquet</option>
+          <option value="wedding">Wedding</option>
+          <option value="event">Event</option>
+          <option value="garden">Garden</option>
+          <option value="houseplants">Houseplants</option>
+          <option value="mixed">Mixed</option>
+        </select>
 
-          <label>Delivery Options</label>
-          <select v-model="owner.delivery">
-            <option value="pickup">Pickup Only</option>
-            <option value="delivery">Delivery Available</option>
-            <option value="both">Pickup & Delivery</option>
-          </select>
+        <label>Delivery</label>
+        <select v-model="owner.delivery">
+          <option value="pickup">Pickup</option>
+          <option value="delivery">Delivery</option>
+          <option value="both">Both</option>
+        </select>
 
-          <label>Logo Upload</label>
-          <input type="file" @change="handleFileUpload($event, 'logo')" accept="image/*" />
-        </div>
+        <label>Logo</label>
+        <input type="file" @change="handleFileUpload($event, 'logo')" />
 
-        <button type="submit" @click="registerOwner()">Register</button>
+        <button type="submit" :disabled="loading">
+          {{ loading ? 'Creating account...' : 'Register Business' }}
+        </button>
+
         <p class="register-text">
           Already have an account?
           <router-link to="/Login">Back to Login</router-link>
         </p>
       </form>
     </div>
+
   </div>
 </template>
 
 <script>
-import { ref, reactive } from 'vue';
+import { ref, reactive } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import router from '@/router/router'
 
 export default {
   setup() {
-    const selectedRole = ref(null);
+    const userStore = useUserStore()
+    const selectedRole = ref(null)
+    const loading = ref(false)
 
-    const user = reactive({
+    const customer = reactive({
       username: '',
       email: '',
       password: ''
-    });
+    })
 
     const owner = reactive({
       username: '',
@@ -131,27 +138,72 @@ export default {
       type: '',
       delivery: '',
       logo: null
-    });
+    })
 
-    const handleFileUpload = (event, field) => {
-      if (event.target.files.length > 0) {
-        owner[field] = event.target.files[0];
+    const handleFileUpload = (e, field) => {
+      owner[field] = e.target.files[0]
+    }
+
+    const registerCustomer = async () => {
+      loading.value = true
+      try {
+        const res = await fetch('http://localhost:8080/api/v1/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: customer.username,
+            email: customer.email,
+            password: customer.password,
+            role: 'CUSTOMER'
+          })
+        })
+
+        if (!res.ok) throw new Error()
+
+        alert('Registration successful, please login')
+        router.push('/Login')
+      } catch {
+        alert('Registration failed')
+      } finally {
+        loading.value = false
       }
-    };
+    }
 
-    const registerUser = () => {
-      console.log('User data:', user);
-      // Hier API Call für User-Registrierung
-    };
+    const registerOwner = async () => {
+      loading.value = true
+      try {
+        const res = await fetch('http://localhost:8080/api/v1/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...owner,
+            role: 'OWNER'
+          })
+        })
 
-    const registerOwner = () => {
-      console.log('Owner data:', owner);
-      // Hier API Call für Owner-Registrierung
-    };
+        if (!res.ok) throw new Error()
 
-    return { selectedRole, user, owner, handleFileUpload, registerUser, registerOwner };
+        alert('Owner registered, please login')
+        router.push('/Login')
+      } catch {
+        alert('Owner registration failed')
+      } finally {
+        loading.value = false
+      }
+    }
+
+
+    return {
+      selectedRole,
+      customer,
+      owner,
+      loading,
+      handleFileUpload,
+      registerCustomer,
+      registerOwner
+    }
   }
-};
+}
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <form @submit.prevent="LogIn" class="login">
+    <form @submit.prevent="logIn" class="login">
       <h1>Welcome</h1>
       <h3>Log in to explore our floral collections</h3>
 
@@ -24,7 +24,9 @@
         />
       </div>
 
-      <button type="submit">Login</button>
+      <button type="submit" :disabled="loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
 
       <p class="register-text">
         No account yet?
@@ -34,34 +36,53 @@
   </div>
 </template>
 
-<script>
-  import router from '@/router/router';
 
-  
+<script>
+import { useUserStore } from '@/stores/userStore'
+import router from '@/router/router'
+
 export default {
   name: "Login",
   data() {
     return {
+      loading: false,
       form: {
-        email: "",
-        password: "",
-      },
-    };
+        email: '',
+        password: ''
+      }
+    }
   },
   methods: {
-    LogIn() {
-      console.log("Logging in with:", this.form);
+    async logIn() {
+      this.loading = true
+      try {
+        const res = await fetch('http://localhost:8080/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(this.form)
+        })
 
-      if (!this.form.email || !this.form.password) {
-        alert("Bitte Email und Passwort eingeben!");
-        return;
+        if (!res.ok) throw new Error()
+
+        const userData = await res.json()
+
+        const userStore = useUserStore()
+        userStore.login(userData)
+
+        // Redirect nach Rolle
+        if (userData.role === 'OWNER') {
+          router.push('/owner/dashboard')
+        } else {
+          router.push('/')
+        }
+      } catch {
+        alert('Login fehlgeschlagen')
+      } finally {
+        this.loading = false
       }
-
-      alert(`Erfolgreich eingeloggt als ${this.form.email}`);
-      // Hier könntest du axios.post('/api/login', this.form) verwenden
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style scoped>
