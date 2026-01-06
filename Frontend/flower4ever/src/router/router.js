@@ -4,6 +4,11 @@ import Register from '../components/Login/Register.vue';
 import OwnerProfile from "@/components/Profile/OwnerProfile.vue";
 import UserProfile from "@/components/Profile/UserProfile.vue";
 import OwnerAccount from "@/components/Profile/OwnerAccount.vue";
+import CustomerOrders from "@/components/OrderVue/CustomerOrders.vue";
+import AdminOrders from "@/components/OrderVue/AdminOrders.vue";
+import HomePage from "@/views/customer-views/HomePage.vue";
+import Map from "@/views/customer-views/Map.vue";
+import Checkout from "@/views/customer-views/Checkout.vue";
 
 const routes = [
   {
@@ -26,6 +31,31 @@ const routes = [
     path: '/ownerAccount',
     component: OwnerAccount
   },
+  {
+    path: '/customer-orders',
+    name: 'CustomerOrders',
+    component: CustomerOrders
+  },
+  {
+    path: '/admin-orders',
+    name: 'AdminOrders',
+    component: AdminOrders
+  },
+  {
+    path: '/',
+    name: 'home',
+    component: HomePage
+  },
+  { 
+    path: '/map', 
+    name: 'map', 
+    component: Map 
+  },
+  { 
+    path: '/checkout', 
+    name: 'checkout', 
+    component: Checkout 
+  }
 ]
 
 export default createRouter({

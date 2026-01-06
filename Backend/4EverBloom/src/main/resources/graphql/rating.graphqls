@@ -1,0 +1,38 @@
+extend type Query {
+  ordersByCustomer(customerId: Int!): [Order!]!
+  ratingsByOrder(orderId: Int!): [Rating!]!
+}
+
+extend type Mutation {
+  submitRating(input: RatingInput!): Rating!
+}
+
+input RatingInput {
+  orderId: Int!
+  customerId: Int!
+  ratingScore: Int!
+  review: String
+}
+
+type Rating {
+  id: ID!
+  ratingScore: Int!
+  review: String
+  orderId: Int!
+  customerId: Int!
+}
+
+type Order {
+  id: ID!
+  status: String!
+  orderDate: String
+  deliveryAddress: String
+  totalAmount: Float
+  items: [OrderLine!]!
+}
+
+type OrderLine {
+  bouquetName: String
+  quantity: Int
+  price: Float
+}

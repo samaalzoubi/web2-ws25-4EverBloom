@@ -12,6 +12,7 @@ import java.util.List;
 //Lab5
 @RestController
 @RequestMapping("/api/v1/users")
+@CrossOrigin
 public class UserRestController {
 
     private final UserService userService;
@@ -20,10 +21,10 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    // Alle User abrufen
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public List<UserDTO> getAllUsers() {
-        return userService.getAllUsers();
+    // Alle User mit der Rolle OWNER abrufen
+    @GetMapping(value = "/owners", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<UserDTO> getAllOwners() {
+        return userService.getAllOwners();
     }
 
     // User erstellen

@@ -184,17 +184,11 @@ public class BouquetService {
 
                     return new ShopLatestPremadeBouquetsDTO(
                             shop.getId(),
-                            //shop.getName(),
+                            shop.getLogo(),
                             bouquetDTOs
                     );
                 })
                 .toList();
     }
-
-
-    /*public List<PremadeBouquetSummary> getPopularBouquetsForShop(Long shopId) {
-        List<Bouquet> bouquets = bouquetRepository.findTopByShopOrderByPopularityDesc(shopId);
-        return bouquets.stream().map(this::mapToSummaryDto).toList();
-    }*/
 }
 

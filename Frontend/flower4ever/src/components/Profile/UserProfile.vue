@@ -1,6 +1,5 @@
 <template> 
     <div class="title"> 
-      <router-link to="/"> <button>Back</button> </router-link>
       <h1>Edit Profile</h1> 
 
     <div class="user-profile-container">

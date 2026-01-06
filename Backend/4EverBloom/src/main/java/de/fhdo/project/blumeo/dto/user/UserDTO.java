@@ -14,8 +14,10 @@ public class UserDTO {
     private String password;
     private Role role; // OWNER or USER
 
-    private Integer number;
+    private String phoneNumber;
     private Address address;
+    private Double latitude;
+    private Double longitude;
     private String shopName;
     private String description;
     private Date date;
@@ -23,5 +25,4 @@ public class UserDTO {
     private String flowerShopType;
     private String deliveryOption;
     private String logo;
-
 }

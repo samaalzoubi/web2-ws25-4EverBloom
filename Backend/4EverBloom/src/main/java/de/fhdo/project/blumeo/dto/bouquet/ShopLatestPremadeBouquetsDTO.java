@@ -11,12 +11,12 @@ import java.util.List;
 public class ShopLatestPremadeBouquetsDTO {
 
     private Long shopId;
-    //private String shopName;
+    private String shopLogo;
     private List<BouquetDetailsDTO> bouquets;
 
-    public ShopLatestPremadeBouquetsDTO(Long shopId, /*String shopName*/ List<BouquetDetailsDTO> bouquets) {
+    public ShopLatestPremadeBouquetsDTO(Long shopId, String shopLogo, List<BouquetDetailsDTO> bouquets) {
         this.shopId = shopId;
-        //this.shopName = shopName;
+        this.shopLogo = shopLogo;
         this.bouquets = bouquets;
     }
 }

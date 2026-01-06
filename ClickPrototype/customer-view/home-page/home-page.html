@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blümeo | Home-Page</title>
+    <link rel="stylesheet" href="/ClickPrototype/style.css">
+    <link rel="stylesheet" href="home-page.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+   <div id="header"></div>
+
+    <main>
+        <section class="banner">
+                <h2>Create & Send Beautiful Bouquets – Fresh, Local & Designed for You</h2>
+                <div class="under-banner">
+                    <p>At Blümeo, every bouquet is crafted with love by local florists and brought to life in our 3D flower designer.</p>
+                    <p>Explore, customize, and send your perfect arrangement – whether for birthdays, celebrations, or “just because.”</p>
+                    <p>Enjoy same-day delivery from trusted local shops. Transparent prices, no hidden fees – just pure floral joy delivered to your doorstep.</p>
+                </div>
+        </section>
+
+        <div class="search-and-carousel">
+            <div class="search-container">
+                <button type="button"><span class="material-symbols-outlined">search</span></button>
+                <input type="text" name="address" placeholder="Find your perfect bouquet...📍">
+                <button type="button" id="open-map" class="map-btn" title="Open map">
+                    <span class="material-symbols-outlined">map_search</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="back-video-container">
+            <video class="background-video" autoplay loop muted playsinline src="/ClickPrototype/assets/flowers_background.mp4"></video>
+            <div id="citation">
+                <p>“I must have flowers, always, and always.” <strong>― Claude Monet</strong></p>
+            </div>
+        </div>
+    
+        <div class="happiness-hubs">
+            <h3>Happiness Hubs</h3>
+            <button class="carousel-button prev" data-carousel-button="prev">&#10594;</button>
+            <button class="carousel-button next" data-carousel-button="next">&#10596;</button>
+            <div class="carousel" id="shop-carousel"></div>
+        </div>
+
+        <section class="petals-of-happiness">
+            <h3>Petals of Happiness</h3>
+
+            <ul class="flower-suggestions"></ul>
+        </section>
+    </main>
+    
+    <div id="footer"></div>
+
+    <!-- Chatbot -->
+    <div id="chatbot" class="chatbot">
+      <div class="chatbot-header">
+        💬 BLÜMEO Assistant
+        <span class="chatbot-close">✖</span>
+      </div>
+      <div class="chatbot-body">
+        <div class="chatbot-message bot">Hello and welcome to BLÜMEO 🌷 I'm your virtual floral assistant. I can help you find the perfect bouquet, track your order, or answer any questions about our services.</div>
+      </div>
+      <div class="chatbot-input">
+        <input type="text" placeholder="Ask me anything..." />
+        <button>
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+    
+    <button class="chatbot-toggle">💬</button>
+
+<script>
+// Chatbot functionality
+document.addEventListener('DOMContentLoaded', function() {
+const chatbot = document.getElementById('chatbot');
+const chatbotToggle = document.querySelector('.chatbot-toggle');
+const chatbotClose = document.querySelector('.chatbot-close');
+const chatInput = document.querySelector('.chatbot-input input');
+const sendButton = document.querySelector('.chatbot-input button');
+    
+// Toggle chatbot
+chatbotToggle.addEventListener('click', function() {
+  chatbot.classList.toggle('open');
+});
+    
+// Close chatbot
+chatbotClose.addEventListener('click', function() {
+  chatbot.classList.remove('open');
+});
+    
+// Send message on Enter key
+chatInput.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    sendMessage();
+  }
+});
+    
+// Send message on button click
+sendButton.addEventListener('click', sendMessage);
+    
+function sendMessage() {
+  const message = chatInput.value.trim();
+  if (message) {
+  // Add user message
+    const chatBody = document.querySelector('.chatbot-body');
+    const userMessage = document.createElement('div');
+    userMessage.className = 'chatbot-message user';
+    userMessage.textContent = message;
+    chatBody.appendChild(userMessage);
+        
+    // Clear input
+    chatInput.value = '';
+        
+    // Scroll to bottom
+    chatBody.scrollTop = chatBody.scrollHeight;
+        
+    // Simulate bot response
+    setTimeout(() => {
+      const botMessage = document.createElement('div');
+      botMessage.className = 'chatbot-message bot';
+      botMessage.textContent = 'Thank you for your message! Our team will assist you shortly. 🌸';
+      chatBody.appendChild(botMessage);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }, 1000);
+  }
+}
+});
+</script>
+
+<script type="module" src="./home.js"></script>
+</body>
+</html>

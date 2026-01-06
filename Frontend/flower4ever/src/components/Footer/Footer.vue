@@ -32,26 +32,7 @@ export default {
 </script>
 
 <style scoped>
-.footer {
-  position: fixed;
-  bottom: -10px;
-  left: 0;
-  width: 100%;
-  background-color:  #b79bd3;
-  text-align: center;
-  padding: 16px 0;
-  border-top: 1px solid #e6e6e6;
-  transition: bottom 0.35s ease;
-  z-index: 1000;
-}
-
-.footer.show {
-  bottom: 0;
-}
-
-.footer-text {
-  margin: 0;
-  font-size: 14px;
-  color: black;
+footer {
+    background-color: var(--color-header-background);
 }
 </style>

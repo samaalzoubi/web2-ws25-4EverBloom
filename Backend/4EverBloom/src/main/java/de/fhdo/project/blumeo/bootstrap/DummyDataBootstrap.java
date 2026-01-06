@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.bootstrap;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.ApplicationListener;
@@ -71,20 +72,70 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
             return;
         }
 
-        //Create test user-customer and user-owner
+        //Create test user-owner
         User owner = new User();
-        owner.setUsername("rose_shop");
-        owner.setEmail("owner@blumeo.test");
-        owner.setPassword("ownerpassword");
+        owner.setUsername("blossoms");
+        owner.setEmail("blossoms@outlook.com");
+        owner.setPassword("blossomsflowers");
         owner.setRole(Role.OWNER);
+
+        owner.setShopName("Blossoms");
+        owner.setFlowerShopType("Boutique");
+        owner.setLink("https://roseparadise.blumeo.test");
+        owner.setLogo("https://i.etsystatic.com/34374772/r/il/c338b0/5033583096/il_fullxfull.5033583096_cwje.jpg");
+        owner.setDate(new Date());
+
+        Address ownerAddress = new Address();
+        ownerAddress.setCity("Dortmund");
+        ownerAddress.setStreetAddress("Viktoriastraße 15");
+        ownerAddress.setZipCode("44135");
+        ownerAddress.setState("North Rhine-Westphalia");
+        owner.setAddress(ownerAddress);
+
+        owner.setPhoneNumber("+491234567890");
+
         owner = userRepository.save(owner);
 
+        //Create test user-customer
         User customer = new User();
         customer.setUsername("alice");
         customer.setEmail("alice@blumeo.test");
         customer.setPassword("customerpassword");
         customer.setRole(Role.CUSTOMER);
+        customer.setDate(new Date());
+        customer.setPhoneNumber("+491112223334");
+
+        Address customerAddress = new Address();
+        customerAddress.setCity("Berlin");
+        customerAddress.setStreetAddress("Blumenweg 7");
+        customerAddress.setZipCode("10115");
+        customer.setAddress(customerAddress);
+
         customer = userRepository.save(customer);
+
+        //Create test user-owner 2.0
+        User owner2 = new User();
+        owner2.setUsername("petals_paradise");
+        owner2.setEmail("petals.paradise@blumeo.test");
+        owner2.setPassword("petalsparadise123"); // in echt: gehasht speichern
+        owner2.setRole(Role.OWNER);
+
+        owner2.setShopName("Franc & Eli");
+        owner2.setFlowerShopType("Concept Store");
+        owner2.setLink("https://petalsparadise.blumeo.test");
+        owner2.setLogo("https://images-platform.99static.com//yrVX8ufudrS38A20MkM0ADXc6eA=/0x0:1904x1904/fit-in/500x500/99designs-contests-attachments/87/87532/attachment_87532959");
+        owner2.setDate(new Date());
+
+        Address owner2Address = new Address();
+        owner2Address.setCity("Düsseldorf");
+        owner2Address.setStreetAddress("Schwanenmarkt 24");
+        owner2Address.setZipCode("40213");
+        owner2Address.setState("North Rhine-Westphalia");
+        owner2.setAddress(owner2Address);
+
+        owner2.setPhoneNumber("+492345678910");
+
+        owner2 = userRepository.save(owner2);
 
         //Create three test flowers
         Flower redRose = new Flower();
@@ -179,6 +230,29 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
 
         bouquetRepository.save(pastelSkyBouquet);
 
+        PremadeBouquet springGardenBliss = new PremadeBouquet();
+        springGardenBliss.setShopOwner(owner2);
+        springGardenBliss.setName("Spring Garden Bliss");
+        springGardenBliss.setDescription("A refreshing mix of tulips, peonies, and garden greenery - perfect for spring celebrations.");
+        springGardenBliss.setPrice(new BigDecimal("89.50"));
+        springGardenBliss.setImageUrl("https://cdn.unebonnemaison.com/q:i/r:0/wp:1/w:400/u:https://unebonnemaison.com/wp-content/uploads/2025/04/DIY-tuto-tulip-bouquet-tulipes-33.jpg");
+        springGardenBliss.getOccasions().add(Occasion.BIRTHDAY);
+        springGardenBliss.getOccasions().add(Occasion.MOTHERS_DAY);
+
+        bouquetRepository.save(springGardenBliss);
+
+        PremadeBouquet sunsetPeonyCharm = new PremadeBouquet();
+        sunsetPeonyCharm.setShopOwner(owner2);
+        sunsetPeonyCharm.setName("Sunset Peony Charm");
+        sunsetPeonyCharm.setDescription("Warm-toned peonies and garden roses arranged with eucalyptus - inspired by golden hour sunsets.");
+        sunsetPeonyCharm.setPrice(new BigDecimal("149.90"));
+        sunsetPeonyCharm.setImageUrl("https://www.realflowers.co.uk/pub/media/catalog/product/cache/0a16fe6c5a12b077b5913b4872a45d22/t/i/timeless_beauty_bouquet_handheld_.jpg");
+        sunsetPeonyCharm.getOccasions().add(Occasion.ANNIVERSARY);
+        sunsetPeonyCharm.getOccasions().add(Occasion.BIRTHDAY);
+        sunsetPeonyCharm.getOccasions().add(Occasion.CONGRATULATIONS);
+
+        bouquetRepository.save(sunsetPeonyCharm);
+
         //Create test CustomBouquet designed by customer in a specific flower shop
         CustomBouquet customSpring = new CustomBouquet();
         customSpring.setShopOwner(owner);
@@ -225,7 +299,7 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         //Create test Order
         Order order = new Order();
         order.setCustomer(customer);
-        order.setDeliveryAddress(new Address("Eisenacher Straße 4", "Dortmund", "Nordrhein-Westfalen", "44143"));
+        order.setDeliveryAddress(customer.getAddress());
         order.setStatus(OrderStatus.CREATED);
 
         order = orderRepository.save(order);

@@ -50,10 +50,5 @@ public class BouquetGraphQLController {
     public List<ShopLatestPremadeBouquetsDTO> latestPremadeBouquetsPerShop() {
         return bouquetService.getLatestPremadeBouquetsPerShop(3);
     }
-
-    /*@QueryMapping
-    public List<PremadeBouquetSummary> popularBouquetsForShop(@Argument Long shopId) {
-        return bouquetService.getPopularBouquetsForShop(shopId);
-    }*/
 }
 

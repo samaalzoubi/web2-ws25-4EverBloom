@@ -1,0 +1,112 @@
+.inventory-wrapper {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 120px auto;
+  padding: 0 2rem;
+}
+
+/* SIDEBAR */
+.side-alert {
+  background: #f8eaff;
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(140,80,255,0.1);
+}
+
+.side-alert span {
+  font-size: 32px;
+  color: #b14dff;
+}
+
+.side-alert h4 {
+  margin: 1rem 0 0.5rem;
+  color: #4b248c;
+}
+
+.side-alert p {
+  color: #7a58b8;
+}
+
+/* CONTENT */
+.inventory-content {
+  padding-right: 1rem;
+}
+
+.title-block h2 {
+  font-size: 2rem;
+  color: #4b248c;
+}
+
+.title-block p {
+  margin-top: 0.3rem;
+  color: #7b5db2;
+}
+
+/* ACTION */
+.action-row {
+  margin: 1.5rem 0;
+}
+
+.add-btn {
+  background: #7a3ec8;
+  color: white;
+  padding: 0.8rem 1.4rem;
+  border-radius: 12px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ✅ INVENTORY GRID */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.6rem;
+  margin-top: 1rem;
+}
+
+/* CARD */
+.inventory-card {
+  background: white;
+  border-radius: 18px;
+  padding: 1.4rem;
+  box-shadow: 0 10px 25px rgba(120,60,200,0.12);
+}
+
+.inventory-card h3 {
+  margin: 0 0 0.4rem;
+  color: #4b248c;
+}
+
+.inventory-card p {
+  margin: 0.25rem 0;
+  color: #6b5aa8;
+  font-size: 0.95rem;
+}
+
+.inventory-card .price {
+  margin-top: 0.6rem;
+  font-weight: 600;
+  color: #7a3ec8;
+}
+
+/* BACK LINK */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #7a3ec8;
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.back-link span {
+  font-size: 20px;
+}
