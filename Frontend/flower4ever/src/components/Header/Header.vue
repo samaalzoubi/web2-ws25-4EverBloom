@@ -7,8 +7,10 @@
         <h3>Design. Bloom. Inspire</h3>
       </div>
     </router-link>
-   
-    <nav>
+
+ 
+    <nav>   
+    <div v-if="userStore.isLoggedIn">
       <router-link to="" class="design-bouquet">
         <span class="fx-3d">3D</span>esign Bouquet 🪄
       </router-link>
@@ -24,9 +26,12 @@
         <span class="cart-count">{{ cartStore.totalQuantity }}</span>
       </a>
 
-      <div class="user-menu" @click="toggleMenu">
+      <div
+        class="user-menu"
+        @click="toggleMenu"
+      >
         <i class="fas fa-user-circle"></i>
-        
+
         <div v-if="isOpen" class="dropdown-menu">
           <div class="dropdown-item">
             <router-link to="/customer-orders" @click.stop>
@@ -34,35 +39,43 @@
               <span>My Orders</span>
             </router-link>
           </div>
+
           <div class="dropdown-item">
             <router-link to="/userProfile" @click.stop>
               <i class="fas fa-user"></i>
               <span>View Profile</span>
             </router-link>
           </div>
+
           <div class="dropdown-item">
-            <router-link to="/login" @click.stop>
+            <a href="#" @click.stop.prevent="logout">
               <i class="fas fa-sign-out-alt"></i>
               <span>Logout</span>
-            </router-link>
+            </a>
           </div>
         </div>
       </div>
+    </div>
+
+      <router-link
+        v-else
+        to="/login"
+        class="user-links"
+      >
+        <i class="fas fa-sign-in-alt"></i>
+        <span style="margin-left: 6px;">Login</span>
+      </router-link>
     </nav>
 
-    <CartSidebar v-if="route.name !== 'checkout'"></CartSidebar>
+    <CartSidebar v-if="route.name !== 'checkout'" />
   </header>
 </template>
 
-
 <script>
 import { useCartStore } from '@/stores/cartStore'
+import { useUserStore } from '@/stores/userStore'
 import CartSidebar from '@/components/CartSidebar.vue'
-import { useRoute } from 'vue-router'
-
-//TODO: v-if="userStore.isLoggedIn"
-//import { useUserStore } from '@/stores/userStore'
-//const userStore = useUserStore()
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   name: "HeaderComponent",
@@ -71,29 +84,37 @@ export default {
   },
   setup() {
     const cartStore = useCartStore()
+    const userStore = useUserStore()
     const route = useRoute()
+    const router = useRouter()
 
-    return { cartStore, route }
+    return { cartStore, userStore, route, router }
   },
   data() {
     return {
-      isOpen: false,
-      cartCount: 0
-    };
+      isOpen: false
+    }
   },
   methods: {
     toggleMenu() {
-      this.isOpen = !this.isOpen;
+      this.isOpen = !this.isOpen
     },
-    
     onCartClick(event) {
       event.preventDefault()
-      console.log("TEST ME")
       this.cartStore.toggle()
-      console.log(this.cartStore.isOpen)
+    },
+    logout() {
+      this.userStore.logout()
+      this.isOpen = false
+      this.router.push('/login')
     }
   },
-};
+  watch: {
+    'route.fullPath'() {
+      this.isOpen = false
+    }
+  }
+}
 </script>
 
 <style>

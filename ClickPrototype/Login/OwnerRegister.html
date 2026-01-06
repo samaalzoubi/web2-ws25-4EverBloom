@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blumeo | Register</title>
+    <link rel="stylesheet" href="../Style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+  </head>
+  <body>
+    <!-- Navigation -->
+    <div id="header"></div>
+    <!-- Main Content -->
+    <main>
+        <!-- Register Box -->
+        <div class="form-container" id="register-container">
+        <h2>Create Account 🌷</h2>
+        <p class="subtitle">Join our blooming community</p>
+        <form id="register-form">
+        <label>Username</label>
+        <input type="text" id="register-username" placeholder="Choose a username" required>
+
+
+        <label>Email</label>
+        <input type="email" id="register-email" placeholder="example@gmail.com" required>
+
+
+        <label>Password</label>
+        <input type="password" id="register-password" placeholder="Create password" required>
+
+
+        <!-- Business Felder -->
+        <div id="business-fields" >
+        <label>Shop Name</label>
+        <input type="text" id="business-name" placeholder="Your shop name">
+
+
+        <label>Shop Address</label>
+        <input type="text" id="business-address" placeholder="Street, City, ZIP">
+
+
+        <label>What do you offer?</label>
+        <textarea id="business-offer" placeholder="Describe your services or products" style="height:80px;"></textarea>
+
+
+        <label>Upload Certificate</label>
+        <input type="file" id="business-certificate" accept="image/*,application/pdf">
+
+
+        <label>Opening Hours</label>
+        <input type="text" id="business-hours" placeholder="e.g. Mon–Fri: 09:00–18:00">
+
+
+        <label>Phone Number</label>
+        <input type="text" id="business-phone" placeholder="Contact number">
+
+
+        <label>Website / Social Media</label>
+        <input type="text" id="business-social" placeholder="Website or Instagram page">
+
+
+       <label>Flower Shop Type</label>
+        <select id="business-type">
+        <option value="">Select type</option>
+        <option value="bouquet">Bouquet Shop</option>
+        <option value="wedding">Wedding Flowers</option>
+        <option value="event">Event Decoration</option>
+        <option value="garden">Garden Plants</option>
+        <option value="houseplants">Houseplants</option>
+        <option value="mixed">Mixed Flower Shop</option>
+        <option value="other">Other</option>
+        </select>
+
+
+        <label>Delivery Options</label>
+        <select id="business-delivery">
+        <option value="pickup">Pickup Only</option>
+        <option value="delivery">Delivery Available</option>
+        <option value="both">Pickup & Delivery</option>
+        </select>
+
+
+        <label>Logo Upload</label>
+        <input type="file" id="business-logo" accept="image/*">
+        </div>
+
+
+        <button type="submit" class="main-btn">Register</button>
+        </form>
+        <p class="toggle-text">
+        Already have an account?
+        <span id="show-login" onclick="window.location.href='Login.html'">Back to Login</span>
+        </p>
+        </div>
+        </main>
+
+    <script>
+      const roleSelect = document.getElementById("role-select");
+      const registerContainer = document.getElementById("register-container");
+
+      document.getElementById("select-user").addEventListener("click", () => {
+        localStorage.setItem("role", "User");
+        roleSelect.classList.add("hidden");
+        registerContainer.classList.remove("hidden");
+      });
+
+      document.getElementById("select-owner").addEventListener("click", () => {
+        localStorage.setItem("role", "Owner");
+        roleSelect.classList.add("hidden");
+        registerContainer.classList.remove("hidden");
+      });
+
+      fetch("../Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("header").innerHTML = data;
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
+
+      document.getElementById("register-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const username = document.getElementById("register-username").value;
+        const email = document.getElementById("register-email").value;
+        const password = document.getElementById("register-password").value;
+        const role = localStorage.getItem("role");
+
+        localStorage.setItem(email, JSON.stringify({ username, password, role }));
+        alert("Account created successfully! You can now log in.");
+        e.target.reset();
+        window.location.href = 'Login.html';
+      });
+    </script>
+  </body>
+</html>

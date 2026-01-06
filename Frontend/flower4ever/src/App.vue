@@ -1,7 +1,17 @@
 <template>
   <div>
-    <Header v-if="user.role === 'CUSTOMER'" />
-    <OwnerHeader v-else-if="user.role === 'OWNER'" />
+    <!-- CUSTOMER HEADER -->
+    <Header
+      v-if="userStore.isLoggedIn && userStore.role === 'CUSTOMER'"
+    />
+
+    <!-- OWNER HEADER -->
+    <OwnerHeader
+      v-else-if="userStore.isLoggedIn && userStore.role === 'OWNER'"
+    />
+
+    <!-- NOT LOGGED IN -->
+    <Header v-else />
 
     <router-view />
 
@@ -10,38 +20,36 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue'
+import { useUserStore } from '@/stores/userStore'
 
-import Header from './components/Header/Header.vue';
-import OwnerHeader from './components/Header/OwnerHeader.vue';
-import Footer from './components/Footer/Footer.vue';
+import Header from './components/Header/Header.vue'
+import OwnerHeader from './components/Header/OwnerHeader.vue'
+import Footer from './components/Footer/Footer.vue'
 
-//TODO: userStore erstellen und da userId, user-Rolle und isLoggedIn speichern
-const user = ref({
-  role: 'OWNER'
-});
+const userStore = useUserStore()
 
 onMounted(async () => {
   try {
-    // Get current user - you should replace '1' with actual user ID from auth/session
-    const userId = localStorage.getItem('userId') || 2;
-    const response = await fetch(`http://localhost:8080/api/v1/users/${userId}`);
-    
-    if (response.ok) {
-      const userData = await response.json();
-      user.value = userData;
-      console.log('User loaded:', userData); // Debug log
-    } else {
-      // Default to owner role if user not found
-      console.warn('User not found, using default role');
-      user.value = { role: 'OWNER' };
-    }
+    const userId = localStorage.getItem('userId')
+
+    if (!userId) return
+
+    const response = await fetch(
+      `http://localhost:8080/api/v1/users/${userId}`
+    )
+
+    if (!response.ok) throw new Error('User not found')
+
+    const userData = await response.json()
+    userStore.login(userData)
+
+    console.log('User geladen:', userData)
   } catch (error) {
-    console.error('User konnte nicht geladen werden', error);
-    // Fallback to default role
-    user.value = { role: 'OWNER' };
+    console.error('User konnte nicht geladen werden', error)
+    userStore.logout()
   }
-});
+})
 </script>
 
 <style>
