@@ -8,99 +8,100 @@
   <link rel="stylesheet" href="/ClickPrototype/style.css">
   <link rel="stylesheet" href="shop-owner-homepage.css">
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 </head>
 
 <body data-page="owner">
 
-  <!-- HEADER (auto-loaded) -->
+  <!-- HEADER -->
   <div id="header"></div>
 
-  <!-- WELCOME BANNER -->
+  <!-- WELCOME -->
   <section class="welcome-banner">
     <div class="welcome-content">
-      <h2>Welcome back, FlowerShop! <span class="emoji">🌸</span></h2>
-      <p>Manage your orders, bouquets, inventory, and conversations.</p>
+      <h2>Welcome back! <span class="emoji">🌸</span></h2>
+      <p>Manage your shop, bouquets, inventory, and orders.</p>
     </div>
   </section>
 
-  <!-- MAIN CONTAINER FOR GRID -->
+  <!-- MAIN -->
   <main class="owner-home-container">
-
     <section class="feature-grid">
 
-      <!-- Dashboard -->
-      <a class="feature-card" href="#">
+      <!-- Dashboard (disabled) -->
+      <div class="feature-card disabled">
         <div class="icon-box"><span class="material-symbols-outlined">home</span></div>
         <h3>Dashboard</h3>
-        <p>View orders, revenue, analytics</p>
-      </a>
+        <p>Coming soon</p>
+      </div>
 
       <!-- Manage Bouquets -->
-      <a class="feature-card" href="#">
+      <a class="feature-card"
+         href="/ClickPrototype/shop-owner-view/manage-bouquets/manage-bouquets.html">
         <div class="icon-box"><span class="material-symbols-outlined">local_florist</span></div>
         <h3>Manage Bouquets</h3>
-        <p>Create & update bouquets</p>
+        <p>Create & delete bouquets</p>
       </a>
 
-      <!-- Manage Inventory (LINK ADDED) -->
-      <a class="feature-card" href="/ClickPrototype/shop-owner-view/manage-inventory/manage-inventory.html">
+      <!-- Manage Inventory -->
+      <a class="feature-card"
+         href="/ClickPrototype/shop-owner-view/manage-inventory/manage-inventory.html">
         <div class="icon-box"><span class="material-symbols-outlined">inventory_2</span></div>
         <h3>Manage Inventory</h3>
         <p>Manage stems & stock</p>
       </a>
 
       <!-- Orders -->
-      <a class="feature-card" href="#">
+      <a class="feature-card"
+         href="/ClickPrototype/shop-owner-view/orders/orders_index.html">
         <div class="icon-box"><span class="material-symbols-outlined">shopping_bag</span></div>
         <h3>Orders</h3>
-        <p>View all orders and update status</p>
+        <p>View customer orders</p>
       </a>
 
-      <!-- Messages -->
-      <a class="feature-card" href="#">
+      <!-- Messages (disabled) -->
+      <div class="feature-card disabled">
         <div class="icon-box"><span class="material-symbols-outlined">chat</span></div>
         <h3>Messages</h3>
-        <p>Chat with customers</p>
-      </a>
+        <p>Coming soon</p>
+      </div>
 
       <!-- Shop Profile -->
-      <a class="feature-card" href="#">
+      <a class="feature-card"
+         href="/ClickPrototype/shop-owner-view/owner-profile/ownerProfile.html">
         <div class="icon-box"><span class="material-symbols-outlined">storefront</span></div>
         <h3>Shop Profile</h3>
-        <p>Edit shop info and address</p>
+        <p>Edit shop information</p>
       </a>
 
-      <!-- Subscription Plan -->
-      <a class="feature-card" href="#">
+      <!-- Subscription (disabled) -->
+      <div class="feature-card disabled">
         <div class="icon-box"><span class="material-symbols-outlined">credit_card</span></div>
-        <h3>Subscription Plan</h3>
-        <p>Manage Basic or Premium plan</p>
-      </a>
+        <h3>Subscription</h3>
+        <p>Coming soon</p>
+      </div>
 
-      <!-- Settings -->
-      <a class="feature-card" href="#">
+      <!-- Settings (disabled) -->
+      <div class="feature-card disabled">
         <div class="icon-box"><span class="material-symbols-outlined">settings</span></div>
         <h3>Settings</h3>
-        <p>Customize your preferences</p>
-      </a>
+        <p>Coming soon</p>
+      </div>
 
     </section>
-
   </main>
 
-  <!-- FOOTER (auto-loaded) -->
+  <!-- FOOTER -->
   <div id="footer"></div>
 
-  <!--HEADER + FOOTER LOADING SCRIPT-->
+  <!-- Layout loader -->
   <script type="module">
-    import { loadLayout } from '/ClickPrototype/layout/layout.js'
-
-    document.addEventListener('DOMContentLoaded', async() => {
-      await loadLayout();      
-    });
+    import { loadLayout } from "/ClickPrototype/layout/layout.js";
+    document.addEventListener("DOMContentLoaded", loadLayout);
   </script>
+
 </body>
 </html>
