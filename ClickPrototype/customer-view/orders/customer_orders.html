@@ -456,6 +456,12 @@ class RatingSystem {
     localStorage.setItem('orderRatings', JSON.stringify(this.ratings));
   }
   
+  extractOrderId(orderIdString) {
+    // Extract numeric ID from format like "ORD-20240729-001"
+    const parts = orderIdString.split('-');
+    return parseInt(parts[parts.length - 1]) || 1;
+  }
+  
   initializeRatings() {
     const starContainers = document.querySelectorAll('.stars');
     
@@ -500,6 +506,21 @@ class RatingSystem {
     // Add submit button listeners
     const submitButtons = document.querySelectorAll('.rating-submit-btn');
     submitButtons.forEach(btn => {
+      const orderId = btn.dataset.orderId;
+      
+      // Check if rating already submitted (stored locally)
+      const isSubmitted = localStorage.getItem(`rating-submitted-${orderId}`);
+      if (isSubmitted === 'true') {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'not-allowed';
+        btn.textContent = 'Already Submitted';
+        const thankYouElement = document.getElementById(`thank-you-${orderId}`);
+        if (thankYouElement) {
+          thankYouElement.style.display = 'block';
+        }
+      }
+      
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         this.submitRating(btn);
@@ -545,17 +566,21 @@ class RatingSystem {
     const originalText = button.textContent;
     button.textContent = 'Submitting...';
 
+    // Get customer ID from URL parameter (e.g., ?customerId=2)
+    const urlParams = new URLSearchParams(window.location.search);
+    const customerId = parseInt(urlParams.get('customerId')) || 2;
+
     // Build payload for backend
     const payload = {
       orderId: this.extractOrderId(orderId), // Convert string to Long
-      customerId: 1, // TODO: Replace with actual customer ID from session localStorage
+      customerId: customerId, // Get from URL parameter
       ratingScore: rating, // Changed from 'value' to 'ratingScore'
       review: null
     };
 
     // Send rating to backend
-    console.log("Attempting to submit rating to http://localhost:8080/api/ratings/submit", payload);
-    fetch('http://localhost:8080/api/ratings/submit', {
+    console.log("Attempting to submit rating to http://localhost:8080/api/v1/ratings", payload);
+    fetch('http://localhost:8080/api/v1/ratings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -569,6 +594,9 @@ class RatingSystem {
       console.log("Rating submitted successfully", data);
       // Persist locally as well
       this.saveRatings();
+      
+      // Mark as submitted in localStorage
+      localStorage.setItem(`rating-submitted-${orderId}`, 'true');
 
       // Show thank you message
       const thankYouElement = document.getElementById(`thank-you-${orderId}`);
@@ -576,17 +604,50 @@ class RatingSystem {
         thankYouElement.style.display = 'block';
       }
 
-      // Hide button
-      button.style.display = 'none';
+      // Disable button permanently and change appearance
+      button.disabled = true;
+      button.style.opacity = '0.5';
+      button.style.cursor = 'not-allowed';
+      button.textContent = 'Already Submitted';
 
       console.log(`Rating submitted for order ${orderId}: ${rating}/5 stars`, data);
     })
     .catch(err => {
       console.error('Failed to submit rating', err);
-      console.log("Rating submit failed - likely CORS issue if HTML opened directly in browser");
-      button.disabled = false;
-      button.textContent = originalText;
-      alert('Failed to submit rating. It has been saved locally and will be retried later.');
+      
+      // Try to get error message from response
+      if (err.json) {
+        err.json().then(errorData => {
+          console.error('Error details:', errorData);
+          
+          // Check if error is because rating already exists
+          if (errorData.message && errorData.message.includes('already rated')) {
+            // Mark as submitted and disable button
+            localStorage.setItem(`rating-submitted-${orderId}`, 'true');
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+            button.textContent = 'Already Submitted';
+            const thankYouElement = document.getElementById(`thank-you-${orderId}`);
+            if (thankYouElement) {
+              thankYouElement.style.display = 'block';
+            }
+          } else {
+            alert(errorData.message || 'Failed to submit rating. Please try again.');
+            button.disabled = false;
+            button.textContent = originalText;
+          }
+        }).catch(() => {
+          alert('Failed to submit rating. Please make sure you are using ?customerId=2 in the URL.');
+          button.disabled = false;
+          button.textContent = originalText;
+        });
+      } else {
+        alert('Failed to submit rating. Please make sure you are using ?customerId=2 in the URL.');
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+      
       // still save locally
       this.saveRatings();
     });
