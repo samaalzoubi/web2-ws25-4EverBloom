@@ -6,7 +6,7 @@
     <div class="owner-profile-container">
       <form>
         <h2>Rosenduft</h2>
-        <p>Manage your shops & products easily 🌸</p>
+        <p>Manage your shops & products easily</p>
 
         <div>
           <label>Shop Logo: </label>
@@ -30,6 +30,11 @@
 
         <div>
           <label>Opening Hours: </label>
+          <input type="date" required>
+        </div>
+
+         <div>
+          <label>Closing Hours: </label>
           <input type="date" required>
         </div>
 

@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
 
 <main>
     <div class="form-container" id="register-container">
@@ -31,14 +30,6 @@
             <label>Password</label>
             <label>
                 <input type="password" th:field="*{password}" placeholder="Create password" required>
-            </label>
-
-            <label>Role</label>
-            <label>
-                <select th:field="*{role}">
-                    <option value="OWNER">Owner</option>
-                    <option value="USER">Flower User</option>
-                </select>
             </label>
 
             <button type="submit" class="main-btn">Register</button>

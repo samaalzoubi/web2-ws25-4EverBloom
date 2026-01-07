@@ -4,41 +4,29 @@
       <h1>Private Information </h1> 
 
     <div class="user-profile-container">
-      <form>
+      <form>    
         <div>
-            <h2>Change Profile Picture</h2>
-            <div>
-              <label>Upload New Picture: </label>
-              <input type="file" accept="image/*">
-            </div>
-        </div>
-
-        
-        <div>
+          <label>Upload New Picture: </label>
+          <input type="file" accept="image/*">
+  
           <label>Shop Name: </label>
           <input placeholder="e.g. Rosenduft & Co" required>
-        </div>
-        
-        <div>
+      
           <label>Number: </label>
           <input type="number" placeholder="+49 xxx ">>
         </div>
-
+      
         <div>
-            <h2>Change Password</h2>
-            <div>
-              <label>Current Password: </label>
-              <input>
-            </div>
-            <div>
-              <label>New Password: </label>
-              <input>
-            </div>
-            <div>
-              <label>Confirm New Password: </label> 
-              <input>
-            </div>
+          <label>Current Password: </label>
+          <input>
+      
+          <label>New Password: </label>
+          <input>
+        
+          <label>Confirm New Password: </label> 
+          <input>
         </div>
+
 
         <div class="card">
             <h2>Delete Account</h2>

@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.controller.user;
 
+import de.fhdo.project.blumeo.dto.user.AuthRequest;
 import de.fhdo.project.blumeo.dto.user.UserDTO;
 import de.fhdo.project.blumeo.dto.user.RegisterRequest;
 import de.fhdo.project.blumeo.services.UserService;
@@ -19,6 +20,20 @@ public class UserRestController {
 
     public UserRestController(UserService userService) {
         this.userService = userService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserDTO> login(@RequestBody AuthRequest request) {
+        UserDTO user = userService.authenticate(
+                request.getEmail(),
+                request.getPassword()
+        );
+
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        return ResponseEntity.ok(user);
     }
 
     // Alle User mit der Rolle OWNER abrufen

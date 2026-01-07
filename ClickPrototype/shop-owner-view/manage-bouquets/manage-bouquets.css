@@ -77,20 +77,6 @@ body {
   box-shadow: 0 14px 35px rgba(120, 60, 200, 0.3);
 }
 
-/* SEARCH */
-.search-dropdown {
-  position: relative;
-  flex: 1.8;
-}
-.search-input {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 12px;
-  border: 1px solid #d6c7ef;
-  background: white;
-  font-size: 1rem;
-}
-
 /* GRID */
 .bouquet-grid {
   display: grid;
@@ -206,4 +192,28 @@ body {
 .delete-btn {
   background: #ffe6e6;
   color: #d34444;
+}
+
+.create-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 420px;
+}
+
+.create-form input,
+.create-form textarea {
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: 1px solid #d6c7ef;
+}
+
+.create-form button {
+  background: #7a3ec8;
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 10px;
+  cursor: pointer;
 }

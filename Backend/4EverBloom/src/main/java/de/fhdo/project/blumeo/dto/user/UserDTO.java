@@ -23,5 +23,6 @@ public class UserDTO {
     private Date date;
     private String link;
     private String flowerShopType;
+    private String deliveryOption;
     private String logo;
 }

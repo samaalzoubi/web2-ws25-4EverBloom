@@ -52,8 +52,7 @@ export default {
   name: "HeaderComponent",
   data() {
     return {
-      isOpen: false,
-      cartCount: 0, 
+      isOpen: false, 
     };
   },
   methods: {

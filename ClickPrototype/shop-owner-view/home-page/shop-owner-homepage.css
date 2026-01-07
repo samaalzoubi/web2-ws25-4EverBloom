@@ -113,3 +113,9 @@
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+.feature-card.disabled {
+  pointer-events: none;
+  opacity: 0.45;
+  cursor: not-allowed;
+}
