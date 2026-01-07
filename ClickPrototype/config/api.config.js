@@ -1,4 +1,4 @@
-export const API_MODE = "GRAPHQL"; //or "GRAPHQL"
+export const API_MODE = "REST"; //or "GRAPHQL"
 
 export const API_BASE_URL = "http://localhost:8080";
 
