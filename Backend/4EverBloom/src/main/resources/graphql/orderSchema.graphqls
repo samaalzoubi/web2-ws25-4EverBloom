@@ -3,7 +3,7 @@
 extend type Query {
   order(orderId: ID!): OrderDTO
   ordersByUser(userId: ID!): [OrderDTO!]!
-  allOrders: [OrderDTO!]!
+  ordersByShop(shopId: ID!): [OrderDTO!]!
 }
 
 extend type Mutation {

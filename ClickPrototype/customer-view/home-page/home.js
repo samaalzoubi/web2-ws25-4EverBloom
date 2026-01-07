@@ -159,9 +159,6 @@ function formatPriceEUR(value) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userId", 2);
-
   await loadLayout();
   loadHome();
 
@@ -170,9 +167,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "/ClickPrototype/customer-view/map/map.html";
   });
 });
-
-//Toggle map button to be redirected to the map-page
-const btn = document.getElementById('open-map');
-btn.addEventListener("click", () => {
-  window.location.href = "/ClickPrototype/customer-view/map/map.html";
-})

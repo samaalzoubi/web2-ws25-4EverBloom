@@ -1,8 +1,7 @@
 import { loadLayout } from "/ClickPrototype/layout/layout.js";
-import {
-  fetchShopByIdGraphQL,
-  fetchShopBouquetsGraphQL
-} from "./shop-profile-graphql.js";
+import { API_MODE } from "/ClickPrototype/config/api.config.js";
+import { fetchShopByIdGraphQL, fetchShopBouquetsGraphQL } from "./shop-profile-graphql.js";
+import { fetchShopByIdREST, fetchShopBouquets } from "./shop-profile-rest.js"
 import { addToCart } from "../../layout/cart.js";
 
 const DEFAULT_BOUQUET_IMAGE =
@@ -26,9 +25,6 @@ function showError(message) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userId", 2);
-
   await loadLayout();
 
   const params = new URLSearchParams(window.location.search);
@@ -40,25 +36,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
  try {
-  const shop = await fetchShopByIdGraphQL(shopId);
-
-  // 🔎 DEBUG LINE (TEMPORARY)
-  console.log("SHOP OBJECT FROM GRAPHQL:", shop);
+  const shop = 
+    API_MODE === "REST"
+      ? await fetchShopByIdGraphQL(shopId)
+      : fetchShopByIdREST(shopId);
 
   if (!shop) {
     showError("Shop not found.");
     return;
   }
 
-  // 🔑 ROLE CHECK (UX FIX)
-  if (shop.role !== "OWNER") {
-    showError("This profile does not belong to a flower shop.");
-    return;
-  }
-
   renderShopInfo(shop);
 
-  const bouquets = await fetchShopBouquetsGraphQL(shopId);
+  const bouquets = 
+    API_MODE === "REST"
+      ? await fetchShopBouquets(shopId)
+      : await fetchShopBouquetsGraphQL(shopId);
+
   renderBouquetGrid(bouquets);
 
 } catch (err) {
@@ -67,8 +61,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     showError("Could not load shop profile. Please try again.");
   }
 });
-
-/* ---------- Rendering ---------- */
 
 function renderShopInfo(shop) {
   const shopInfo = document.querySelector(".shop-info");

@@ -1,72 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blumeo | Register</title>
-    <link rel="stylesheet" href="/ClickPrototype/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+
+    <link rel="stylesheet" href="/ClickPrototype/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
   </head>
+
   <body>
     <main>
-      <!-- Register Box -->
       <div class="form-container" id="register-container">
         <h2>Create Account 🌷</h2>
         <p class="subtitle">Join our blooming community</p>
+
         <form id="register-form">
-          <label>Username</label>
-          <input type="text" id="register-username" placeholder="Choose a username" required>
+          <label for="register-username">Username</label>
+          <input
+            type="text"
+            id="register-username"
+            placeholder="Choose a username"
+            required
+          />
 
-          <label>Email</label>
-          <input type="email" id="register-email" placeholder="example@gmail.com" required>
+          <label for="register-email">Email</label>
+          <input
+            type="email"
+            id="register-email"
+            placeholder="example@gmail.com"
+            required
+          />
 
-          <label>Password</label>
-          <input type="password" id="register-password" placeholder="Create password" required>
+          <label for="register-password">Password</label>
+          <input
+            type="password"
+            id="register-password"
+            placeholder="Create password"
+            required
+          />
 
           <button type="submit" class="main-btn">Register</button>
         </form>
+
         <p class="toggle-text">
           Already have an account?
-          <span id="show-login" onclick="window.location.href='/ClickPrototype/common-view/login/login.html'">Back to Login</span>
-        </p>
+          <span
+            class="link"
+            onclick="window.location.href='/ClickPrototype/common-view/login/login.html'"
+          >
+            Back to Login
+          </span>
+        </p>  
+        <div id="form-message" class="form-message" aria-live="polite"></div>
       </div>
     </main>
 
-    <script>
-      const roleSelect = document.getElementById("role-select");
-      const registerContainer = document.getElementById("register-container");
-
-      document.getElementById("select-user").addEventListener("click", () => {
-        localStorage.setItem("role", "User");
-        roleSelect.classList.add("hidden");
-        registerContainer.classList.remove("hidden");
-      });
-
-      document.getElementById("select-owner").addEventListener("click", () => {
-        localStorage.setItem("role", "Owner");
-        roleSelect.classList.add("hidden");
-        registerContainer.classList.remove("hidden");
-      });
-
-      fetch("/ClickPrototype/common-view/header/header.html")
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById("header").innerHTML = data;
-        })
-        .catch(err => console.error("Header konnte nicht geladen werden:", err));
-
-      document.getElementById("register-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const username = document.getElementById("register-username").value;
-        const email = document.getElementById("register-email").value;
-        const password = document.getElementById("register-password").value;
-        const role = localStorage.getItem("role");
-
-        localStorage.setItem(email, JSON.stringify({ username, password, role }));
-        alert("Account created successfully! You can now log in.");
-        e.target.reset();
-        window.location.href = '/ClickPrototype/common-view/login/login.html';
-      });
-    </script>
+    <script type="module" src="./registerCustomer.js"></script>
   </body>
 </html>

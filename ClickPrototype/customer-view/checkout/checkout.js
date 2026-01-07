@@ -3,9 +3,6 @@ import { loadLayout } from '/ClickPrototype/layout/layout.js'
 const DEFAULT_BOUQUET_IMAGE = "https://peoplesflowers.imgix.net/images/itemVariation/designers-choice-7983070-2-200515317401-21021884408.jpg?w=600&h=720&fit=crop&dpr=2";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userId", 2);
-  
   const cachedCartState = sessionStorage.getItem("cartState");
   const cartState = JSON.parse(cachedCartState);
   const placeOrderButton = document.querySelector(".buttonOrder")

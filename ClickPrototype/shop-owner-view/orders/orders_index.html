@@ -43,12 +43,8 @@
 <script type="module" src="./owner-orders.js"></script>
 
 <script type="module">
-  import { loadLayout } from '/ClickPrototype/layout/layout.js'
-
   // Chatbot functionality
-  document.addEventListener('DOMContentLoaded', async() => {
-    await loadLayout(); 
-    
+  document.addEventListener('DOMContentLoaded', async() => {    
     const chatbot = document.getElementById('chatbot');
     const chatbotToggle = document.querySelector('.chatbot-toggle');
     const chatbotClose = document.querySelector('.chatbot-close');

@@ -1,10 +1,10 @@
-import { GRAPHQL_ENDPOINT } from "/ClickPrototype/config/api.config.js";
+import { GRAPHQL_BASE } from "/ClickPrototype/config/api.config.js";
 
 /**
  * Generic GraphQL helper
  */
 async function graphqlRequest(query, variables = {}) {
-  const response = await fetch(GRAPHQL_ENDPOINT, {
+  const response = await fetch(GRAPHQL_BASE, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -28,73 +28,30 @@ async function graphqlRequest(query, variables = {}) {
 }
 
 /**
- * Fetch all orders for a specific shop using GraphQL
- */
-export async function fetchOrdersByShopGraphQL(shopId) {
-  const query = `
-    query GetShopOrders($shopId: Int!) {
-      ordersByShop(shopId: $shopId) {
-        orderId
-        orderDate
-        status
-        totalAmount
-        shippingAddress
-        orderLines {
-          quantity
-          price
-          bouquet {
-            id
-            name
-            price
-            imageUrl
-          }
-        }
-        customer {
-          id
-          username
-          email
-        }
-      }
-    }
-  `;
-
-  const data = await graphqlRequest(query, { shopId: parseInt(shopId) });
-  return data.ordersByShop;
-}
-
-/**
  * Fetch all orders (admin view) using GraphQL
  */
-export async function fetchAllOrdersGraphQL() {
+export async function fetchShopOwnerOrdersGraphQL(shopId) {
   const query = `
-    query GetAllOrders {
-      allOrders {
+    query GetAllOrders($shopId: ID!) {
+      ordersByShop(shopId: $shopId) {
         orderId
+        customerId
         orderDate
         status
         totalAmount
-        shippingAddress
         orderLines {
           quantity
           price
-          bouquet {
-            id
-            name
-            price
-            imageUrl
-          }
-        }
-        customer {
-          id
-          username
-          email
+          bouquetName
         }
       }
     }
   `;
 
-  const data = await graphqlRequest(query);
-  return data.allOrders;
+  const variables = { shopId: String(shopId) };
+
+  const data = await graphqlRequest(query, variables);
+  return data.ordersByShop;
 }
 
 /**
@@ -102,34 +59,25 @@ export async function fetchAllOrdersGraphQL() {
  */
 export async function fetchOrderDetailsGraphQL(orderId) {
   const query = `
-    query GetOrderDetails($orderId: Int!) {
+    query GetOrderDetails($orderId: ID!) {
       orderById(orderId: $orderId) {
         orderId
+        customerId
         orderDate
         status
         totalAmount
-        shippingAddress
         orderLines {
           quantity
           price
-          bouquet {
-            id
-            name
-            price
-            imageUrl
-            description
-          }
-        }
-        customer {
-          id
-          username
-          email
+          bouquetName
         }
       }
     }
   `;
 
-  const data = await graphqlRequest(query, { orderId: parseInt(orderId) });
+  const variables = { orderId: String(orderId) };
+
+  const data = await graphqlRequest(query, variables);
   return data.orderById;
 }
 
@@ -155,53 +103,4 @@ export async function updateOrderStatusGraphQL(orderId, status) {
 
   const data = await graphqlRequest(mutation, variables);
   return data.updateOrderStatus;
-}
-
-/**
- * Delete/Cancel order using GraphQL mutation
- */
-export async function deleteOrderGraphQL(orderId) {
-  const mutation = `
-    mutation DeleteOrder($orderId: Int!) {
-      deleteOrder(orderId: $orderId)
-    }
-  `;
-
-  const variables = {
-    orderId: parseInt(orderId)
-  };
-
-  const data = await graphqlRequest(mutation, variables);
-  return data.deleteOrder;
-}
-
-/**
- * Get order statistics using GraphQL
- */
-export async function fetchOrderStatsGraphQL(shopId = null) {
-  const query = shopId ? `
-    query GetShopStats($shopId: Int!) {
-      shopOrderStats(shopId: $shopId) {
-        totalOrders
-        totalRevenue
-        pendingOrders
-        preparingOrders
-        deliveredOrders
-      }
-    }
-  ` : `
-    query GetOverallStats {
-      overallOrderStats {
-        totalOrders
-        totalRevenue
-        pendingOrders
-        preparingOrders
-        deliveredOrders
-      }
-    }
-  `;
-
-  const variables = shopId ? { shopId: parseInt(shopId) } : {};
-  const data = await graphqlRequest(query, variables);
-  return shopId ? data.shopOrderStats : data.overallOrderStats;
 }

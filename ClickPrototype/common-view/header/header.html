@@ -10,7 +10,7 @@
 
   <body>
     <header id="header">
-      <a href="/ClickPrototype/customer-view/home-page/home-page.html">
+      <a href="#" id="logo-link">
         <div class="logo">
           <img src="/ClickPrototype/assets/Logo.png" alt="Flower Logo" width="70" height="70" />
           <div class="logo-text-part">
@@ -19,6 +19,11 @@
           </div>
         </div>
       </a>
+
+      <a id="login-link" class="login-btn" href="/ClickPrototype/common-view/login/login.html">
+        Login
+      </a>
+
 
       <nav>
         <div class="design-bouquet hidden">
@@ -32,13 +37,13 @@
           <span class="cart-count">0</span>
         </a>
 
-        <div class="dropdown">
+        <div class="dropdown user-links">
           <span class="material-symbols-outlined">account_circle</span>
 
           <div class="dropdown-content">
-            <a href="/ClickPrototype/customer-view/orders/customer_orders.html" class="option-btn">My Orders</a>
-            <a href="/ClickPrototype/customer-view/customer-profile/profile.html" class="option-btn">View Profile</a>
-            <a href="/ClickPrototype/common-view/login/login.html" class="option-btn">Logout</a>
+            <a href="/ClickPrototype/customer-view/orders/customer_orders.html" class="option-btn customer-only">My Orders</a>
+            <a href="/ClickPrototype/customer-view/customer-profile/profile.html" class="option-btn customer-only">View Profile</a>
+            <a href="/ClickPrototype/common-view/login/login.html" class="option-btn logout-link">Logout</a>
           </div>
         </div>
       </nav>

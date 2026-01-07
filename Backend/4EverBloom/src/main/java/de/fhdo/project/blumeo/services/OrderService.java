@@ -97,25 +97,36 @@ public class OrderService {
                 .toList();
     }
 
-@Transactional
-public OrderDTO updateStatus(Long orderId, OrderStatus status) {
-    Order order = orderRepository.findById(orderId).orElseThrow();
-    order.setStatus(status);
-    Order saved = orderRepository.save(order);
-    return orderMapper.toDto(saved);
-}
-    // Get all orders (for admin)
-    public List<OrderDTO> getAllOrders() {
-        return orderRepository.findAll()
-                .stream()
+    @Transactional
+    public OrderDTO updateStatus(Long orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        order.setStatus(status);
+        Order saved = orderRepository.save(order);
+        return orderMapper.toDto(saved);
+    }
+
+    public List<OrderDTO> getOrdersByShopId(Long shopId) {
+        List<Order> orders = orderRepository.findByShop_Id(shopId);
+
+        if (orders.isEmpty()) {
+            return List.of();
+        }
+
+        return orders.stream()
                 .map(orderMapper::toDto)
                 .toList();
     }
 
+
     // Get orders by user ID (for customer)
     public List<OrderDTO> getOrdersByUserId(Long userId) {
-        return orderRepository.findByCustomer_Id(userId)
-                .stream()
+        List<Order> orders = orderRepository.findByCustomer_Id(userId);
+
+        if (orders.isEmpty()) {
+            return List.of();
+        }
+
+        return orders.stream()
                 .map(orderMapper::toDto)
                 .toList();
     }

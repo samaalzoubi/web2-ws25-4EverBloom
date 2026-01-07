@@ -1,94 +1,43 @@
 import { REST_BASE } from "/ClickPrototype/config/api.config.js";
 
-export async function fetchFlowersREST() {
-    const url = `${REST_BASE}/bouquet/premade/latest`;
-
-    const response = await fetch(url, {
-        headers: { Accept: "application/json" }
-    })
-    
-    if (!response.ok) {
-        throw new Error(`REST failed: ${response.status} ${response.statusText}`);
-    }
-
-    return await response.json();
-}
-
-export async function addToCartREST(userId, bouquetId) {
-  const url = `${REST_BASE}/cart/${userId}/items?bouquetId=${bouquetId}`;
-
-  const response = await fetch(url, {
-    method: "POST",
+async function restRequest(path, method, body) {
+  const response = await fetch(`${REST_BASE}${path}`, {
+    method,
     headers: {
-      "Accept": "application/json"
-    }
-  });
-
-  if (!response.ok) {
-    let message = "Could not add item to cart.";
-    const errorBody = await response.json();
-    if (errorBody && errorBody.message) {
-      message = errorBody.message;
-    }
-
-    throw new Error(message);
-  }
-
-  return await response.json();
-}
-
-export async function getActiveCartREST(userId) {
-  const response = await fetch(`${REST_BASE}/cart/${userId}`, {
-    headers: { Accept: "application/json" }
-  });
-  if (!response.ok) {
-    throw new Error(`Get cart failed (${response.status})`);
-  }
-  return await response.json();
-}
-
-export async function patchCartItemQuantityREST(userId, itemId, quantityDelta) {
-  const url = `${REST_BASE}/cart/${userId}/items/${itemId}?quantityDelta=${encodeURIComponent(quantityDelta)}`;
-
-  const response = await fetch(url, {
-    method: "PATCH",
-    headers: { Accept: "application/json" }
-  });
-
-  if (!response.ok) {
-    throw new Error(`Update quantity failed (${response.status})`);
-  }
-
-  return await response.json();
-}
-
-export async function clearCartREST(userId) {
-  const url = `${REST_BASE}/cart/${userId}`;
-
-  const response = await fetch(url, {
-    method: "DELETE",
-    headers: {
+      "Content-Type": "application/json",
       Accept: "application/json"
-    }
+    },
+    body: body ? JSON.stringify(body) : null
   });
 
   if (!response.ok) {
-    throw new Error(`Clear cart failed (${response.status})`);
+    let errorMessage = `REST error: ${response.status}`;
+
+    try {
+      const text = await response.text();
+      if (text) {
+        errorMessage = text;
+      }
+    } catch (_) {}
+
+    throw new Error(errorMessage);
   }
 
-  return true;
+  return response.json();
 }
 
-export async function fetchShopsREST() {
-  const url = `${REST_BASE}/users/owners`;
-
-  const response = await fetch(url, {
-    headers: { Accept: "application/json" }
+export async function loginREST(email, password) {
+  return restRequest("/users/login", "POST", {
+    email,
+    password
   });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch owners");
-  }
-  return await response.json();
 }
 
+export async function registerREST(username, email, password, role) {
+  return restRequest("/users", "POST", {
+    username,
+    email,
+    password,
+    role
+  });
+}

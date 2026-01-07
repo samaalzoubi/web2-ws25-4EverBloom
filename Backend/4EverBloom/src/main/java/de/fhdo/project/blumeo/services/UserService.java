@@ -1,6 +1,8 @@
 package de.fhdo.project.blumeo.services;
 
+import de.fhdo.project.blumeo.entity.bouquet.CustomBouquetRepository;
 import de.fhdo.project.blumeo.entity.user.Role;
+import de.fhdo.project.blumeo.exception.EmailAlreadyExistsException;
 import de.fhdo.project.blumeo.utils.mapper.user.UserMapper;
 import de.fhdo.project.blumeo.dto.user.RegisterRequest;
 import de.fhdo.project.blumeo.dto.user.UserDTO;
@@ -17,10 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userConverter;
+    private final CustomBouquetRepository customBouquetRepository;
 
-    public UserService(UserRepository userRepository, UserMapper userConverter) {
+    public UserService(UserRepository userRepository, UserMapper userConverter, CustomBouquetRepository customBouquetRepository) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
+        this.customBouquetRepository = customBouquetRepository;
     }
 
     public List<UserDTO> getAllOwners() {
@@ -39,7 +43,7 @@ public class UserService {
     @Transactional
     public UserDTO createUser(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         User entity = userConverter.toEntity(request);
@@ -49,14 +53,33 @@ public class UserService {
 
     @Transactional
     public UserDTO updateUser(Long id, UserDTO dto) {
-        return userRepository.findById(id)
-                .map(user -> {
-                    userConverter.updateEntity(user, dto);
-                    User saved = userRepository.save(user);
-                    return userConverter.toDTO(saved);
-                })
-                .orElse(null);
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (dto.getUsername() != null && !dto.getUsername().isBlank()) {
+            user.setUsername(dto.getUsername());
+        }
+
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+            user.setEmail(dto.getEmail());
+        }
+
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            user.setPassword(dto.getPassword());
+        }
+
+        User saved = userRepository.save(user);
+
+        UserDTO result = new UserDTO();
+        result.setId(saved.getId());
+        result.setUsername(saved.getUsername());
+        result.setEmail(saved.getEmail());
+        result.setRole(saved.getRole());
+
+        return result;
     }
+
 
     public UserDTO authenticate(String email, String password) {
         return userRepository.findByEmail(email)
@@ -65,7 +88,11 @@ public class UserService {
                 .orElse(null);
     }
 
+    @Transactional
     public void deleteUser(Long id) {
+
+        customBouquetRepository.deleteByDesignedByCustomer_Id(id);
+
         userRepository.deleteById(id);
     }
-}
+    }

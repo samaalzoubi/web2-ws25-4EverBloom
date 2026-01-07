@@ -26,6 +26,10 @@ public class Order {
     @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id", nullable = false)
+    private User shop;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.CREATED;
 

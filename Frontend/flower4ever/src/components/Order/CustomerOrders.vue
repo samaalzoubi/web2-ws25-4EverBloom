@@ -265,7 +265,6 @@ export default {
       try {
         this.loading = true;
         this.error = null;
-        // ✅ NOW USING REAL BACKEND API
         this.orders = await orderService.getAllOrders();
         this.filterOrders();
       } catch (err) {

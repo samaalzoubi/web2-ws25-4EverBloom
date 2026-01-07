@@ -1,10 +1,10 @@
-import { GRAPHQL_ENDPOINT } from "/ClickPrototype/config/api.config.js";
+import { GRAPHQL_BASE } from "/ClickPrototype/config/api.config.js";
 
 /**
  * Generic GraphQL helper
  */
 async function graphqlRequest(query, variables = {}) {
-  const response = await fetch(GRAPHQL_ENDPOINT, {
+  const response = await fetch(GRAPHQL_BASE, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,10 +30,11 @@ async function graphqlRequest(query, variables = {}) {
 /**
  * Fetch all orders for a specific customer using GraphQL
  */
-export async function fetchOrdersByCustomerGraphQL(customerId) {
+export async function fetchOrdersByCustomerGraphQL(userId) {
+  console.log("I AM HERE")
   const query = `
-    query GetCustomerOrders($customerId: Int!) {
-      ordersByCustomer(customerId: $customerId) {
+    query GetCustomerOrders($userId: ID!) {
+      ordersByUser(userId: $userId) {
         orderId
         orderDate
         status
@@ -41,19 +42,15 @@ export async function fetchOrdersByCustomerGraphQL(customerId) {
         orderLines {
           quantity
           price
-          bouquet {
-            id
-            name
-            price
-            imageUrl
-          }
+          bouquetName
         }
       }
     }
   `;
 
-  const data = await graphqlRequest(query, { customerId: parseInt(customerId) });
-  return data.ordersByCustomer;
+  const variables = { userId: String(userId) };
+  const data = await graphqlRequest(query, variables);
+  return data.ordersByUser;
 }
 
 /**
@@ -61,34 +58,26 @@ export async function fetchOrdersByCustomerGraphQL(customerId) {
  */
 export async function fetchOrderDetailsGraphQL(orderId) {
   const query = `
-    query GetOrderDetails($orderId: Int!) {
-      orderById(orderId: $orderId) {
+    query GetOrderDetails($orderId: ID!) {
+      order(orderId: $orderId) {
         orderId
+        customerId
         orderDate
         status
         totalAmount
-        shippingAddress
+        address
         orderLines {
           quantity
           price
-          bouquet {
-            id
-            name
-            price
-            imageUrl
-            description
-          }
-        }
-        customer {
-          id
-          username
-          email
+          bouquetName
         }
       }
     }
   `;
 
-  const data = await graphqlRequest(query, { orderId: parseInt(orderId) });
+  const variables = { oderId: String(orderId) };
+
+  const data = await graphqlRequest(query, variables);
   return data.orderById;
 }
 

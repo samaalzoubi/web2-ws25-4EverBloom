@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
   <link rel="stylesheet" href="/ClickPrototype/style.css">
   <link rel="stylesheet" href="orders_styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 </head>
 <body>
 
@@ -21,27 +20,38 @@
     <main class="main-content">
       <div class="customer-header">
         <h1>My Orders</h1>
-        <p>Hello Alice! Here's your order history and current orders.</p>
       </div>
       
       <div class="controls-bar">
         <input class="search-input" placeholder="Search your orders..." />
         <select class="filter-select">
           <option value="all">All Statuses</option>
-          <option value="CREATED">Created</option>
-          <option value="CONFIRMED">Confirmed</option>
-          <option value="IN_DELIVERY">In Delivery</option>
-          <option value="DELIVERED">Delivered</option>
-          <option value="CANCELLED">Cancelled</option>
-          <option value="PAID">Paid</option>
+          <option value="Created">Created</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="In Delivery">In Delivery</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+          <option value="Paid">Paid</option>
         </select>
       </div>
       
-      <div class="orders-grid" id="orders-grid" data-customer-id="2">
-        <!-- Orders will be loaded dynamically from the database -->
-        <div class="loading-spinner" style="text-align: center; padding: 2rem;">
-          <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--brand-primary);"></i>
-          <p>Loading your orders...</p>
+      <div class="orders-grid" id="orders-grid">
+      </div>
+      
+      <!-- Edit Modal -->
+      <div id="edit-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="modal-title">Edit Order</h2>
+            <button class="modal-close" id="close-edit-modal">&times;</button>
+          </div>
+          <div id="edit-modal-body" class="edit-modal-body">
+            <!-- Order items will be populated here -->
+          </div>
+          <div class="modal-actions">
+            <button id="save-edit-btn" class="btn-save">Save Changes</button>
+            <button id="cancel-edit-btn" class="btn-cancel">Cancel</button>
+          </div>
         </div>
       </div>
       
@@ -137,14 +147,369 @@
   });
 </script>
 
-  <script type="module">    
-    import { loadLayout } from '/ClickPrototype/layout/layout.js';
-
-    // Load layout on page load
-    document.addEventListener('DOMContentLoaded', async() => {
-      await loadLayout();
+<script type="module" src="./orders.js">    
+    // Edit Order Functionality
+    let editingOrder = null;
+    const editModal = document.getElementById('edit-modal');
+    const editModalBody = document.getElementById('edit-modal-body');
+    const modalTitle = document.getElementById('modal-title');
+    const closeEditModalBtn = document.getElementById('close-edit-modal');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+    const saveEditBtn = document.getElementById('save-edit-btn');
+    
+    // Mock order data - In real app, would come from backend
+    const ordersData = {
+      'ORD-20240729-001': {
+        id: 'ORD-20240729-001',
+        items: [
+          { name: 'Sunny Day Bouquet', price: 49.99, quantity: 1 },
+          { name: 'Rose Garden Delight', price: 35.75, quantity: 2 }
+        ]
+      },
+      'ORD-20240727-006': {
+        id: 'ORD-20240727-006',
+        items: [
+          { name: 'Tulip Treasure', price: 42.00, quantity: 1 }
+        ]
+      }
+    };
+    
+    function calculateTotal(items) {
+      return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    }
+    
+    function openEditModal(orderId) {
+      const orderData = ordersData[orderId];
+      if (!orderData) {
+        alert('Order not found');
+        return;
+      }
+      
+      editingOrder = JSON.parse(JSON.stringify(orderData));
+      modalTitle.textContent = `Edit Order ${orderId}`;
+      renderEditModalContent();
+      editModal.style.display = 'flex';
+    }
+    
+    function renderEditModalContent() {
+      let html = '<div class="edit-items-list">';
+      
+      editingOrder.items.forEach((item, index) => {
+        html += `
+          <div class="edit-item">
+            <div class="item-info">
+              <span class="item-name">${item.name}</span>
+              <span class="item-price">€${item.price.toFixed(2)}</span>
+            </div>
+            <div class="item-controls">
+              <button class="qty-btn" onclick="decreaseQty(${index})">−</button>
+              <span class="qty-display">${item.quantity}</span>
+              <button class="qty-btn" onclick="increaseQty(${index})">+</button>
+              ${editingOrder.items.length > 1 ? `<button class="delete-btn" onclick="deleteItem(${index})" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      html += `<button class="add-item-btn" onclick="addNewItem()"><i class="fas fa-plus"></i> Add Item</button>`;
+      html += `<div class="edit-total">Total: €${calculateTotal(editingOrder.items).toFixed(2)}</div>`;
+      
+      editModalBody.innerHTML = html;
+    }
+    
+    function increaseQty(index) {
+      if (editingOrder.items[index]) {
+        editingOrder.items[index].quantity++;
+        renderEditModalContent();
+      }
+    }
+    
+    function decreaseQty(index) {
+      if (editingOrder.items[index] && editingOrder.items[index].quantity > 1) {
+        editingOrder.items[index].quantity--;
+        renderEditModalContent();
+      }
+    }
+    
+    function deleteItem(index) {
+      if (editingOrder.items.length > 1) {
+        editingOrder.items.splice(index, 1);
+        renderEditModalContent();
+      } else {
+        alert('Cannot delete the last item. An order must have at least one item.');
+      }
+    }
+    
+    function addNewItem() {
+      const itemName = prompt('Enter item name:');
+      if (itemName) {
+        const newItem = {
+          name: itemName,
+          price: 49.99,
+          quantity: 1
+        };
+        editingOrder.items.push(newItem);
+        renderEditModalContent();
+      }
+    }
+    
+    function closeEditModal() {
+      editModal.style.display = 'none';
+      editingOrder = null;
+    }
+    
+    // Event listeners for modal
+    closeEditModalBtn.addEventListener('click', closeEditModal);
+    cancelEditBtn.addEventListener('click', closeEditModal);
+    
+    saveEditBtn.addEventListener('click', () => {
+      if (editingOrder) {
+        alert(`Order ${editingOrder.id} updated successfully with ${editingOrder.items.length} item(s) - Total: €${calculateTotal(editingOrder.items).toFixed(2)}`);
+        closeEditModal();
+      }
+    });
+    
+    // Close modal when clicking outside
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) {
+        closeEditModal();
+      }
+    });
+    
+    // Add click listeners to edit buttons
+    document.addEventListener('DOMContentLoaded', () => {
+      const editButtons = document.querySelectorAll('.edit-btn');
+      editButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const orderId = btn.dataset.orderId;
+          openEditModal(orderId);
+        });
+      });
     });
   </script>
 
-  <!-- Import the orders.js module which handles all order fetching and rendering -->
-  <script type="module" src="./orders.js"></script>
+<script>  
+// Enhanced Rating System with Data Persistence
+class RatingSystem {
+  constructor() {
+    this.ratings = this.loadRatings();
+    this.initializeRatings();
+  }
+  
+  loadRatings() {
+    const stored = localStorage.getItem('orderRatings');
+    return stored ? JSON.parse(stored) : {};
+  }
+  
+  saveRatings() {
+    localStorage.setItem('orderRatings', JSON.stringify(this.ratings));
+  }
+  
+  extractOrderId(orderIdString) {
+    // Extract numeric ID from format like "ORD-20240729-001"
+    const parts = orderIdString.split('-');
+    return parseInt(parts[parts.length - 1]) || 1;
+  }
+  
+  initializeRatings() {
+    const starContainers = document.querySelectorAll('.stars');
+    
+    starContainers.forEach(container => {
+      const orderId = container.dataset.orderId;
+      const stars = container.querySelectorAll('i');
+      
+      // Restore previously saved rating if exists
+      if (this.ratings[orderId]) {
+        this.displayRating(orderId, this.ratings[orderId]);
+      }
+      
+      // Add click listeners to stars
+      stars.forEach((star, index) => {
+        star.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.setRating(orderId, index + 1);
+        });
+        
+        // Hover effect
+        star.addEventListener('mouseover', (e) => {
+          stars.forEach((s, i) => {
+            if (i < index + 1) {
+              s.classList.add('active');
+            } else {
+              s.classList.remove('active');
+            }
+          });
+        });
+      });
+      
+      // Reset on mouse leave
+      container.addEventListener('mouseleave', () => {
+        if (this.ratings[orderId]) {
+          this.displayRating(orderId, this.ratings[orderId]);
+        } else {
+          stars.forEach(s => s.classList.remove('active'));
+        }
+      });
+    });
+    
+    // Add submit button listeners
+    const submitButtons = document.querySelectorAll('.rating-submit-btn');
+    submitButtons.forEach(btn => {
+      const orderId = btn.dataset.orderId;
+      
+      // Check if rating already submitted (stored locally)
+      const isSubmitted = localStorage.getItem(`rating-submitted-${orderId}`);
+      if (isSubmitted === 'true') {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'not-allowed';
+        btn.textContent = 'Already Submitted';
+        const thankYouElement = document.getElementById(`thank-you-${orderId}`);
+        if (thankYouElement) {
+          thankYouElement.style.display = 'block';
+        }
+      }
+      
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.submitRating(btn);
+      });
+    });
+  }
+  
+  setRating(orderId, value) {
+    this.ratings[orderId] = value;
+    this.displayRating(orderId, value);
+  }
+  
+  displayRating(orderId, value) {
+    const container = document.querySelector(`.stars[data-order-id="${orderId}"]`);
+    const stars = container.querySelectorAll('i');
+    const displayElement = document.getElementById(`rating-display-${orderId}`);
+    
+    stars.forEach((star, index) => {
+      if (index < value) {
+        star.classList.add('active');
+      } else {
+        star.classList.remove('active');
+      }
+    });
+    
+    if (displayElement) {
+      displayElement.style.display = 'block';
+      displayElement.querySelector('.current-rating').textContent = value;
+    }
+  }
+  
+  submitRating(button) {
+    const orderId = button.dataset.orderId;
+    const rating = this.ratings[orderId];
+    
+    if (!rating) {
+      alert('Please select a rating before submitting.');
+      return;
+    }
+    
+    // Disable button during submission
+    button.disabled = true;
+    const originalText = button.textContent;
+    button.textContent = 'Submitting...';
+
+    // Get customer ID from URL parameter (e.g., ?customerId=2)
+    const urlParams = new URLSearchParams(window.location.search);
+    const customerId = parseInt(urlParams.get('customerId')) || 2;
+
+    // Build payload for backend
+    const payload = {
+      orderId: this.extractOrderId(orderId), // Convert string to Long
+      customerId: customerId, // Get from URL parameter
+      ratingScore: rating, // Changed from 'value' to 'ratingScore'
+      review: null
+    };
+
+    // Send rating to backend
+    console.log("Attempting to submit rating to http://localhost:8080/api/v1/ratings", payload);
+    fetch('http://localhost:8080/api/v1/ratings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(res => {
+      console.log("Rating submit response:", res);
+      if (!res.ok) throw res;
+      return res.json();
+    })
+    .then(data => {
+      console.log("Rating submitted successfully", data);
+      // Persist locally as well
+      this.saveRatings();
+      
+      // Mark as submitted in localStorage
+      localStorage.setItem(`rating-submitted-${orderId}`, 'true');
+
+      // Show thank you message
+      const thankYouElement = document.getElementById(`thank-you-${orderId}`);
+      if (thankYouElement) {
+        thankYouElement.style.display = 'block';
+      }
+
+      // Disable button permanently and change appearance
+      button.disabled = true;
+      button.style.opacity = '0.5';
+      button.style.cursor = 'not-allowed';
+      button.textContent = 'Already Submitted';
+
+      console.log(`Rating submitted for order ${orderId}: ${rating}/5 stars`, data);
+    })
+    .catch(err => {
+      console.error('Failed to submit rating', err);
+      
+      // Try to get error message from response
+      if (err.json) {
+        err.json().then(errorData => {
+          console.error('Error details:', errorData);
+          
+          // Check if error is because rating already exists
+          if (errorData.message && errorData.message.includes('already rated')) {
+            // Mark as submitted and disable button
+            localStorage.setItem(`rating-submitted-${orderId}`, 'true');
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+            button.textContent = 'Already Submitted';
+            const thankYouElement = document.getElementById(`thank-you-${orderId}`);
+            if (thankYouElement) {
+              thankYouElement.style.display = 'block';
+            }
+          } else {
+            alert(errorData.message || 'Failed to submit rating. Please try again.');
+            button.disabled = false;
+            button.textContent = originalText;
+          }
+        }).catch(() => {
+          alert('Failed to submit rating. Please make sure you are using ?customerId=2 in the URL.');
+          button.disabled = false;
+          button.textContent = originalText;
+        });
+      } else {
+        alert('Failed to submit rating. Please make sure you are using ?customerId=2 in the URL.');
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+      
+      // still save locally
+      this.saveRatings();
+    });
+  }
+}
+
+// Initialize rating system when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  new RatingSystem();
+});
+
+</script>
+</body>
+</html>

@@ -4,9 +4,6 @@ import { fetchShopsREST } from "/ClickPrototype/customer-view/home-page/home-res
 import { fetchShopsGraphQL } from "/ClickPrototype/customer-view/home-page/home-graphql.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userId", 2);
-
   await loadLayout();
 
   const map = initMap();
