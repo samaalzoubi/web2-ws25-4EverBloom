@@ -1,10 +1,73 @@
-// orders_app.js - Modern Dynamic Version
+// orders_app.js - Modern Dynamic Version with API Integration
+import { API_MODE } from "/ClickPrototype/config/api.config.js";
+import { 
+  fetchAllOrdersREST, 
+  updateOrderStatusREST,
+  deleteOrderREST
+} from "./owner-orders-rest.js";
+import { 
+  fetchAllOrdersGraphQL, 
+  updateOrderStatusGraphQL,
+  deleteOrderGraphQL
+} from "./owner-orders-graphql.js";
 
-let currentOrders = [...MOCK_ORDERS];
+let currentOrders = [];
+let allOrders = [];
 let searchTerm = "";
 let selectedStatus = "all";
 let showEdit = false;
 let editOrder = null;
+
+/**
+ * Load orders from API
+ */
+const loadOrders = async () => {
+  try {
+    console.log(`Fetching orders via ${API_MODE} API...`);
+    
+    const orders = API_MODE === "REST"
+      ? await fetchAllOrdersREST()
+      : await fetchAllOrdersGraphQL();
+    
+    // Transform API data to match UI expectations
+    allOrders = orders.map(order => ({
+      id: order.orderId ? `ORD-${order.orderId}` : order.id,
+      customer: {
+        id: order.customer?.id || order.customer?.userId,
+        name: order.customer?.username || order.customer?.name || 'Unknown',
+        email: order.customer?.email || '',
+        phone: order.customer?.phone || '',
+        address: order.shippingAddress || ''
+      },
+      orderDate: order.orderDate,
+      items: (order.orderLines || []).map(line => ({
+        name: line.bouquet?.name || 'Item',
+        price: line.price || line.bouquet?.price || 0,
+        quantity: line.quantity || 1,
+        imageUrl: line.bouquet?.imageUrl
+      })),
+      total: order.totalAmount || 0,
+      status: order.status,
+      notes: order.notes || ''
+    }));
+    
+    console.log('Orders loaded:', allOrders);
+    filterOrders();
+  } catch (err) {
+    console.error('Failed to load orders:', err);
+    showNotification(`Failed to load orders: ${err.message}`, 'error');
+    allOrders = [];
+    currentOrders = [];
+    renderApp();
+  }
+};
+
+/**
+ * Calculate total from items
+ */
+const calculateTotal = (items) => {
+  return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+};
 
 // Stats Calculation
 const calculateStats = () => {
@@ -20,7 +83,7 @@ const calculateStats = () => {
 
 // Filters
 const filterOrders = () => {
-  let filtered = [...MOCK_ORDERS];
+  let filtered = [...allOrders];
   if (searchTerm) {
     filtered = filtered.filter(
       (o) =>
@@ -44,9 +107,9 @@ const handleFilter = (e) => {
   filterOrders();
 };
 
-// Cancel Order - FIXED VERSION
-const cancelOrder = (id) => {
-  const order = MOCK_ORDERS.find((o) => o.id === id);
+// Cancel Order - API VERSION
+const cancelOrder = async (id) => {
+  const order = allOrders.find((o) => o.id === id);
   if (!order) {
     showNotification("Order not found.", 'error');
     return;
@@ -58,15 +121,28 @@ const cancelOrder = (id) => {
   }
   
   if (confirm("Are you sure you want to cancel this order? This action cannot be undone.")) {
-    order.status = OrderStatus.CANCELLED;
-    filterOrders();
-    showNotification(`Order ${id} has been cancelled.`, 'success');
+    try {
+      const orderId = id.replace('ORD-', '');
+      
+      if (API_MODE === "REST") {
+        await deleteOrderREST(orderId);
+      } else {
+        await deleteOrderGraphQL(orderId);
+      }
+      
+      order.status = OrderStatus.CANCELLED;
+      filterOrders();
+      showNotification(`Order ${id} has been cancelled.`, 'success');
+    } catch (err) {
+      console.error('Failed to cancel order:', err);
+      showNotification(`Failed to cancel order: ${err.message}`, 'error');
+    }
   }
 };
 
 // Accept Order - Changes status from PENDING to PREPARING or PREPARING to OUT_FOR_DELIVERY
-const acceptOrder = (id) => {
-  const order = MOCK_ORDERS.find((o) => o.id === id);
+const acceptOrder = async (id) => {
+  const order = allOrders.find((o) => o.id === id);
   if (!order) {
     showNotification("Order not found.", 'error');
     return;
@@ -88,15 +164,28 @@ const acceptOrder = (id) => {
   }
   
   if (confirm(confirmMessage)) {
-    order.status = nextStatus;
-    filterOrders();
-    showNotification(successMessage, 'success');
+    try {
+      const orderId = id.replace('ORD-', '');
+      
+      if (API_MODE === "REST") {
+        await updateOrderStatusREST(orderId, nextStatus);
+      } else {
+        await updateOrderStatusGraphQL(orderId, nextStatus);
+      }
+      
+      order.status = nextStatus;
+      filterOrders();
+      showNotification(successMessage, 'success');
+    } catch (err) {
+      console.error('Failed to update order status:', err);
+      showNotification(`Failed to update order: ${err.message}`, 'error');
+    }
   }
 };
 
 // Edit Order
 const openEdit = (id) => {
-  const o = MOCK_ORDERS.find((x) => x.id === id);
+  const o = allOrders.find((x) => x.id === id);
   if (!o) return;
   if (o.status === OrderStatus.DELIVERED || o.status === OrderStatus.CANCELLED)
     return showNotification("This order cannot be edited.", 'error');
@@ -132,26 +221,32 @@ const deleteItem = (name) => {
 };
 
 const addNewItemToEdit = () => {
-  const itemName = prompt(
-    "Enter item name to add:\n" +
-      AVAILABLE_ITEMS.map((i) => `${i.name} - €${i.price}`).join("\n")
-  );
+  // Note: This should fetch available bouquets from the API
+  // For now, using a simple prompt
+  const itemName = prompt("Enter bouquet name to add:");
   if (!itemName) return;
   
-  const item = AVAILABLE_ITEMS.find((i) => i.name === itemName.split(' - ')[0]);
-  if (!item) return showNotification("Item not found.", 'error');
+  const price = parseFloat(prompt("Enter price:"));
+  if (isNaN(price)) return showNotification("Invalid price.", 'error');
   
-  const existing = editOrder.items.find((i) => i.name === item.name);
-  if (existing) existing.quantity++;
-  else editOrder.items.push({ ...item, quantity: 1 });
+  const existing = editOrder.items.find((i) => i.name === itemName);
+  if (existing) {
+    existing.quantity++;
+  } else {
+    editOrder.items.push({ name: itemName, price: price, quantity: 1 });
+  }
   
   editOrder.total = calculateTotal(editOrder.items);
   renderApp();
 };
 
 const saveEdit = () => {
-  const idx = MOCK_ORDERS.findIndex((o) => o.id === editOrder.id);
-  MOCK_ORDERS[idx] = { ...editOrder };
+  // Note: This should call an API to update the order
+  // For now, just updating local state
+  const idx = allOrders.findIndex((o) => o.id === editOrder.id);
+  if (idx !== -1) {
+    allOrders[idx] = { ...editOrder };
+  }
   showEdit = false;
   filterOrders();
   showNotification(`Order ${editOrder.id} updated successfully!`, 'success');
@@ -376,27 +471,46 @@ const renderApp = () => {
 };
 
 // Move the first pending order to preparing
-const acceptPending = () => {
-  const order = MOCK_ORDERS.find((o) => o.status === OrderStatus.PENDING);
+const acceptPending = async () => {
+  const order = allOrders.find((o) => o.status === OrderStatus.PENDING);
   if (!order) {
     showNotification("No pending orders to accept.", 'info');
     return;
   }
-  order.status = OrderStatus.PREPARING;
-  filterOrders();
-  showNotification(`Order ${order.id} accepted — now Preparing.`, 'success');
+  
+  try {
+    const orderId = order.id.replace('ORD-', '');
+    
+    if (API_MODE === "REST") {
+      await updateOrderStatusREST(orderId, OrderStatus.PREPARING);
+    } else {
+      await updateOrderStatusGraphQL(orderId, OrderStatus.PREPARING);
+    }
+    
+    order.status = OrderStatus.PREPARING;
+    filterOrders();
+    showNotification(`Order ${order.id} accepted — now Preparing.`, 'success');
+  } catch (err) {
+    console.error('Failed to accept order:', err);
+    showNotification(`Failed to accept order: ${err.message}`, 'error');
+  }
 };
 
 // Startup
-document.addEventListener("DOMContentLoaded", () => {
-  renderApp();
+document.addEventListener("DOMContentLoaded", async () => {
+  renderApp(); // Show loading state
+  await loadOrders(); // Load data from API
   initChatbot();
 });
 
 // Add some demo data manipulation for testing
 window.demoAddOrder = () => {
   const sampleCustomers = ['Alex Thompson', 'Maria Garcia', 'James Wilson', 'Sophia Chen'];
-  const sampleItems = AVAILABLE_ITEMS;
+  const sampleBouquets = [
+    { name: "Sunny Day Bouquet", price: 35.99 },
+    { name: "Rose Garden Delight", price: 45.5 },
+    { name: "Tulip Treasure", price: 42.0 }
+  ];
   
   const randomCustomer = {
     id: `CUST-DEMO-${Date.now()}`,
@@ -406,7 +520,7 @@ window.demoAddOrder = () => {
     address: "123 Demo Street"
   };
   
-  const randomItem = sampleItems[Math.floor(Math.random() * sampleItems.length)];
+  const randomItem = sampleBouquets[Math.floor(Math.random() * sampleBouquets.length)];
   const quantity = Math.floor(Math.random() * 3) + 1;
   
   const newOrder = {
@@ -419,9 +533,7 @@ window.demoAddOrder = () => {
     notes: "Demo order"
   };
   
-  MOCK_ORDERS.unshift(newOrder);
+  allOrders.unshift(newOrder);
   filterOrders();
   showNotification(`Demo order ${newOrder.id} added!`, 'success');
 };
-
-/* i still need to make the cancel button functional, need to add validation for the delete button, implement logic when item = 0 in edit mode it should be discarded */
