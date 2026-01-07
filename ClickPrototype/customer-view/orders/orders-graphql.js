@@ -30,7 +30,8 @@ async function graphqlRequest(query, variables = {}) {
 /**
  * Fetch all orders for a specific customer using GraphQL
  */
-export async function fetchOrdersByCustomerGraphQL(customerId) {
+export async function fetchOrdersByCustomerGraphQL(userId) {
+  console.log("I AM HERE")
   const query = `
     query GetCustomerOrders($userId: ID!) {
       ordersByUser(userId: $userId) {
@@ -47,9 +48,9 @@ export async function fetchOrdersByCustomerGraphQL(customerId) {
     }
   `;
 
-  const variables = { userId: String(customerId) };
+  const variables = { userId: String(userId) };
   const data = await graphqlRequest(query, variables);
-  return data.ordersByCustomer;
+  return data.ordersByUser;
 }
 
 /**
