@@ -41,8 +41,7 @@ export async function loginGraphQL(email, password) {
   return data.login;
 }
 
-// REGISTER
-export async function registerGraphQL(username, email, password) {
+export async function registerGraphQL(username, email, password, role) {
   const mutation = `
     mutation Register($request: RegisterRequest!) {
       registerUser(request: $request) {
@@ -54,9 +53,15 @@ export async function registerGraphQL(username, email, password) {
     }
   `;
 
-  const data = await graphqlRequest(mutation, {
-    request: { username, email, password }
-  });
+  const variables = {
+    request: {
+      username,
+      email,
+      password,
+      role
+    }
+  };
 
+  const data = await graphqlRequest(mutation, variables);
   return data.registerUser;
 }

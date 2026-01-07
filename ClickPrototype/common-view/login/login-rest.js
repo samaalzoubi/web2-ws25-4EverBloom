@@ -33,10 +33,11 @@ export async function loginREST(email, password) {
   });
 }
 
-export async function registerREST(username, email, password) {
+export async function registerREST(username, email, password, role) {
   return restRequest("/users", "POST", {
     username,
     email,
-    password
+    password,
+    role
   });
 }

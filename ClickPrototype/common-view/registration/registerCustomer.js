@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       API_MODE === "REST"
-        ? await registerREST(username, email, password)
-        : await registerGraphQL(username, email, password);
+        ? await registerREST(username, email, password, "CUSTOMER")
+        : await registerGraphQL(username, email, password, "CUSTOMER");
 
       showMessage(
         "Registration successful! Redirecting to login…",
