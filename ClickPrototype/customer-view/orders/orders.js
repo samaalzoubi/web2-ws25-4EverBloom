@@ -1,5 +1,5 @@
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
-import { fetchOrdersByCustomerREST, fetchOrderDetailsREST } from "./orders-rest.js";
+import { fetchOrdersByCustomerREST, fetchOrderDetailsREST, submitRatingREST } from "./orders-rest.js";
 import { fetchOrdersByCustomerGraphQL, submitRatingGraphQL } from "./orders-graphql.js";
 
 /**
@@ -117,13 +117,10 @@ class RatingSystem {
     button.textContent = 'Submitting...';
 
     try {
-      // Always use GraphQL for rating submission (as per requirements)
-      const result = await submitRatingGraphQL(
-        orderId,
-        this.customerId,
-        rating,
-        null
-      );
+      // Use appropriate API based on API_MODE
+      const result = API_MODE === "REST"
+        ? await submitRatingREST(orderId, this.customerId, rating, null)
+        : await submitRatingGraphQL(orderId, this.customerId, rating, null);
 
       this.saveRatings();
 
@@ -199,13 +196,23 @@ function createOrderCard(order) {
     minute: '2-digit'
   }) : '';
 
+  // Map status to CSS class for styling
+  const statusClass = {
+    'CREATED': 'status-pending',
+    'CONFIRMED': 'status-confirmed',
+    'IN_DELIVERY': 'status-out',
+    'DELIVERED': 'status-delivered',
+    'CANCELLED': 'status-cancelled',
+    'PAID': 'status-paid'
+  }[order.status] || 'status-pending';
+
   card.innerHTML = `
     <div class="order-header">
       <div>
         <div class="order-id">Order #${order.orderId}</div>
         <div class="order-date">${orderDate}</div>
       </div>
-      <span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span>
+      <span class="status-badge ${statusClass}">${order.status.replace(/_/g, ' ')}</span>
     </div>
 
     <div class="order-items">
@@ -348,6 +355,8 @@ function filterOrders() {
       card.style.display = 'none';
     }
   });
+  
+  console.log(`Filtered orders by status: ${selectedStatus}`);
 }
 
 // Get filter select element and add event listener
