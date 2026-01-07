@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
   </head>
   <body>
-    <!-- Navigation -->
-    <div id="header"></div>
-    <!-- Main Content -->
     <main>
         <!-- Register Box -->
         <div class="form-container" id="register-container">
@@ -94,14 +91,7 @@
         </div>
         </main>
 
-    <script>
-      fetch("/ClickPrototype/common-view/header/header.html")
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById("header").innerHTML = data;
-        })
-        .catch(err => console.error("Header konnte nicht geladen werden:", err));
-        
+    <script>    
       const roleSelect = document.getElementById("role-select");
       const registerContainer = document.getElementById("register-container");
 
