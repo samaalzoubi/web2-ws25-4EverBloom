@@ -1,31 +1,71 @@
-const DEFAULT_LOGO =
-  "https://images.scalebranding.com/flower-shop-logo-2a1cfde0-daf2-417f-a0a6-de1d596a23d7.jpg";
+import { API_MODE } from "/ClickPrototype/config/api.config.js";
+import { loginREST } from "./login-rest.js";
+import { loginGraphQL } from "./login-graphql.js";
 
-export function renderUsers(containerId, users, onDelete) {
-  const ul = document.getElementById(containerId);
-  ul.innerHTML = "";
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("login-form");
+  const messageBox = document.getElementById("form-message");
 
-  users.forEach(user => {
-    const li = document.createElement("li");
-    li.style.marginBottom = "1rem";
+  if (!loginForm || !messageBox) return;
 
-    li.innerHTML = `
-      <img src="${user.logo || DEFAULT_LOGO}" width="50"><br>
-      <strong>${user.username}</strong><br>
-      ${user.email}<br>
-      Role: ${user.role}<br>
-      Shop: ${user.shopName ?? "—"}<br>
-      <button data-id="${user.id}">Delete</button>
-    `;
+  const showMessage = (text, type) => {
+    messageBox.textContent = text;
+    messageBox.className = `form-message show ${type}`;
+  };
 
-    li.querySelector("button").addEventListener("click", () => {
-      onDelete(user.id);
-    });
+  const clearMessage = () => {
+    messageBox.textContent = "";
+    messageBox.className = "form-message";
+  };
 
-    ul.appendChild(li);
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearMessage();
+
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+
+    if (!email || !password) {
+      showMessage("Please enter email and password.", "error");
+      return;
+    }
+
+    try {
+      const user =
+        API_MODE === "REST"
+          ? await loginREST(email, password)
+          : await loginGraphQL(email, password);
+
+      showMessage("Login successful. Redirecting…", "success");
+
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userId", user.id);
+      localStorage.setItem("role", user.role);
+
+      setTimeout(() => {
+        window.location.href =
+          "/ClickPrototype/customer-view/home-page/home-page.html";
+      }, 1000);
+    } catch (err) {
+      const msg = err.message?.toLowerCase() || "";
+
+      if (
+        msg.includes("invalid") ||
+        msg.includes("unauthorized") ||
+        msg.includes("401")
+      ) {
+        showMessage(
+          "Invalid email or password. Please try again.",
+          "error"
+        );
+      } else {
+        showMessage(
+          "Login failed. Please try again later.",
+          "error"
+        );
+      }
+
+      console.error(err);
+    }
   });
-}
-
-export function renderError(containerId, msg) {
-  document.getElementById(containerId).innerHTML = `<li>${msg}</li>`;
-}
+});

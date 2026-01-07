@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.services;
 
 import de.fhdo.project.blumeo.entity.user.Role;
+import de.fhdo.project.blumeo.exception.EmailAlreadyExistsException;
 import de.fhdo.project.blumeo.utils.mapper.user.UserMapper;
 import de.fhdo.project.blumeo.dto.user.RegisterRequest;
 import de.fhdo.project.blumeo.dto.user.UserDTO;
@@ -39,7 +40,7 @@ public class UserService {
     @Transactional
     public UserDTO createUser(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         User entity = userConverter.toEntity(request);

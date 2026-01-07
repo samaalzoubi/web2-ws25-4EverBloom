@@ -1,92 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blumeo | Login</title>
-    <link rel="stylesheet" href="/ClickPrototype/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+
+    <link rel="stylesheet" href="/ClickPrototype/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
   </head>
+
   <body>
-    <!-- Navigation -->
-       <div id="header"></div>
+    <!-- Header -->
+    <div id="header"></div>
 
     <!-- Main Content -->
     <main>
-      <!-- Login Box -->
       <div class="form-container" id="login-container">
         <h2>Welcome Back 🌸</h2>
         <p class="subtitle">Log in to explore our floral collections</p>
+
         <form id="login-form">
-          <label>Email</label>
+          <label for="login-email">Email</label>
           <input
             type="email"
             id="login-email"
             placeholder="example@gmail.com"
             required
-          >
-          <label>Password</label>
+          />
+
+          <label for="login-password">Password</label>
           <input
             type="password"
             id="login-password"
             placeholder="Enter your password"
             required
-          >
+          />
+
           <button type="submit" class="main-btn">Login</button>
         </form>
+
         <p class="toggle-text">
           No account yet?
-          <span id="show-register" onclick="window.location.href='/ClickPrototype/common-view/registration/register.html'">Register here</span>
+          <span
+            class="link"
+            onclick="window.location.href='/ClickPrototype/common-view/registration/register.html'"
+          >
+            Register here
+          </span>
         </p>
+
+         <div id="form-message" class="form-message" aria-live="polite"></div>
       </div>
     </main>
 
+    <!-- Header Loader -->
     <script>
-      const loginContainer = document.getElementById("login-container");
-      const registerContainer = document.getElementById("register-container");
-      const showLogin = document.getElementById("show-login");
-
       fetch("/ClickPrototype/common-view/header/header.html")
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById("header").innerHTML = data;
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("header").innerHTML = html;
         })
-        .catch(err => console.error("Header konnte nicht geladen werden:", err));
-
-
-      showLogin.addEventListener("click", () => {
-        registerContainer.classList.add("hidden");
-        loginContainer.classList.remove("hidden");
-      });
-
-      // Demo logic: save users in localStorage
-      document
-        .getElementById("register-form")
-        .addEventListener("submit", (e) => {
-          e.preventDefault();
-          const username = document.getElementById("register-username").value;
-          const email = document.getElementById("register-email").value;
-          const password = document.getElementById("register-password").value;
-
-          localStorage.setItem(email, JSON.stringify({ username, password }));
-          alert("Account created successfully! You can now log in.");
-          e.target.reset();
-          showLogin.click();
-        });
-
-      document.getElementById("login-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const email = document.getElementById("login-email").value;
-        const password = document.getElementById("login-password").value;
-        const storedUser = JSON.parse(localStorage.getItem(email));
-
-        if (storedUser && storedUser.password === password) {
-          localStorage.setItem("isLoggedIn", "true");
-          window.location.href = "/ClickPrototype/customer-view/home-page/home-page.html";
-        } else {
-          alert("Invalid email or password. Please try again.");
-        }
-      });
+        .catch((err) =>
+          console.error("Header konnte nicht geladen werden:", err)
+        );
     </script>
+
+    <!-- Login Logic -->
+    <script type="module" src="./login.js"></script>
   </body>
 </html>
