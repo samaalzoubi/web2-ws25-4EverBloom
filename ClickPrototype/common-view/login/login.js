@@ -1,8 +1,11 @@
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
 import { loginREST } from "./login-rest.js";
 import { loginGraphQL } from "./login-graphql.js";
+import { loadLayout } from "/ClickPrototype/layout/layout.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadLayout();
+
   const loginForm = document.getElementById("login-form");
   const messageBox = document.getElementById("form-message");
 
@@ -43,9 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("role", user.role);
 
       setTimeout(() => {
-        window.location.href =
-          "/ClickPrototype/customer-view/home-page/home-page.html";
+        if (user.role === "CUSTOMER") {
+          window.location.href = "/ClickPrototype/customer-view/home-page/home-page.html";
+        } else {
+          window.location.href = "/ClickPrototype/shop-owner-view/home-page/shop-owner-homepage.html";
+        }
       }, 1000);
+
     } catch (err) {
       const msg = err.message?.toLowerCase() || "";
 

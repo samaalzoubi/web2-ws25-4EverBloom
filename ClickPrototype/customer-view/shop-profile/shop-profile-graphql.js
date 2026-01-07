@@ -1,4 +1,4 @@
-const GRAPHQL_URL = "http://localhost:8080/graphql";
+import { GRAPHQL_BASE } from "/ClickPrototype/config/api.config.js";
 
 /**
  * Fetch shop (owner) information via GraphQL
@@ -23,7 +23,7 @@ export async function fetchShopByIdGraphQL(shopId) {
     }
   `;
 
-  const response = await fetch(GRAPHQL_URL, {
+  const response = await fetch(GRAPHQL_BASE, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -59,7 +59,7 @@ export async function fetchShopBouquetsGraphQL(shopId) {
     }
   `;
 
-  const response = await fetch(GRAPHQL_URL, {
+  const response = await fetch(GRAPHQL_BASE, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

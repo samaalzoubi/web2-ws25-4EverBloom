@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
   <link rel="stylesheet" href="/ClickPrototype/style.css">
   <link rel="stylesheet" href="orders_styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 </head>
 <body>
 
@@ -21,7 +20,6 @@
     <main class="main-content">
       <div class="customer-header">
         <h1>My Orders</h1>
-        <p>Hello Alice! Here's your order history and current orders.</p>
       </div>
       
       <div class="controls-bar">
@@ -38,120 +36,6 @@
       </div>
       
       <div class="orders-grid" id="orders-grid">
-        <!-- Order Card 1 -->
-        <div class="order-card" data-status="In Delivery">
-          <div class="order-header">
-            <div>
-              <div class="order-id">ORD-20240729-001</div>
-              <div class="order-date">July 29, 2024, 10:30 AM</div>
-            </div>
-            <span class="status-badge status-out">In Delivery</span>
-          </div>
-          
-          <div class="order-items">
-            <div class="order-item">
-              <span>Sunny Day Bouquet</span>
-              <span class="item-quantity">×1</span>
-            </div>
-            <div class="order-item">
-              <span>Rose Garden Delight</span>
-              <span class="item-quantity">×2</span>
-            </div>
-          </div>
-          <div class="order-total">€117.48</div>
-          
-          <div class="customer-actions">
-              
-            
-            <button class="cancel-btn">
-              <i class="fas fa-times"></i> Cancel
-            </button>
-            <button class="btn-help">
-              <i class="fas fa-question-circle"></i> Help
-            </button>
-          </div>
-        </div>
-        
-        <!-- Order Card 2 -->
-        <div class="order-card" data-status="Delivered">
-          <div class="order-header">
-            <div>
-              <div class="order-id">ORD-20240728-004</div>
-              <div class="order-date">July 28, 2024, 9:15 AM</div>
-            </div>
-            <span class="status-badge status-delivered">Delivered</span>
-          </div>
-          
-          <div class="order-items">
-            <div class="order-item">
-              <span>Wildflower Wonder</span>
-              <span class="item-quantity">×1</span>
-            </div>
-          </div>
-          <div class="order-total">€29.99</div>
-          
-      
-          <div class="customer-actions">
-            <button class="btn-reorder">
-              <i class="fas fa-redo"></i> Reorder
-            </button>
-            <button class="btn-help">
-              <i class="fas fa-question-circle"></i> Help
-            </button>
-          </div>
-              <div class="rating-box" id="rating-box-ORD-20240729-001">
-      <h4>How was your experience?</h4>
-      <div class="stars" data-order-id="ORD-20240729-001">
-        <i class="fa-solid fa-star" data-value="1"></i>
-        <i class="fa-solid fa-star" data-value="2"></i>
-        <i class="fa-solid fa-star" data-value="3"></i>
-        <i class="fa-solid fa-star" data-value="4"></i>
-        <i class="fa-solid fa-star" data-value="5"></i>
-      </div>
-      <div class="rating-value-display" id="rating-display-ORD-20240729-001" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--brand-primary); display: none;">
-        Rating: <span class="current-rating">0</span>/5
-      </div>
-
- <div class="customer-actions">
-
- <button class="rating-submit-btn" type="submit" data-order-id="ORD-20240729-001">
-               Submit Rating
-            </button>
-            </div>
-            <div class="rating-thank-you" id="thank-you-ORD-20240729-001" style="display: none; margin-top: 1rem; padding: 1rem; background: #e8f5e9; border-radius: 8px; text-align: center; color: #2e7d32;">
-              <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
-              <span>Thank you for your rating! We appreciate your feedback.</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Order Card 3 -->
-        <div class="order-card" data-status="Created">
-          <div class="order-header">
-            <div>
-              <div class="order-id">ORD-20240727-006</div>
-              <div class="order-date">July 27, 2024, 6:00 PM</div>
-            </div>
-            <span class="status-badge status-pending">Created</span>
-          </div>
-          
-          <div class="order-items">
-            <div class="order-item">
-              <span>Tulip Treasure</span>
-              <span class="item-quantity">×1</span>
-            </div>
-          </div>
-          <div class="order-total">€42.00</div>
-          
-          <div class="customer-actions">
-            <button class="btn-edit edit-btn" data-order-id="ORD-20240727-006">
-              <i class="fas fa-pen"></i> Edit
-            </button>
-            <button class="btn-help">
-              <i class="fas fa-question-circle"></i> Help
-            </button>
-          </div>
-        </div>
       </div>
       
       <!-- Edit Modal -->
@@ -263,40 +147,7 @@
   });
 </script>
 
-  <script type="module">    
-  import { loadLayout } from '/ClickPrototype/layout/layout.js'
-
-    // Filter Functionality
-    let selectedStatus = 'all';
-    
-    function filterOrders() {
-      const ordersGrid = document.getElementById('orders-grid');
-      const orderCards = ordersGrid.querySelectorAll('.order-card');
-      
-      orderCards.forEach(card => {
-        const cardStatus = card.getAttribute('data-status');
-        
-        if (selectedStatus === 'all' || cardStatus === selectedStatus) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-    
-    // Get filter select element and add event listener
-    document.addEventListener('DOMContentLoaded', async() => {
-      await loadLayout();
-
-      const filterSelect = document.querySelector('.filter-select');
-      if (filterSelect) {
-        filterSelect.addEventListener('change', (e) => {
-          selectedStatus = e.target.value;
-          filterOrders();
-        });
-      }
-    });
-    
+<script type="module" src="./orders.js">    
     // Edit Order Functionality
     let editingOrder = null;
     const editModal = document.getElementById('edit-modal');

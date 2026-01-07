@@ -1,6 +1,10 @@
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
 import { fetchOrdersByCustomerREST, fetchOrderDetailsREST } from "./orders-rest.js";
 import { fetchOrdersByCustomerGraphQL, submitRatingGraphQL } from "./orders-graphql.js";
+import { loadLayout } from "/ClickPrototype/layout/layout.js";
+
+let userId = null;
+let selectedStatus = 'all';
 
 /**
  * Rating System with localStorage persistence
@@ -156,8 +160,6 @@ function renderOrders(orders) {
   const ordersGrid = document.getElementById('orders-grid');
   if (!ordersGrid) return;
 
-  const customerId = ordersGrid.dataset.customerId;
-
   if (!orders || orders.length === 0) {
     ordersGrid.innerHTML = `
       <div class="order-card">
@@ -212,7 +214,7 @@ function createOrderCard(order) {
       ${order.orderLines && order.orderLines.length > 0
         ? order.orderLines.map(line => `
             <div class="order-item">
-              <span>${line.bouquet?.name || 'Item'}</span>
+              <span>${line.bouquetName || 'Item'}</span>
               <span class="item-quantity">×${line.quantity}</span>
             </div>
           `).join('')
@@ -238,10 +240,6 @@ function createOrderCard(order) {
       <div class="customer-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
         <button class="rating-submit-btn" type="button" data-order-id="${order.orderId}">
           Submit Rating
-        </button>
-        <button class="view-details-btn" type="button" data-order-id="${order.orderId}"
-                style="background: var(--brand-secondary); color: var(--text-dark); padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
-          <i class="fas fa-info-circle"></i> View Details
         </button>
       </div>
 
@@ -288,11 +286,8 @@ async function viewOrderDetails(orderId) {
 /**
  * Load orders based on API_MODE
  */
-async function loadOrders() {
-  const ordersGrid = document.getElementById('orders-grid');
-  const customerId = ordersGrid?.dataset.customerId;
-
-  if (!customerId) {
+async function loadOrders(userId) {
+  if (!userId) {
     console.error('No customer ID found');
     return;
   }
@@ -301,8 +296,8 @@ async function loadOrders() {
     console.log(`Fetching orders via ${API_MODE} API...`);
 
     const orders = API_MODE === "REST"
-      ? await fetchOrdersByCustomerREST(customerId)
-      : await fetchOrdersByCustomerGraphQL(customerId);
+      ? await fetchOrdersByCustomerREST(userId)
+      : await fetchOrdersByCustomerGraphQL(userId);
 
     console.log('Orders fetched:', orders);
     renderOrders(orders);
@@ -315,26 +310,41 @@ async function loadOrders() {
 /**
  * Initialize page
  */
-document.addEventListener('DOMContentLoaded', () => {
-  loadOrders();
+document.addEventListener("DOMContentLoaded", async () => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  const role = localStorage.getItem("role");
+  userId = localStorage.getItem("userId");
 
-  // Add event listeners for view details buttons
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('.view-details-btn')) {
-      const btn = e.target.closest('.view-details-btn');
-      const orderId = btn.getAttribute('data-order-id');
-      if (orderId) {
-        viewOrderDetails(orderId);
-      }
-    }
+  if (isLoggedIn !== "true" || role !== "CUSTOMER") {
+    window.location.href = "/ClickPrototype/common-view/login/login.html";
+    return;
+  }
+
+  await loadLayout();
+
+  loadOrders(userId);
+
+  const filterSelect = document.querySelector(".filter-select");
+  if (filterSelect) {
+    filterSelect.addEventListener("change", (e) => {
+      selectedStatus = e.target.value;
+      filterOrders();
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".view-details-btn");
+    if (!btn) return;
+
+    const orderId = btn.getAttribute("data-order-id");
+    if (orderId) viewOrderDetails(orderId);
   });
 });
+
 
 /**
  * Filter orders by status
  */
-let selectedStatus = 'all';
-
 function filterOrders() {
   const ordersGrid = document.getElementById('orders-grid');
   const orderCards = ordersGrid.querySelectorAll('.order-card');
@@ -349,14 +359,3 @@ function filterOrders() {
     }
   });
 }
-
-// Get filter select element and add event listener
-document.addEventListener('DOMContentLoaded', () => {
-  const filterSelect = document.querySelector('.filter-select');
-  if (filterSelect) {
-    filterSelect.addEventListener('change', (e) => {
-      selectedStatus = e.target.value;
-      filterOrders();
-    });
-  }
-});

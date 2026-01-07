@@ -299,6 +299,7 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         //Create test Order
         Order order = new Order();
         order.setCustomer(customer);
+        order.setShop(owner);
         order.setDeliveryAddress(customer.getAddress());
         order.setStatus(OrderStatus.CREATED);
 

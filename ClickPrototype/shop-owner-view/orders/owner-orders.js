@@ -1,14 +1,15 @@
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
 import { 
-  fetchAllOrdersREST, 
+  fetchOrdersForShopREST, 
   fetchOrderDetailsREST, 
   updateOrderStatusREST 
 } from "./owner-orders-rest.js";
 import { 
-  fetchAllOrdersGraphQL, 
+  fetchShopOwnerOrdersGraphQL, 
   fetchOrderDetailsGraphQL, 
   updateOrderStatusGraphQL 
 } from "./owner-orders-graphql.js";
+import { loadLayout } from '/ClickPrototype/layout/layout.js'
 
 // Order Status Constants
 const OrderStatus = {
@@ -25,6 +26,7 @@ let searchTerm = "";
 let selectedStatus = "all";
 let showEdit = false;
 let editOrder = null;
+let userId = null
 
 /**
  * Calculate order statistics
@@ -70,8 +72,8 @@ async function loadOrders() {
     console.log(`Fetching orders via ${API_MODE} API...`);
     
     const orders = API_MODE === "REST"
-      ? await fetchAllOrdersREST()
-      : await fetchAllOrdersGraphQL();
+      ? await fetchOrdersForShopREST(userId)
+      : await fetchShopOwnerOrdersGraphQL(userId);
     
     console.log('Orders fetched:', orders);
     currentOrders = orders;
@@ -301,7 +303,7 @@ const renderOrderCard = (order) => {
       <div class="order-header">
         <div>
           <div class="order-id">Order #${order.orderId}</div>
-          <div class="order-customer">${order.customer?.username || 'Customer'}</div>
+          <div class="order-customer">Customer #${order.customerId || ''}</div>
           <div class="order-date">${formatDate(order.orderDate)}</div>
         </div>
         <span class="status-badge">${order.status}</span>
@@ -311,7 +313,7 @@ const renderOrderCard = (order) => {
         ${order.orderLines && order.orderLines.length > 0
           ? order.orderLines.map(line => `
               <div class="order-item">
-                <span>${line.bouquet?.name || 'Item'}</span>
+                <span>${line.bouquetName || 'Item'}</span>
                 <span class="item-quantity">×${line.quantity}</span>
                 <span class="item-price">${formatCurrency(line.price)}</span>
               </div>
@@ -352,10 +354,6 @@ function renderOrders(orders) {
   
   appContainer.innerHTML = `
     <main class="main-content">
-      <div class="owner-header">
-        <h1>Order Management</h1>
-        <p>Manage and track all shop orders</p>
-      </div>
       
       ${renderStats(stats)}
       
@@ -395,7 +393,10 @@ function renderOrders(orders) {
 /**
  * Initialize page
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  userId = localStorage.getItem("userId");
+
+  await loadLayout();
   loadOrders();
   
   // Expose functions globally for onclick handlers

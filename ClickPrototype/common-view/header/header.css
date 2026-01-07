@@ -127,13 +127,12 @@ nav {
   justify-content: center;
 }
 
-/*TODO: pruefen, warum nicht funktioniert*/
 .cart-link:hover {
   color: var(--color-hover);
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 

@@ -31,19 +31,16 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // Get all orders or filter by userId
-    @GetMapping
-    public ResponseEntity<List<OrderDTO>> getAllOrders(
-            @RequestParam(required = false) Long userId) {
-        
-        if (userId != null) {
-            // Get orders for specific customer
-            return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
-        }
-        
-        // Get all orders (for admin)
-        return ResponseEntity.ok(orderService.getAllOrders());
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<OrderDTO>> getOrdersForCustomer(@PathVariable Long customerId) {
+        return ResponseEntity.ok(orderService.getOrdersByUserId(customerId));
     }
+
+    @GetMapping("/shop/{shopId}")
+    public ResponseEntity<List<OrderDTO>> getOrdersForShop(@PathVariable Long shopId) {
+        return ResponseEntity.ok(orderService.getOrdersByShopId(shopId));
+    }
+
 
     @PostMapping("/{userId}")
     public ResponseEntity<OrderDTO> createOrder(

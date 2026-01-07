@@ -32,6 +32,11 @@ public class OrderGraphQLController {
         return orderService.getOrdersByUserId(userId);
     }
 
+    @QueryMapping
+    public List<OrderDTO> ordersByShop(@Argument Long shopId) {
+        return orderService.getOrdersByShopId(shopId);
+    }
+
     /* -------------------- Mutations -------------------- */
 
     @MutationMapping

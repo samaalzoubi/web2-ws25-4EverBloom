@@ -56,18 +56,6 @@
       </div>
     </main>
 
-    <!-- Header Loader -->
-    <script>
-      fetch("/ClickPrototype/common-view/header/header.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("header").innerHTML = html;
-        })
-        .catch((err) =>
-          console.error("Header konnte nicht geladen werden:", err)
-        );
-    </script>
-
     <!-- Login Logic -->
     <script type="module" src="./login.js"></script>
   </body>
