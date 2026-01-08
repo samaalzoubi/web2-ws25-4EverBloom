@@ -162,14 +162,16 @@
 <script>
 import Chatbot from './Chatbot.vue';
 import orderService from '@/services/orderService';
+import { useUserStore } from '@/stores/userStore';
 
-// Order Statuses
+// Order Statuses (matching backend)
 const OrderStatus = {
-  PENDING: "Pending",
-  PREPARING: "Preparing",
-  OUT_FOR_DELIVERY: "In Delivery",
-  DELIVERED: "Delivered",
-  CANCELLED: "Cancelled",
+  CREATED: "CREATED",
+  CONFIRMED: "CONFIRMED",
+  IN_DELIVERY: "IN_DELIVERY",
+  DELIVERED: "DELIVERED",
+  CANCELLED: "CANCELLED",
+  PAID: "PAID"
 };
 
 // Available Items
@@ -191,11 +193,12 @@ const formatDate = (d) =>
 
 const getStatusClass = (status) =>
   ({
-    Pending: "status-pending",
-    Preparing: "status-preparing",
-    "Out for Delivery": "status-out",
-    Delivered: "status-delivered",
-    Cancelled: "status-cancelled",
+    CREATED: "status-pending",
+    CONFIRMED: "status-preparing",
+    IN_DELIVERY: "status-out",
+    DELIVERED: "status-delivered",
+    CANCELLED: "status-cancelled",
+    PAID: "status-paid"
   }[status] || "");
 
 const calculateTotal = (items) =>
@@ -262,8 +265,8 @@ export default {
       return {
         total: this.orders.length,
         revenue: this.orders.reduce((sum, order) => sum + order.total, 0),
-        pending: this.orders.filter(o => o.status === OrderStatus.PENDING).length,
-        preparing: this.orders.filter(o => o.status === OrderStatus.PREPARING).length
+        pending: this.orders.filter(o => o.status === OrderStatus.CREATED).length,
+        preparing: this.orders.filter(o => o.status === OrderStatus.CONFIRMED).length
       };
     }
   },
@@ -286,8 +289,9 @@ export default {
     },
 
     getUserId() {
-      // TODO: Replace with actual authentication logic
-      return localStorage.getItem('userId') || 1;
+      // Get shopId from userStore for shop owner
+      const userStore = useUserStore();
+      return userStore.user?.shopId || userStore.user?.id || 1;
     },
 
     async loadOrders() {
@@ -295,22 +299,22 @@ export default {
         this.loading = true;
         this.error = null;
         
-        // ✅ NOW USING REAL BACKEND API
-        this.orders = await orderService.getCustomerOrders(this.userId);
+        // ✅ NOW USING REAL BACKEND API - Shop Orders
+        this.orders = await orderService.getShopOrders(this.userId);
         
         // Debug: Log orders to verify structure
         console.log('Loaded orders:', this.orders);
         console.log('First order items:', this.orders[0]?.items);
         
         // Get customer name from first order or default
-        if (this.orders.length > 0) {
-          this.customerName = this.orders[0].customerName || 'Customer';
+        if (this.orders.length > 0 && this.orders[0].customer) {
+          this.customerName = this.orders[0].customer.name || 'Customer';
         }
         
         this.filterOrders();
       } catch (err) {
-        this.error = 'Failed to load your orders';
-        console.error('Error loading customer orders:', err);
+        this.error = 'Failed to load shop orders';
+        console.error('Error loading shop orders:', err);
       } finally {
         this.loading = false;
       }
@@ -341,33 +345,25 @@ export default {
 
     canAccept(order) {
       // Can accept if order is in a status that can be progressed
-      const progressableStatuses = ['Pending', 'Preparing', 'Out for Delivery', 'CREATED', 'Created', 'In Delivery', 'IN DELIVERY'];
+      const progressableStatuses = [OrderStatus.CREATED, OrderStatus.CONFIRMED, OrderStatus.IN_DELIVERY];
       console.log('canAccept check - Order:', order.id, 'Status:', order.status, 'Can accept:', progressableStatuses.includes(order.status));
       return progressableStatuses.includes(order.status);
     },
 
     getAcceptButtonText(status) {
       const statusMap = {
-        'Pending': 'Start Preparing',
-        'Preparing': 'Send for Delivery',
-        'Out for Delivery': 'Mark Delivered',
-        'CREATED': 'Accept Order',
-        'Created': 'Accept Order',
-        'In Delivery': 'Mark Delivered',
-        'IN DELIVERY': 'Mark Delivered'
+        [OrderStatus.CREATED]: 'Confirm Order',
+        [OrderStatus.CONFIRMED]: 'Start Delivery',
+        [OrderStatus.IN_DELIVERY]: 'Mark Delivered'
       };
       return statusMap[status] || 'Accept';
     },
 
     getNextStatus(currentStatus) {
       const statusFlow = {
-        'Pending': 'Preparing',
-        'Preparing': 'Out for Delivery',
-        'Out for Delivery': 'Delivered',
-        'CREATED': 'Preparing',
-        'Created': 'Preparing',
-        'In Delivery': 'Delivered',
-        'IN DELIVERY': 'Delivered'
+        [OrderStatus.CREATED]: OrderStatus.CONFIRMED,
+        [OrderStatus.CONFIRMED]: OrderStatus.IN_DELIVERY,
+        [OrderStatus.IN_DELIVERY]: OrderStatus.DELIVERED
       };
       return statusFlow[currentStatus] || currentStatus;
     },

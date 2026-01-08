@@ -55,27 +55,25 @@ export default {
     return this.updateOrderStatus(orderId, ORDER_STATUS.CANCELLED);
   },
 
-  // Get all orders (for admin)
-  async getAllOrders() {
-    try {
-      const response = await apiClient.get(API_ENDPOINTS.ORDERS);
-      return this.transformBackendOrders(response.data);
-    } catch (error) {
-      console.error('Error fetching all orders:', error);
-      console.warn('Using mock data as fallback');
-      return this.getMockOrders();
-    }
-  },
-
   // Get orders for specific customer
   async getCustomerOrders(userId) {
     try {
-      const response = await apiClient.get(`${API_ENDPOINTS.ORDERS}?userId=${userId}`);
+      const response = await apiClient.get(API_ENDPOINTS.CUSTOMER_ORDERS(userId));
       return this.transformBackendOrders(response.data);
     } catch (error) {
       console.error('Error fetching customer orders:', error);
-      console.warn('Using mock data as fallback');
-      return this.getMockOrders();
+      throw error;
+    }
+  },
+
+  // Get orders for specific shop (for shop owners)
+  async getShopOrders(shopId) {
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.SHOP_ORDERS(shopId));
+      return this.transformBackendOrders(response.data);
+    } catch (error) {
+      console.error('Error fetching shop orders:', error);
+      throw error;
     }
   },
 
@@ -116,23 +114,13 @@ export default {
       price: item.price || item.bouquet?.price || 0
     }));
 
-    // Map backend status to frontend status
-    const statusMap = {
-      'CREATED': 'Pending',
-      'CONFIRMED': 'Preparing',
-      'IN_DELIVERY': 'Out for Delivery',
-      'DELIVERED': 'Delivered',
-      'CANCELLED': 'Cancelled'
-    };
-    const frontendStatus = statusMap[backendOrder.status] || backendOrder.status || 'Pending';
-
     return {
       id: backendOrder.orderId || backendOrder.id,
       orderNumber: backendOrder.orderNumber || `ORD-${backendOrder.orderId || backendOrder.id}`,
       customerName: backendOrder.customer?.name || backendOrder.customerName || backendOrder.user?.name || 'Unknown',
       customerId: backendOrder.customerId || backendOrder.customer?.id || backendOrder.userId || backendOrder.user?.id,
       orderDate: backendOrder.orderDate || backendOrder.createdAt || new Date().toISOString(),
-      status: frontendStatus,
+      status: backendOrder.status || 'CREATED',
       total: backendOrder.totalAmount || backendOrder.total || 0,
       items: transformedItems,
       rating: backendOrder.rating || null,
@@ -157,11 +145,13 @@ export default {
     return backendOrders.map(order => this.transformBackendOrder(order));
   },
 
-  async submitRating(orderId, rating) {
+  async submitRating(orderId, customerId, ratingScore, review = '') {
     try {
-      const response = await apiClient.post(`${API_ENDPOINTS.RATING}`, {
+      const response = await apiClient.post(API_ENDPOINTS.RATING, {
         orderId,
-        rating
+        customerId,
+        ratingScore,
+        review
       });
       return response.data;
     } catch (error) {

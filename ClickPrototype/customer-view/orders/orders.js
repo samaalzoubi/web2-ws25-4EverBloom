@@ -200,6 +200,7 @@ function createOrderCard(order) {
 
   // Map status to CSS class for styling
   const statusClass = {
+    'PENDING': 'status-pending',
     'CREATED': 'status-pending',
     'CONFIRMED': 'status-confirmed',
     'IN_DELIVERY': 'status-out',
@@ -231,6 +232,7 @@ function createOrderCard(order) {
 
     <div class="order-total">€${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</div>
 
+    ${order.status === 'DELIVERED' ? `
     <div class="rating-box">
       <h4>How was your experience?</h4>
       <div class="stars" data-order-id="${order.orderId}">
@@ -255,6 +257,7 @@ function createOrderCard(order) {
         <span>Thank you for your rating! We appreciate your feedback!</span>
       </div>
     </div>
+    ` : ''}
   `;
 
   return card;
@@ -357,9 +360,16 @@ function filterOrders() {
   const orderCards = ordersGrid.querySelectorAll('.order-card');
 
   orderCards.forEach(card => {
-    const cardStatus = card.getAttribute('data-status');
+    const cardStatus = card.getAttribute('data-status'); // e.g., "CREATED", "IN_DELIVERY"
+    
+    // Normalize both statuses for comparison
+    const normalizedCardStatus = cardStatus.replace(/_/g, ' '); // "IN_DELIVERY" -> "IN DELIVERY"
+    const normalizedSelectedStatus = selectedStatus.toUpperCase(); // "Created" -> "CREATED"
 
-    if (selectedStatus === 'all' || cardStatus === selectedStatus) {
+    if (selectedStatus === 'all' || 
+        cardStatus === normalizedSelectedStatus || 
+        normalizedCardStatus === normalizedSelectedStatus ||
+        cardStatus.toUpperCase() === normalizedSelectedStatus) {
       card.style.display = 'block';
     } else {
       card.style.display = 'none';

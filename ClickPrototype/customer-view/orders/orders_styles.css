@@ -138,6 +138,8 @@
   font-family: "Poppins", sans-serif;
   transition: var(--transition);
   min-width: 280px;
+  flex: 1;
+  max-width: 400px;
   outline: none;
   font-size: 0.95rem;
 }
@@ -156,6 +158,8 @@
   font-family: "Poppins", sans-serif;
   cursor: pointer;
   transition: var(--transition);
+  flex: 1;
+  max-width: 250px;
   outline: none;
   font-size: 0.95rem;
 }
@@ -163,6 +167,20 @@
 .filter-select:focus {
   outline: none;
   border-color: var(--brand-dark);
+}
+
+@media (max-width: 768px) {
+  .controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-input,
+  .filter-select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+  }
 }
 
 .create-order-btn {

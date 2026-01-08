@@ -56,10 +56,17 @@ public class OrderService {
         order.setStatus(OrderStatus.CREATED);
 // total represents totalamount
         double total = 0;
+        User shop = null;
 
         for (int i = 0; i < bouquetIds.size(); i++) {
             Bouquet bouquet = bouquetRepository.findById(bouquetIds.get(i))
                     .orElseThrow(() -> new IllegalArgumentException("Bouquet not found"));
+
+            // Set the shop from the first bouquet's owner
+            if (shop == null) {
+                shop = bouquet.getShopOwner();
+                order.setShop(shop);
+            }
 
             int qty = quantities.get(i);
 

@@ -252,13 +252,14 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  background: var(--brand-primary);
 }
 
-.status-pending { background: #ffb84d; }
-.status-preparing { background: #4da6ff; }
-.status-out { background: #ff66b2; }
-.status-delivered { background: #63d471; }
-.status-cancelled { background: #e57373; }
+.status-pending { }
+.status-preparing { }
+.status-out { }
+.status-delivered { }
+.status-cancelled { }
 
 .order-customer {
   font-weight: 600;
@@ -1063,11 +1064,11 @@
       letter-spacing: 0.5px;
     }
 
-    .status-pending { background: #ffb84d; }
-    .status-preparing { background: #4da6ff; }
-    .status-out { background: #ff66b2; }
-    .status-delivered { background: #63d471; }
-    .status-cancelled { background: #e57373; }
+    .status-pending { }
+    .status-preparing { }
+    .status-out { }
+    .status-delivered { }
+    .status-cancelled { }
 
     .order-total {
       font-weight: 700;

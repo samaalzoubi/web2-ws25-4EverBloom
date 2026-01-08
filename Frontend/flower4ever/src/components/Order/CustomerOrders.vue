@@ -81,7 +81,7 @@
           <div class="customer-actions">
             <!-- Edit button for Created status -->
             <button
-              v-if="order.status === 'Created'"
+              v-if="order.status === 'CREATED'"
               class="btn-edit"
               @click="openEditModal(order)"
             >
@@ -99,7 +99,7 @@
 
             <!-- Reorder button for delivered orders -->
             <button
-              v-if="order.status === 'Delivered'"
+              v-if="order.status === 'DELIVERED'"
               class="btn-reorder"
               @click="reorderItems(order)"
             >
@@ -113,7 +113,7 @@
 
           <!-- Rating Box for Delivered Orders -->
           <div
-            v-if="order.status === 'Delivered' && !order.rated"
+            v-if="order.status === 'DELIVERED' && !order.rated"
             class="rating-box"
           >
             <h4>How was your experience?</h4>
@@ -220,6 +220,7 @@
 <script>
 import Chatbot from './Chatbot.vue';
 import orderService from '@/services/orderService';
+import { useUserStore } from '@/stores/userStore';
 
 const AVAILABLE_ITEMS = [
   { name: "Sunny Day Bouquet", price: 35.99 },
@@ -244,7 +245,8 @@ export default {
       showEditModal: false,
       editingOrder: null,
       loading: false,
-      error: null
+      error: null,
+      userId: null
     };
   },
   computed: {
@@ -252,12 +254,15 @@ export default {
       return {
         total: this.orders.length,
         revenue: this.orders.reduce((sum, order) => sum + (order.total || 0), 0),
-        pending: this.orders.filter(o => o.status === 'Created' || o.status === 'Confirmed').length,
-        delivered: this.orders.filter(o => o.status === 'Delivered').length
+        pending: this.orders.filter(o => o.status === 'CREATED' || o.status === 'CONFIRMED').length,
+        delivered: this.orders.filter(o => o.status === 'DELIVERED').length
       };
     }
   },
   async mounted() {
+    const userStore = useUserStore();
+    this.userId = userStore.user?.userId || userStore.user?.id || 2;
+    console.log('Customer userId:', this.userId);
     await this.loadOrders();
   },
   methods: {
@@ -265,7 +270,9 @@ export default {
       try {
         this.loading = true;
         this.error = null;
-        this.orders = await orderService.getAllOrders();
+        this.orders = await orderService.getCustomerOrders(this.userId);
+        console.log('Loaded orders:', this.orders);
+        console.log('Orders count:', this.orders.length);
         this.filterOrders();
       } catch (err) {
         this.error = 'Failed to load orders';
@@ -314,7 +321,7 @@ export default {
     },
 
     canCancel(order) {
-      return order.status !== 'Delivered' && order.status !== 'Cancelled';
+      return order.status !== 'DELIVERED' && order.status !== 'CANCELLED';
     },
 
     async cancelOrder(orderId) {
@@ -324,7 +331,7 @@ export default {
         await orderService.cancelOrder(orderId);
         const order = this.orders.find(o => o.id === orderId);
         if (order) {
-          order.status = 'Cancelled';
+          order.status = 'CANCELLED';
           this.filterOrders();
           alert(`Order ${orderId} has been cancelled.`);
         }
@@ -426,9 +433,10 @@ export default {
       }
 
       try {
-        await orderService.submitRating(order.id, order.selectedRating);
+        await orderService.submitRating(order.id, this.userId, order.selectedRating);
         order.rated = true;
         this.$forceUpdate();
+        alert('Thank you for your rating!');
       } catch (error) {
         alert('Failed to submit rating. Please try again.');
         console.error('Submit rating error:', error);

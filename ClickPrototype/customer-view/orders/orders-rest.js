@@ -2,10 +2,10 @@ import { REST_BASE } from "/ClickPrototype/config/api.config.js";
 
 /**
  * Fetch all orders for a specific customer using REST API
- * GET /api/v1/orders?userId={customerId}
+ * GET /api/v1/orders/customer/{customerId}
  */
 export async function fetchOrdersByCustomerREST(customerId) {
-  const url = `${REST_BASE}/orders?userId=${customerId}`;
+  const url = `${REST_BASE}/orders/customer/${customerId}`;
   
   console.log('Fetching orders from:', url);
 

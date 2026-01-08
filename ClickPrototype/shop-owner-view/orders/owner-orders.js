@@ -35,9 +35,9 @@ const calculateStats = () => {
   const stats = {
     total: currentOrders.length,
     revenue: currentOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0),
-    pending: currentOrders.filter(o => o.status === OrderStatus.PENDING).length,
-    preparing: currentOrders.filter(o => o.status === OrderStatus.PREPARING).length,
-    delivered: currentOrders.filter(o => o.status === OrderStatus.DELIVERED).length
+    pending: currentOrders.filter(o => o.status === 'PENDING' || o.status === 'CREATED').length,
+    preparing: currentOrders.filter(o => o.status === 'CONFIRMED').length,
+    delivered: currentOrders.filter(o => o.status === 'DELIVERED').length
   };
   return stats;
 };
@@ -131,17 +131,24 @@ async function acceptOrder(orderId) {
     return;
   }
   
+  console.log('Order status:', order.status);
+  
   let nextStatus, confirmMessage, successMessage;
   
-  if (order.status === OrderStatus.PENDING) {
-    nextStatus = OrderStatus.PREPARING;
-    confirmMessage = "Accept this order and move to Preparing?";
-    successMessage = `Order #${orderId} accepted and moved to Preparing.`;
-  } else if (order.status === OrderStatus.PREPARING) {
-    nextStatus = OrderStatus.OUT_FOR_DELIVERY;
+  if (order.status === 'PENDING' || order.status === 'CREATED') {
+    nextStatus = 'CONFIRMED';
+    confirmMessage = "Accept this order and move to Confirmed?";
+    successMessage = `Order #${orderId} accepted and moved to Confirmed.`;
+  } else if (order.status === 'CONFIRMED') {
+    nextStatus = 'IN_DELIVERY';
     confirmMessage = "Send this order out for delivery?";
     successMessage = `Order #${orderId} sent out for delivery.`;
+  } else if (order.status === 'IN_DELIVERY') {
+    nextStatus = 'DELIVERED';
+    confirmMessage = "Mark this order as delivered?";
+    successMessage = `Order #${orderId} has been delivered.`;
   } else {
+    console.log('Cannot move forward from status:', order.status);
     showNotification("This order cannot be moved forward.", 'error');
     return;
   }
@@ -177,7 +184,7 @@ async function cancelOrder(orderId) {
     return;
   }
   
-  if (order.status === OrderStatus.DELIVERED || order.status === OrderStatus.CANCELLED) {
+  if (order.status === 'DELIVERED' || order.status === 'CANCELLED') {
     showNotification("This order cannot be cancelled.", 'error');
     return;
   }
@@ -186,13 +193,13 @@ async function cancelOrder(orderId) {
   
   try {
     const updatedOrder = API_MODE === "REST"
-      ? await updateOrderStatusREST(orderId, OrderStatus.CANCELLED)
-      : await updateOrderStatusGraphQL(orderId, OrderStatus.CANCELLED);
+      ? await updateOrderStatusREST(orderId, 'CANCELLED')
+      : await updateOrderStatusGraphQL(orderId, 'CANCELLED');
     
     // Update local state
     const index = currentOrders.findIndex(o => o.orderId === orderId);
     if (index !== -1) {
-      currentOrders[index] = { ...currentOrders[index], status: OrderStatus.CANCELLED };
+      currentOrders[index] = { ...currentOrders[index], status: 'CANCELLED' };
     }
     
     filterOrders();
@@ -295,8 +302,8 @@ const renderStats = (stats) => `
  */
 const renderOrderCard = (order) => {
   const statusClass = `status-${order.status.toLowerCase().replace(/ /g, '-')}`;
-  const canAccept = order.status === OrderStatus.PENDING || order.status === OrderStatus.PREPARING;
-  const canCancel = order.status !== OrderStatus.DELIVERED && order.status !== OrderStatus.CANCELLED;
+  const canAccept = order.status === 'CREATED' || order.status === 'CONFIRMED';
+  const canCancel = order.status !== 'DELIVERED' && order.status !== 'CANCELLED';
   
   return `
     <div class="order-card ${statusClass}">
@@ -325,19 +332,14 @@ const renderOrderCard = (order) => {
       <div class="order-total">Total: ${formatCurrency(order.totalAmount || 0)}</div>
       
       <div class="order-actions">
-        ${canAccept ? `
-          <button class="btn btn-accept" onclick="window.acceptOrder(${order.orderId})">
-            <i class="fas fa-check"></i> ${order.status === OrderStatus.PENDING ? 'Accept' : 'Ship'}
-          </button>
-        ` : ''}
+        <button class="btn btn-accept" onclick="window.acceptOrder(${order.orderId})">
+          <i class="fas fa-check"></i> Accept
+        </button>
         ${canCancel ? `
           <button class="btn btn-cancel" onclick="window.cancelOrder(${order.orderId})">
             <i class="fas fa-times"></i> Cancel
           </button>
         ` : ''}
-        <button class="btn btn-view" onclick="window.viewOrderDetails(${order.orderId})">
-          <i class="fas fa-eye"></i> View
-        </button>
       </div>
     </div>
   `;
@@ -365,11 +367,12 @@ function renderOrders(orders) {
         />
         <select class="filter-select">
           <option value="all" ${selectedStatus === 'all' ? 'selected' : ''}>All Statuses</option>
-          <option value="${OrderStatus.PENDING}" ${selectedStatus === OrderStatus.PENDING ? 'selected' : ''}>Pending</option>
-          <option value="${OrderStatus.PREPARING}" ${selectedStatus === OrderStatus.PREPARING ? 'selected' : ''}>Preparing</option>
-          <option value="${OrderStatus.OUT_FOR_DELIVERY}" ${selectedStatus === OrderStatus.OUT_FOR_DELIVERY ? 'selected' : ''}>Out for Delivery</option>
-          <option value="${OrderStatus.DELIVERED}" ${selectedStatus === OrderStatus.DELIVERED ? 'selected' : ''}>Delivered</option>
-          <option value="${OrderStatus.CANCELLED}" ${selectedStatus === OrderStatus.CANCELLED ? 'selected' : ''}>Cancelled</option>
+          <option value="PENDING" ${selectedStatus === 'PENDING' ? 'selected' : ''}>Pending</option>
+          <option value="CREATED" ${selectedStatus === 'CREATED' ? 'selected' : ''}>Created</option>
+          <option value="CONFIRMED" ${selectedStatus === 'CONFIRMED' ? 'selected' : ''}>Confirmed</option>
+          <option value="IN_DELIVERY" ${selectedStatus === 'IN_DELIVERY' ? 'selected' : ''}>In Delivery</option>
+          <option value="DELIVERED" ${selectedStatus === 'DELIVERED' ? 'selected' : ''}>Delivered</option>
+          <option value="CANCELLED" ${selectedStatus === 'CANCELLED' ? 'selected' : ''}>Cancelled</option>
         </select>
       </div>
       
