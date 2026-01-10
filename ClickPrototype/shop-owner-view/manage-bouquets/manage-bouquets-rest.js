@@ -1,7 +1,7 @@
-const BASE_URL = "http://localhost:8080/api/v1/bouquet";
+import { REST_BASE } from "/ClickPrototype/config/api.config.js"
 
 export async function createBouquet(shopId, data) {
-  const response = await fetch(`${BASE_URL}/shops/${shopId}/premade`, {
+  const response = await fetch(`${REST_BASE}/bouquet/shops/${shopId}/premade`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
@@ -15,7 +15,7 @@ export async function createBouquet(shopId, data) {
 }
 
 export async function deleteBouquet(bouquetId) {
-  const response = await fetch(`${BASE_URL}/${bouquetId}`, {
+  const response = await fetch(`${REST_BASE}/bouquet/${bouquetId}`, {
     method: "DELETE"
   });
 

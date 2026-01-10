@@ -1,4 +1,4 @@
-import { fetchBouquetsGraphQL } from "./manage-bouquets-graphql.js";
+import { fetchBouquetsGraphQL, createPremadeBouquet } from "./manage-bouquets-graphql.js";
 import { createBouquet, deleteBouquet } from "./manage-bouquets-rest.js";
 import { fetchShopBouquets } from "/ClickPrototype/customer-view/shop-profile/shop-profile-rest.js"
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
@@ -76,7 +76,7 @@ form.addEventListener("submit", async e => {
   };
 
   try {
-    await createBouquet(shopId, data);
+    API_MODE == "REST" ? await createBouquet(shopId, data) : await createPremadeBouquet(shopId, data);
     form.reset();
     form.style.display = "none";
     loadBouquets();
