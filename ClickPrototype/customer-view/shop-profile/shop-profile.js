@@ -1,15 +1,27 @@
 import { loadLayout } from "/ClickPrototype/layout/layout.js";
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
-import { fetchShopByIdGraphQL, fetchShopBouquetsGraphQL } from "./shop-profile-graphql.js";
-import { fetchShopByIdREST, fetchShopBouquets } from "./shop-profile-rest.js"
+import {
+  fetchShopByIdGraphQL,
+  fetchShopBouquetsGraphQL
+} from "./shop-profile-graphql.js";
+import {
+  fetchShopByIdREST,
+  fetchShopBouquets
+} from "./shop-profile-rest.js";
 import { addToCart } from "../../layout/cart.js";
 
+/* ===============================
+   CONSTANTS
+=============================== */
 const DEFAULT_BOUQUET_IMAGE =
   "https://peoplesflowers.imgix.net/images/itemVariation/designers-choice-7983070-2-200515317401-21021884408.jpg?w=600&h=720&fit=crop&dpr=2";
 
 const DEFAULT_SHOP_LOGO =
   "https://images.scalebranding.com/flower-shop-logo-2a1cfde0-daf2-417f-a0a6-de1d596a23d7.jpg";
 
+/* ===============================
+   HELPERS
+=============================== */
 function formatPriceEUR(value) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
@@ -24,44 +36,80 @@ function showError(message) {
   }
 }
 
+/* ===============================
+   MAIN
+=============================== */
 document.addEventListener("DOMContentLoaded", async () => {
   await loadLayout();
 
-  const params = new URLSearchParams(window.location.search);
-  const shopId = params.get("shopId");
+  /* ===============================
+     AUTH / OWNERSHIP CHECK (LAB 6)
+  =============================== */
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const role = localStorage.getItem("role");
+  const loggedInUserId = Number(localStorage.getItem("userId"));
 
+  const params = new URLSearchParams(window.location.search);
+  const shopId = Number(params.get("shopId"));
+
+  const ownerBtn = document.getElementById("ownerDashboardBtn");
+
+  if (
+    ownerBtn &&
+    isLoggedIn &&
+    role === "OWNER" &&
+    loggedInUserId === shopId
+  ) {
+    ownerBtn.classList.remove("hidden");
+    ownerBtn.onclick = () => {
+      window.location.href =
+        "/ClickPrototype/shop-owner-view/home-page/shop-owner-homepage.html";
+    };
+  }
+
+  /* ===============================
+     SHOP ID CHECK
+  =============================== */
   if (!shopId) {
     showError("No shop selected.");
     return;
   }
 
- try {
-  const shop = 
-    API_MODE === "REST"
-      ? await fetchShopByIdGraphQL(shopId)
-      : fetchShopByIdREST(shopId);
+  try {
+    /* ===============================
+       LOAD SHOP DATA
+    =============================== */
+    const shop =
+      API_MODE === "REST"
+        ? await fetchShopByIdREST(shopId)
+        : await fetchShopByIdGraphQL(shopId);
 
-  if (!shop) {
-    showError("Shop not found.");
-    return;
-  }
+    if (!shop) {
+      showError("Shop not found.");
+      return;
+    }
 
-  renderShopInfo(shop);
+    renderShopInfo(shop);
 
-  const bouquets = 
-    API_MODE === "REST"
-      ? await fetchShopBouquets(shopId)
-      : await fetchShopBouquetsGraphQL(shopId);
+    /* ===============================
+       LOAD BOUQUETS
+    =============================== */
+    const bouquets =
+      API_MODE === "REST"
+        ? await fetchShopBouquets(shopId)
+        : await fetchShopBouquetsGraphQL(shopId);
 
-  renderBouquetGrid(bouquets);
+    renderBouquetGrid(bouquets);
 
-} catch (err) {
-
+  } catch (err) {
     console.error(err);
     showError("Could not load shop profile. Please try again.");
   }
 });
 
+/* ===============================
+   RENDER SHOP INFO
+=============================== */
 function renderShopInfo(shop) {
   const shopInfo = document.querySelector(".shop-info");
   if (!shopInfo) return;
@@ -94,10 +142,12 @@ function renderShopInfo(shop) {
   const detailsDiv = document.createElement("div");
   detailsDiv.classList.add("shop-details");
 
-  const addr = shop.address;
+  const addr = shop.address || {};
   detailsDiv.innerHTML = `
-    <p>📍 ${addr?.streetAddress ?? ""}, ${addr?.zipCode ?? ""} ${addr?.city ?? ""}</p>
-    <p>🌐 <a href="${shop.link ?? "#"}">${shop.link ?? "Website not available"}</a></p>
+    <p>📍 ${addr.streetAddress ?? ""}, ${addr.zipCode ?? ""} ${addr.city ?? ""}</p>
+    <p>🌐 <a href="${shop.link ?? "#"}" target="_blank">
+      ${shop.link ?? "Website not available"}
+    </a></p>
     <p>📞 ${shop.phoneNumber ?? "No phone number"}</p>
   `;
 
@@ -105,6 +155,9 @@ function renderShopInfo(shop) {
   shopInfo.appendChild(detailsDiv);
 }
 
+/* ===============================
+   RENDER BOUQUETS
+=============================== */
 function renderBouquetGrid(bouquets) {
   const grid = document.querySelector(".bouquet-grid");
   if (!grid) return;

@@ -4,15 +4,33 @@ import {
   deleteShopStem
 } from "./manage-inventory-graphql.js";
 
-/* DEMO SHOP OWNER */
-const shopId = 1;
+function requireOwner() {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const role = localStorage.getItem("role");
 
-/* DOM */
+  if (!isLoggedIn || role !== "OWNER") {
+    alert("Unauthorized access. Please log in as shop owner.");
+    window.location.href = "/ClickPrototype/common-view/login/login.html";
+    throw new Error("Unauthorized");
+  }
+}
+
+requireOwner();
+
+
+const shopId = Number(localStorage.getItem("userId"));
+
+if (!shopId) {
+  alert("Shop context missing. Please log in again.");
+  throw new Error("Missing shopId");
+}
+
+/* ---------- DOM ---------- */
 const body = document.getElementById("inventory-body");
 const form = document.getElementById("create-form");
 const toggleBtn = document.getElementById("toggle-create");
 
-/* HELPERS */
+/* ---------- HELPERS ---------- */
 function formatEUR(v) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
@@ -20,7 +38,7 @@ function formatEUR(v) {
   }).format(v);
 }
 
-/* LOAD INVENTORY */
+/* ---------- LOAD ---------- */
 async function loadInventory() {
   body.innerHTML = "";
   try {
@@ -39,9 +57,7 @@ async function loadInventory() {
         <td>${i.flowerSeason}</td>
         <td>${i.quantity}</td>
         <td>${formatEUR(i.price)}</td>
-        <td>
-          <button class="delete-btn">Delete</button>
-        </td>
+        <td><button class="delete-btn">Delete</button></td>
       `;
 
       row.querySelector(".delete-btn").onclick = async () => {
@@ -53,17 +69,18 @@ async function loadInventory() {
       body.appendChild(row);
     });
   } catch (e) {
-    body.innerHTML = `<tr><td colspan="6" style="color:red;">Failed to load inventory.</td></tr>`;
+    body.innerHTML =
+      `<tr><td colspan="6" style="color:red;">Failed to load inventory.</td></tr>`;
     console.error(e);
   }
 }
 
-/* TOGGLE FORM */
+/* ---------- TOGGLE ---------- */
 toggleBtn.onclick = () => {
   form.style.display = form.style.display === "none" ? "flex" : "none";
 };
 
-/* CREATE ITEM */
+/* ---------- CREATE ---------- */
 form.onsubmit = async e => {
   e.preventDefault();
 
@@ -82,5 +99,5 @@ form.onsubmit = async e => {
   loadInventory();
 };
 
-/* INIT */
+/* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", loadInventory);
