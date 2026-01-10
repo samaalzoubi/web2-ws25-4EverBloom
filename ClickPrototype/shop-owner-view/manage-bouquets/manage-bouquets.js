@@ -1,16 +1,30 @@
 import { fetchBouquetsGraphQL } from "./manage-bouquets-graphql.js";
 import { createBouquet, deleteBouquet } from "./manage-bouquets-rest.js";
 
-/**
- * DEMO shop owner
- * In real login flow, this comes from logged-in OWNER
- */
-const shopId = 1;
+function requireOwner() {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const role = localStorage.getItem("role");
+
+  if (!isLoggedIn || role !== "OWNER") {
+    alert("Unauthorized access. Please log in as shop owner.");
+    window.location.href = "/ClickPrototype/common-view/login/login.html";
+    throw new Error("Unauthorized");
+  }
+}
+
+requireOwner();
+
+const shopId = Number(localStorage.getItem("userId"));
+
+if (!shopId) {
+  alert("Shop context missing. Please log in again.");
+  throw new Error("Missing shopId");
+}
 
 const DEFAULT_IMG =
   "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d";
 
-/* ---------- DOM ELEMENTS ---------- */
+/* ---------- DOM ---------- */
 const grid = document.querySelector(".bouquet-grid");
 const form = document.getElementById("create-bouquet-form");
 const toggleBtn = document.getElementById("toggle-create");
@@ -41,8 +55,7 @@ async function loadBouquets() {
     renderBouquetGrid(bouquets);
   } catch (err) {
     console.error(err);
-    grid.innerHTML =
-      "<p style='color:red;'>Failed to load bouquets.</p>";
+    grid.innerHTML = "<p style='color:red;'>Failed to load bouquets.</p>";
   }
 }
 
@@ -61,14 +74,14 @@ form.addEventListener("submit", async e => {
     await createBouquet(shopId, data);
     form.reset();
     form.style.display = "none";
-    await loadBouquets(); // refresh grid
+    loadBouquets();
   } catch (err) {
     alert("Failed to create bouquet");
     console.error(err);
   }
 });
 
-/* ---------- RENDER GRID ---------- */
+/* ---------- RENDER ---------- */
 function renderBouquetGrid(bouquets) {
   grid.innerHTML = "";
 
@@ -85,19 +98,15 @@ function renderBouquetGrid(bouquets) {
       <div class="image-box">
         <img src="${b.imageUrl || DEFAULT_IMG}" />
       </div>
-
       <div class="card-details">
         <div class="top-row">
           <h3>${b.name}</h3>
           <p class="price">${formatPriceEUR(b.price)}</p>
         </div>
-
         <p class="description">
           ${b.description ?? "Premade bouquet offered by this shop."}
         </p>
-
         <span class="stock stock-green">Available</span>
-
         <div class="actions">
           <a href="#" class="delete-btn">
             <span class="material-symbols-outlined">delete</span>
@@ -106,16 +115,13 @@ function renderBouquetGrid(bouquets) {
       </div>
     `;
 
-    /* ---------- DELETE HANDLER ---------- */
     card.querySelector(".delete-btn").addEventListener("click", async e => {
       e.preventDefault();
-
       if (!confirm("Delete this bouquet?")) return;
 
       try {
-       
         await deleteBouquet(Number(b.id));
-        await loadBouquets();
+        loadBouquets();
       } catch (err) {
         alert("Failed to delete bouquet");
         console.error(err);
