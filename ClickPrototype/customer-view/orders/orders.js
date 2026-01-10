@@ -26,8 +26,7 @@ class RatingSystem {
   }
 
   resolveCustomerId() {
-    const grid = document.getElementById('orders-grid');
-    const id = grid?.dataset.customerId;
+    const id = localStorage.getItem("userId")
     return id ? Number(id) : null;
   }
 
