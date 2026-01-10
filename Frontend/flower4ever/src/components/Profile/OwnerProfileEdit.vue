@@ -1,173 +1,196 @@
 <template>
-  <div class="title">
-    <router-link to="/"><button>Back</button></router-link>
-    <h1>Edit Profile</h1>
+  <div class="user-profile-container">
+    <form @submit.prevent="saveProfile">
+      <router-link to="/" class="back" style="align-self: left"
+        ><button>Back</button>
+      </router-link>
+      <div class="profile-header">
+        <img
+          class="profile-avatar"
+          :src="logoPreview || user.profileImage || defaultAvatar"
+          alt="Profile Picture"
+        />
 
-    <div class="user-profile-container">
-      <form @submit.prevent="saveProfile">
-
-        <div>
-          <h4>General Information</h4>
-          <img
-            v-if="logoPreview"
-            :src="logoPreview"
-            class="logo-preview"
-          />
-          <label>Logo</label>
-          <input type="file" accept="image/*" @change="handleFileUpload" />
-
-          <label>Street</label>
-          <input v-model="owner.address.streetAddress" />
-
-          <label>City</label>
-          <input v-model="owner.address.city" />
-
-          <label>State</label>
-          <input v-model="owner.address.state" />
-
-          <label>ZIP Code</label>
-          <input v-model="owner.address.zipCode" />
-
-          <label>Opening Hours</label>
-          <div class="time-range">
-            <input type="time" v-model="owner.openingTime">
-            <span>–</span>
-            <input type="time" v-model="owner.closingTime">
-          </div>
+        <div class="profile-info">
+          <h2>{{ user.username }}</h2>
+          <p>{{ user.email }}</p>
         </div>
+      </div>
 
-        <!-- Password -->
-        <div>
-          <h4>Change Password</h4>
+      <div>
+        <h4>Change Information</h4>
+        <label>Street</label>
+        <input v-model="owner.address.streetAddress" />
 
-          <label>Current Password</label>
-          <input type="password" v-model="currentPassword" />
+        <label>City</label>
+        <input v-model="owner.address.city" />
 
-          <label>New Password</label>
-          <input type="password" v-model="newPassword" />
+        <label>State</label>
+        <input v-model="owner.address.state" />
 
-          <label>Confirm New Password</label>
-          <input type="password" v-model="confirmPassword" />
+        <label>ZIP Code</label>
+        <input v-model="owner.address.zipCode" />
+
+        <label>Logo</label>
+        <input type="file" accept="image/*" @change="handleFileUpload" />
+
+        <label>Opening Hours</label>
+        <div class="time-range">
+          <input type="time" v-model="owner.openingTime" />
+          <span>–</span>
+          <input type="time" v-model="owner.closingTime" />
         </div>
+      </div>
 
-        <button type="submit">Save Profile</button>
+      <div>
+        <h4>Change Password</h4>
 
-        <div class="form-message" :class="[formMessage ? 'show' : '', formMessageType]">
-          {{ formMessage }}
-        </div>
+        <label>Current Password</label>
+        <input type="password" v-model="currentPassword" />
 
-        <div>
-          <h4>Delete Account</h4>
-          <p>Warning: This action cannot be undone!</p>
-          <button type="button" class="danger-btn" @click="deleteAccount">Delete Account</button>
-        </div>
+        <label>New Password</label>
+        <input type="password" v-model="newPassword" />
 
-      </form>
-    </div>
+        <label>Confirm New Password</label>
+        <input type="password" v-model="confirmPassword" />
+      </div>
+
+      <button type="submit">Save Profile</button>
+
+      <div
+        class="form-message"
+        :class="[formMessage ? 'show' : '', formMessageType]"
+      >
+        {{ formMessage }}
+      </div>
+
+      <div>
+        <h4>Delete Account</h4>
+        <p>Warning: This action cannot be undone!</p>
+        <button type="button" class="danger-btn" @click="deleteAccount">
+          Delete Account
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue"
-import axios from "axios"
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
 export default {
   setup() {
-    const logoFile = ref(null)
-    const logoPreview = ref(null)
+    const logoFile = ref(null);
+    const logoPreview = ref(null);
 
     const owner = ref({
       address: {
         streetAddress: "",
         city: "",
         state: "",
-        zipCode: ""
+        zipCode: "",
       },
       openingTime: "",
-      closingTime: ""
-    })
+      closingTime: "",
+    });
 
-    const currentPassword = ref("")
-    const newPassword = ref("")
-    const confirmPassword = ref("")
+    const currentPassword = ref("");
+    const newPassword = ref("");
+    const confirmPassword = ref("");
 
-    const formMessage = ref("")
-    const formMessageType = ref("")
+    const formMessage = ref("");
+    const formMessageType = ref("");
+
+    const storedUserRaw = localStorage.getItem("user");
+    const user = ref(storedUserRaw ? JSON.parse(storedUserRaw) : null);
+
+    const defaultAvatar =
+      "https://ui-avatars.com/api/?name=" +
+      encodeURIComponent(user.value.username || "User");
+
+    if (!user.value) {
+      window.location.href = "/login";
+      return {};
+    }
 
     const showMessage = (msg, type = "success") => {
-      formMessage.value = msg
-      formMessageType.value = type
-      setTimeout(() => (formMessage.value = ""), 4000)
-    }
+      formMessage.value = msg;
+      formMessageType.value = type;
+      setTimeout(() => (formMessage.value = ""), 4000);
+    };
 
     const handleFileUpload = (event) => {
-      const file = event.target.files[0]
+      const file = event.target.files[0];
 
-      if (!file) return
+      if (!file) return;
 
       if (!file.type.startsWith("image/")) {
-        showMessage("Only image files allowed", "error")
-        return
+        showMessage("Only image files allowed", "error");
+        return;
       }
 
-      logoFile.value = file
-      logoPreview.value = URL.createObjectURL(file)
-    }
+      logoFile.value = file;
+      logoPreview.value = URL.createObjectURL(file);
+    };
 
-onMounted(async () => {
-  const userId = localStorage.getItem("userId")
+    onMounted(async () => {
+      const userId = localStorage.getItem("userId");
 
-  try {
-    const res = await axios.get(`http://localhost:8080/api/v1/users/${userId}`)
-    const data = res.data
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/api/v1/users/${userId}`
+        );
+        const data = res.data;
 
-    owner.value = {
-      ...data,
-      address: {
-        streetAddress: data.address?.streetAddress || "",
-        city: data.address?.city || "",
-        state: data.address?.state || "",
-        zipCode: data.address?.zipCode || ""
-      },
-      openingTime: data.openingTime || "",
-      closingTime: data.closingTime || ""
-    }
+        owner.value = {
+          ...data,
+          address: {
+            streetAddress: data.address?.streetAddress || "",
+            city: data.address?.city || "",
+            state: data.address?.state || "",
+            zipCode: data.address?.zipCode || "",
+          },
+          openingTime: data.openingTime || "",
+          closingTime: data.closingTime || "",
+        };
 
-    // Falls schon ein Logo existiert
-    if (data.logoUrl) {
-      logoPreview.value = data.logoUrl
-    }
-
-  } catch (err) {
-    showMessage("Could not load profile", "error")
-  }
-})
+        // Falls schon ein Logo existiert
+        if (data.logoUrl) {
+          logoPreview.value = data.logoUrl;
+        }
+      } catch (err) {
+        showMessage("Could not load profile", "error");
+      }
+    });
 
     const saveProfile = async () => {
       if (newPassword.value !== confirmPassword.value) {
-        showMessage("Passwords do not match", "error")
-        return
+        showMessage("Passwords do not match", "error");
+        return;
       }
 
       try {
-        const userId = localStorage.getItem("userId")
+        const userId = localStorage.getItem("userId");
 
-       const formData = new FormData()
+        const formData = new FormData();
 
         formData.append(
           "user",
           new Blob(
-            [JSON.stringify({
-              ...owner.value,
-              password: newPassword.value || undefined
-            })],
+            [
+              JSON.stringify({
+                ...owner.value,
+                password: newPassword.value || undefined,
+              }),
+            ],
             { type: "application/json" }
           )
-        )
+        );
 
         // Logo anhängen (nur wenn gewählt)
         if (logoFile.value) {
-          formData.append("logo", logoFile.value)
+          formData.append("logo", logoFile.value);
         }
 
         await axios.put(
@@ -175,52 +198,47 @@ onMounted(async () => {
           formData,
           {
             headers: {
-              "Content-Type": "multipart/form-data"
-            }
+              "Content-Type": "multipart/form-data",
+            },
           }
-        )
+        );
 
-        showMessage("Profile updated successfully", "success")
+        showMessage("Profile updated successfully", "success");
 
-        currentPassword.value = ""
-        newPassword.value = ""
-        confirmPassword.value = ""
-
+        currentPassword.value = "";
+        newPassword.value = "";
+        confirmPassword.value = "";
       } catch (err) {
         if (err.response?.data) {
-          showMessage(err.response.data.message || err.response.data, "error")
+          showMessage(err.response.data.message || err.response.data, "error");
         } else {
-          showMessage("Server not reachable", "error")
+          showMessage("Server not reachable", "error");
         }
       }
-    }
+    };
     const deleteAccount = async () => {
       const confirmDelete = confirm(
         "Are you sure? This will permanently delete your account and shop."
-      )
+      );
 
-      if (!confirmDelete) return
+      if (!confirmDelete) return;
 
       try {
-        const userId = localStorage.getItem("userId")
+        const userId = localStorage.getItem("userId");
 
-        await axios.delete(`http://localhost:8080/api/v1/users/${userId}`)
+        await axios.delete(`http://localhost:8080/api/v1/users/${userId}`);
 
-        localStorage.clear()
+        localStorage.clear();
 
-        showMessage("Account deleted successfully", "success")
+        showMessage("Account deleted successfully", "success");
 
         setTimeout(() => {
-          window.location.href = "/"
-        }, 1500)
-
+          window.location.href = "/";
+        }, 1500);
       } catch (err) {
-        showMessage(
-          err.response?.data || "Could not delete account",
-          "error"
-        )
+        showMessage(err.response?.data || "Could not delete account", "error");
       }
-    }
+    };
 
     return {
       owner,
@@ -231,31 +249,26 @@ onMounted(async () => {
       saveProfile,
       formMessage,
       formMessageType,
-      handleFileUpload
-    }
-  }
-}
+      handleFileUpload,
+      user,
+      defaultAvatar,
+      logoPreview,
+    };
+  },
+};
 </script>
 
 <style scoped>
-.title{
-  background: linear-gradient(120deg, #ffffff, #d4bdf0);
-  color: #7c5ca6;
-}
-
-h4{
-   justify-self: left;
-   margin-top: 25px;
-   padding-bottom: 10px;
-   font-size: 20px;
-}
-
 h1 {
   justify-self: center;
   margin-top: 0;
 }
 
-.user-profile-container{
+.back {
+  align-self: flex-start;
+}
+
+.user-profile-container {
   background: linear-gradient(120deg, #ffffff, #d4bdf0);
   color: #333333;
   min-height: 100vh;
@@ -265,45 +278,47 @@ h1 {
 }
 
 form {
-  background-color: #ffffff;
+  background: linear-gradient(120deg, #ffffff, #d4bdf0);
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-  width: 400px;
+  width: 100%;
   text-align: center;
   animation: fadeIn 0.4s ease;
 }
 
 button {
-    background: none;
-    border: 1px solid #7c5ca6;
-    color: #7c5ca6;
-    padding: 8px 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s;
-    margin-top: 10px;
+  background: none;
+  border: 1px solid #7c5ca6;
+  color: #7c5ca6;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 10px;
 }
- button:hover {
-    background: #7c5ca6;
-    color: #fff;
- }
+button:hover {
+  background: #7c5ca6;
+  color: #fff;
+}
 
- form {
+form {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-
 label {
+  text-align: right;
+  font-size: 14px;
   font-weight: 500;
-  margin-bottom: 6px;
+  color: #555;
 }
 
-input, textarea {
-  border: 1px solid  #e7e3ee;
-  border-radius:  16px;
+input,
+textarea {
+  border: 1px solid #e7e3ee;
+  border-radius: 16px;
   padding: 10px 12px;
   font-size: 0.95rem;
   font-family: inherit;
@@ -311,19 +326,22 @@ input, textarea {
   background: #fcfbfe;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
   border-color: #7c5ca6;
   box-shadow: 0 0 0 3px rgba(124, 92, 166, 0.12);
 }
 
 .danger-btn {
-    background-color: #e74c3c;
-    color: black;
+  background-color: #e74c3c;
+  color: black;
+  max-width: 25%;
+  align-self: center;
 }
 
 .danger-btn:hover {
-    background-color: #c0392b;
+  background-color: #c0392b;
 }
 
 .form-message {
@@ -354,34 +372,79 @@ input:focus, textarea:focus {
   color: #b42318;
   border: 1px solid #f5c2bd;
 }
-
-.time-range {
+.profile-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 16px;
+  background: linear-gradient(120deg, #f7f4fb, #efe9fa);
+  border: 1px solid #e4ddf2;
 }
 
-.time-range input {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  background: white;
-  min-width: 120px;
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #7c5ca6;
 }
 
-.time-range span {
-  font-size: 18px;
-  font-weight: 600;
-  color: #7e4bb1;
+.profile-info h2 {
+  margin: 0;
+  color: #7c5ca6;
+  font-size: 1.3rem;
 }
 
+.profile-info p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+h4 {
+  justify-self: left;
+  margin-top: 25px;
+  padding-bottom: 10px;
+  font-size: 20px;
+}
+/* Form sections layout */
+form > div {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  column-gap: 24px;
+  row-gap: 16px;
+  align-items: center;
+}
+
+/* Section titles span full width */
+form > div > h4 {
+  grid-column: 1 / -1;
+  margin-bottom: 10px;
+}
+
+/* Time range should span full width */
+.time-range {
+  grid-column: 2 / -1;
+}
+
+/* Logo preview centered */
 .logo-preview {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-  margin-top: 10px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
+  grid-column: 2;
+}
+
+/* Buttons full width */
+button[type="submit"] {
+  grid-column: 1 / -1;
+  justify-self: stretch;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid #e7e3ee;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 14px;
+  background: #fcfbfe;
 }
 </style>

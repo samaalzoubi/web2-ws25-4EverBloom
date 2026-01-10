@@ -1,6 +1,6 @@
 <template>
   <div>
-   <Header />
+    <Header />
 
     <router-view />
 
@@ -9,39 +9,39 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { useUserStore } from '@/stores/userStore'
+import { onMounted } from "vue";
+import { useUserStore } from "@/stores/userStore";
 
-import Header from './components/Header/Header.vue'
-import Footer from './components/Footer/Footer.vue'
+import Header from "./components/Header/Header.vue";
+import Footer from "./components/Footer/Footer.vue";
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 onMounted(async () => {
   try {
-    const userId = localStorage.getItem('userId')
+    const userId = localStorage.getItem("userId");
 
-    if (!userId) return
+    if (!userId) return;
 
     const response = await fetch(
       `http://localhost:8080/api/v1/users/${userId}`
-    )
+    );
 
-    if (!response.ok) throw new Error('User not found')
+    if (!response.ok) throw new Error("User not found");
 
-    const userData = await response.json()
-    userStore.login(userData)
+    const userData = await response.json();
+    userStore.login(userData);
 
-    console.log('User geladen:', userData)
+    console.log("User geladen:", userData);
   } catch (error) {
-    console.error('User konnte nicht geladen werden', error)
-    userStore.logout()
+    console.error("User konnte nicht geladen werden", error);
+    userStore.logout();
   }
-})
+});
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
 :root {
   /* Colors */
@@ -73,7 +73,11 @@ onMounted(async () => {
 }
 
 body {
-  background: linear-gradient(120deg, var(--color-background), var(--color-background-secondary));
+  background: linear-gradient(
+    120deg,
+    var(--color-background),
+    var(--color-background-secondary)
+  );
   color: var(--color-text-dark);
   min-height: 100vh;
   display: flex;
@@ -179,8 +183,14 @@ footer {
 }
 
 @keyframes fadeIn {
-  from {opacity: 0; transform: translateY(10px);}
-  to {opacity: 1; transform: translateY(0);}
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive */

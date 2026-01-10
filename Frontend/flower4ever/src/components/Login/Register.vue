@@ -1,9 +1,10 @@
 <template>
   <div class="register-container">
-
     <div v-if="!selectedRole" class="register role-select">
       <h2>Please choose your account type:</h2>
-      <button class="main-btn" @click="selectedRole = 'CUSTOMER'">Private</button>
+      <button class="main-btn" @click="selectedRole = 'CUSTOMER'">
+        Private
+      </button>
       <button class="main-btn" @click="selectedRole = 'OWNER'">Business</button>
     </div>
 
@@ -21,12 +22,15 @@
         <label>Password</label>
         <input type="password" v-model="customer.password" required />
 
-        <div class="form-message" :class="[formMessage ? 'show' : '', formMessageType]">
+        <div
+          class="form-message"
+          :class="[formMessage ? 'show' : '', formMessageType]"
+        >
           {{ formMessage }}
         </div>
 
         <button type="submit" :disabled="loading">
-          {{ loading ? 'Creating account...' : 'Register' }}
+          {{ loading ? "Creating account..." : "Register" }}
         </button>
 
         <p class="register-text">
@@ -53,21 +57,18 @@
         <label>Shop Name</label>
         <input v-model="owner.shopName" />
 
-        <label>Shop Address</label>
-        <input v-model="owner.shopAddress" />
-
         <label>What do you offer?</label>
         <textarea v-model="owner.offer"></textarea>
 
         <label>Certificate</label>
         <input type="file" @change="handleFileUpload($event, 'certificate')" />
 
-       <label>Opening Hours</label>
+        <label>Opening Hours</label>
 
         <div v-if="owner">
-          <input type="time" v-model="owner.openingTime">
+          <input type="time" v-model="owner.openingTime" />
           <span>–</span>
-          <input type="time" v-model="owner.closingTime">
+          <input type="time" v-model="owner.closingTime" />
         </div>
 
         <label>Phone</label>
@@ -96,12 +97,15 @@
         <label>Logo</label>
         <input type="file" @change="handleFileUpload($event, 'logo')" />
 
-        <div class="form-message" :class="[formMessage ? 'show' : '', formMessageType]">
+        <div
+          class="form-message"
+          :class="[formMessage ? 'show' : '', formMessageType]"
+        >
           {{ formMessage }}
         </div>
 
         <button type="submit" :disabled="loading">
-          {{ loading ? 'Creating account...' : 'Register Business' }}
+          {{ loading ? "Creating account..." : "Register Business" }}
         </button>
 
         <p class="register-text">
@@ -110,26 +114,25 @@
         </p>
       </form>
     </div>
-
   </div>
 </template>
 
 <script>
-import { ref, reactive } from "vue"
-import router from "@/router/router"
+import { ref, reactive } from "vue";
+import router from "@/router/router";
 
 export default {
   setup() {
-    const selectedRole = ref(null)
-    const loading = ref(false)
-    const formMessage = ref("")
-    const formMessageType = ref("")
+    const selectedRole = ref(null);
+    const loading = ref(false);
+    const formMessage = ref("");
+    const formMessageType = ref("");
 
     const customer = reactive({
       username: "",
       email: "",
-      password: ""
-    })
+      password: "",
+    });
 
     const owner = reactive({
       username: "",
@@ -145,16 +148,16 @@ export default {
       social: "",
       type: "",
       delivery: "",
-      logo: null
-    })
+      logo: null,
+    });
 
     const handleFileUpload = (e, field) => {
-      owner[field] = e.target.files[0]
-    }
+      owner[field] = e.target.files[0];
+    };
 
     const registerCustomer = async () => {
-      loading.value = true
-      formMessage.value = ""
+      loading.value = true;
+      formMessage.value = "";
 
       try {
         const res = await fetch("http://localhost:8080/api/v1/users", {
@@ -164,32 +167,31 @@ export default {
             username: customer.username,
             email: customer.email,
             password: customer.password,
-            role: "CUSTOMER"
-          })
-        })
+            role: "CUSTOMER",
+          }),
+        });
 
         if (!res.ok) {
-          const text = await res.text()
-          formMessage.value = text
-          formMessageType.value = "error"
-          return
+          const text = await res.text();
+          formMessage.value = text;
+          formMessageType.value = "error";
+          return;
         }
 
-        formMessage.value = "Account created successfully"
-        formMessageType.value = "success"
-        setTimeout(() => router.push("/Login"), 1500)
-
+        formMessage.value = "Account created successfully";
+        formMessageType.value = "success";
+        setTimeout(() => router.push("/Login"), 1500);
       } catch {
-        formMessage.value = "Server not reachable"
-        formMessageType.value = "error"
+        formMessage.value = "Server not reachable";
+        formMessageType.value = "error";
       } finally {
-        loading.value = false
+        loading.value = false;
       }
-    }
+    };
 
     const registerOwner = async () => {
-      loading.value = true
-      formMessage.value = ""
+      loading.value = true;
+      formMessage.value = "";
 
       try {
         const res = await fetch("http://localhost:8080/api/v1/users", {
@@ -202,27 +204,26 @@ export default {
             role: "OWNER",
             shopName: owner.shopName,
             openingTime: owner.openingTime,
-            closingTime: owner.closingTime
-          })
-        })
+            closingTime: owner.closingTime,
+          }),
+        });
 
         if (!res.ok) {
-          formMessage.value = "Business registration failed"
-          formMessageType.value = "error"
-          return
+          formMessage.value = "Business registration failed";
+          formMessageType.value = "error";
+          return;
         }
 
-        formMessage.value = "Business account created"
-        formMessageType.value = "success"
-        setTimeout(() => router.push("/Login"), 1500)
-
+        formMessage.value = "Business account created";
+        formMessageType.value = "success";
+        setTimeout(() => router.push("/Login"), 1500);
       } catch {
-        formMessage.value = "Server not reachable"
-        formMessageType.value = "error"
+        formMessage.value = "Server not reachable";
+        formMessageType.value = "error";
       } finally {
-        loading.value = false
+        loading.value = false;
       }
-    }
+    };
 
     return {
       selectedRole,
@@ -233,13 +234,11 @@ export default {
       formMessageType,
       handleFileUpload,
       registerCustomer,
-      registerOwner
-    }
-  }
-}
+      registerOwner,
+    };
+  },
+};
 </script>
-
-
 
 <style scoped>
 .register-container {
@@ -349,8 +348,6 @@ button:hover {
   border: 1px solid #f5c2bd;
 }
 
-
-
 select {
   position: relative;
   width: 100%;
@@ -399,7 +396,6 @@ select option[value=""] {
   color: #aaa;
 }
 
-
 textarea {
   width: 100%;
   min-height: 90px;
@@ -439,5 +435,4 @@ textarea:focus {
   font-weight: 600;
   color: #7e4bb1;
 }
-
 </style>
