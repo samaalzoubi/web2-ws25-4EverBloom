@@ -26,7 +26,8 @@ public class UserMapper {
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole());
-        dto.setDate(user.getDate());
+        dto.setOpeningTime(user.getOpeningTime());
+        dto.setClosingTime(user.getClosingTime());
         dto.setLogo(user.getLogo());
         dto.setLink(user.getLink());
         dto.setPhoneNumber(user.getPhoneNumber());

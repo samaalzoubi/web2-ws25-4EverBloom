@@ -10,13 +10,12 @@
 
 
     <nav>
-      <router-link v-if="!userStore.isLoggedIn" to="/login" class="user-links">
+      <router-link v-if="!userStore.isLoggedIn" to="/login">
         <i class="fas fa-sign-in-alt"></i>
         <span style="margin-left: 6px;">Login</span>
       </router-link>
 
       <template v-else>
-
         <router-link
           v-if="isCustomer"
           to="/design"
@@ -25,10 +24,9 @@
           <span class="fx-3d">3D</span>esign Bouquet 🪄
         </router-link>
 
-        <!-- CUSTOMER CART -->
         <a
           v-if="isCustomer && route.name !== 'checkout'"
-          class="user-links cart-link"
+          class="cart-link"
           href="#"
           title="Cart"
           @click.prevent="onCartClick"
@@ -37,13 +35,11 @@
           <span class="cart-count">{{ cartStore.totalQuantity }}</span>
         </a>
 
-        <!-- USER MENU -->
         <div class="user-menu" @click="toggleMenu">
-          <i class="fas fa-user-circle"></i>
-
+          <i class="far fa-user-circle"></i>
+    
           <div v-if="isOpen" class="dropdown-menu">
 
-            <!-- CUSTOMER MENU -->
             <template v-if="isCustomer">
               <div class="dropdown-item">
                 <router-link to="/customer-orders" @click.stop>
@@ -52,22 +48,16 @@
               </div>
 
               <div class="dropdown-item">
-                <router-link to="/userProfile" @click.stop>
-                  <i class="fas fa-user"></i> Profile
+                <router-link to="/customerProfileEdit" @click.stop>
+                  <i class="fas fa-user"></i> Account
                 </router-link>
               </div>
             </template>
 
             <template v-if="isOwner">
               <div class="dropdown-item">
-                <router-link to="/ownerProfile" @click.stop>
-                  <i class="fas fa-user"></i> Shop Profile
-                </router-link>
-              </div>
-
-              <div class="dropdown-item">
-                <router-link to="/ownerAccount" @click.stop>
-                  <i class="fas fa-cog"></i> Account
+                <router-link to="/ownerProfileEdit" @click.stop>
+                  <i class="fas fa-user"></i> Account
                 </router-link>
               </div>
             </template>
@@ -77,13 +67,10 @@
                 <i class="fas fa-sign-out-alt"></i> Logout
               </a>
             </div>
-
           </div>
         </div>
-
       </template>
     </nav>
-
     <CartSidebar v-if="isCustomer && route.name !== 'checkout'" />
   </header>
 </template>
@@ -147,7 +134,6 @@ export default {
 
 
 <style>
-
 .main-header {
   display: flex !important;
   align-items: center !important;
@@ -208,6 +194,7 @@ export default {
   line-height: 1.2 !important;
   display: block !important;
 }
+
 
 nav {
   display: flex !important;
@@ -293,6 +280,11 @@ nav i:hover {
   font-size: 28px;
 }
 
+.user-menu i{
+  color:#4b3c8a;
+  font-size: 23px;
+}
+
 .dropdown-menu {
   position: absolute;
   top: calc(100% + 15px);
@@ -310,6 +302,7 @@ nav i:hover {
 
 .dropdown-item {
   transition: background 0.2s;
+  color: #4b3c8a;
 }
 
 .dropdown-item a {
@@ -325,9 +318,6 @@ nav i:hover {
 
 .dropdown-item:hover {
   background-color: #f5f0ff;
-}
-
-.dropdown-item:hover a {
   color: #7e4bb1;
 }
 

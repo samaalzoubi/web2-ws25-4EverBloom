@@ -1,17 +1,15 @@
 <template>
   <div class="register-container">
 
-    <!-- ROLE SELECTION -->
     <div v-if="!selectedRole" class="register role-select">
       <h2>Please choose your account type:</h2>
       <button class="main-btn" @click="selectedRole = 'CUSTOMER'">Private</button>
       <button class="main-btn" @click="selectedRole = 'OWNER'">Business</button>
     </div>
 
-    <!-- CUSTOMER REGISTRATION -->
     <div v-if="selectedRole === 'CUSTOMER'" class="register">
       <h1>Create Account</h1>
-      <h3>Join our blooming community</h3>
+      <p>Join our blooming community</p>
 
       <form @submit.prevent="registerCustomer">
         <label>Username</label>
@@ -38,7 +36,6 @@
       </form>
     </div>
 
-    <!-- OWNER REGISTRATION -->
     <div v-if="selectedRole === 'OWNER'" class="register">
       <h1>Create Business Account</h1>
       <p class="subtitle">Register your flower business</p>
@@ -65,8 +62,13 @@
         <label>Certificate</label>
         <input type="file" @change="handleFileUpload($event, 'certificate')" />
 
-        <label>Opening Hours</label>
-        <input v-model="owner.hours" />
+       <label>Opening Hours</label>
+
+        <div v-if="owner">
+          <input type="time" v-model="owner.openingTime">
+          <span>–</span>
+          <input type="time" v-model="owner.closingTime">
+        </div>
 
         <label>Phone</label>
         <input v-model="owner.phone" />
@@ -137,7 +139,8 @@ export default {
       shopAddress: "",
       offer: "",
       certificate: null,
-      hours: "",
+      openingTime: "",
+      closingTime: "",
       phone: "",
       social: "",
       type: "",
@@ -165,12 +168,12 @@ export default {
           })
         })
 
-      if (!res.ok) {
-        const text = await res.text()
-        formMessage.value = text
-        formMessageType.value = "error"
-        return
-      }
+        if (!res.ok) {
+          const text = await res.text()
+          formMessage.value = text
+          formMessageType.value = "error"
+          return
+        }
 
         formMessage.value = "Account created successfully"
         formMessageType.value = "success"
@@ -196,7 +199,10 @@ export default {
             username: owner.username,
             email: owner.email,
             password: owner.password,
-            role: "OWNER"
+            role: "OWNER",
+            shopName: owner.shopName,
+            openingTime: owner.openingTime,
+            closingTime: owner.closingTime
           })
         })
 
@@ -232,6 +238,7 @@ export default {
   }
 }
 </script>
+
 
 
 <style scoped>
@@ -410,6 +417,27 @@ textarea:focus {
   outline: none;
   border-color: #c7a6d8;
   box-shadow: 0 0 0 3px rgba(199, 166, 216, 0.25);
+}
+
+.time-range {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.time-range input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background: white;
+  min-width: 120px;
+}
+
+.time-range span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #7e4bb1;
 }
 
 </style>

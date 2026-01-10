@@ -10,6 +10,7 @@ import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO updateUser(Long id, UserDTO dto) {
+    public UserDTO updateUser(Long id, UserDTO dto, MultipartFile logo) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));

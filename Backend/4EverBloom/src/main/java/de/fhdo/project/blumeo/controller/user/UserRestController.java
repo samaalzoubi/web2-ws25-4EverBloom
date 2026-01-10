@@ -7,6 +7,7 @@ import de.fhdo.project.blumeo.services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -66,10 +67,19 @@ public class UserRestController {
     }
 
     // User aktualisieren
-    @PutMapping(value = "/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO dto) {
-        UserDTO updated = userService.updateUser(id, dto);
-        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<UserDTO> updateUser(
+            @PathVariable Long id,
+            @RequestPart("user") UserDTO dto,
+            @RequestPart(value = "logo", required = false) MultipartFile logo
+    ) {
+        UserDTO updated = userService.updateUser(id, dto, logo);
+        return updated != null
+                ? ResponseEntity.ok(updated)
+                : ResponseEntity.notFound().build();
     }
 
     // User löschen

@@ -1,16 +1,10 @@
 package de.fhdo.project.blumeo.entity.user;
 
+import java.time.LocalTime;
 import java.util.Date;
 
 import de.fhdo.project.blumeo.entity.order.Address;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -52,5 +46,9 @@ public class User {
 
     private String logo;
 
-    private Date date;
+    @Column(name = "opening_time")
+    private LocalTime openingTime;
+
+    @Column(name = "closing_time")
+    private LocalTime closingTime;
 }

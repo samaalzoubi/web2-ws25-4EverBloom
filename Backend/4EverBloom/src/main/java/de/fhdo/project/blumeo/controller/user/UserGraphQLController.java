@@ -40,16 +40,18 @@ public class UserGraphQLController {
     }
 
     @MutationMapping
-    public UserDTO updateUser(@Argument Long id,
-                              @Argument String username,
-                              @Argument String email,
-                              @Argument String password) {
+    public UserDTO updateUser(
+            @Argument Long id,
+            @Argument String username,
+            @Argument String email,
+            @Argument String password
+    ) {
         UserDTO dto = new UserDTO();
         dto.setUsername(username);
         dto.setEmail(email);
         dto.setPassword(password);
 
-        return userService.updateUser(id, dto);
+        return userService.updateUser(id, dto, null);
     }
 
     @MutationMapping

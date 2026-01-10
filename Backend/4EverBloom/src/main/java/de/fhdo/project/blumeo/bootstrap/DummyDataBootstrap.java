@@ -1,7 +1,7 @@
 package de.fhdo.project.blumeo.bootstrap;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.context.ApplicationListener;
@@ -83,7 +83,9 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         owner.setFlowerShopType("Boutique");
         owner.setLink("https://roseparadise.blumeo.test");
         owner.setLogo("https://i.etsystatic.com/34374772/r/il/c338b0/5033583096/il_fullxfull.5033583096_cwje.jpg");
-        owner.setDate(new Date());
+
+        owner.setOpeningTime(LocalTime.of(9, 0));
+        owner.setClosingTime(LocalTime.of(18, 0));
 
         Address ownerAddress = new Address();
         ownerAddress.setCity("Dortmund");
@@ -102,7 +104,9 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         customer.setEmail("alice@blumeo.test");
         customer.setPassword("customerpassword");
         customer.setRole(Role.CUSTOMER);
-        customer.setDate(new Date());
+
+        customer.setOpeningTime(LocalTime.of(9, 0));
+        customer.setClosingTime(LocalTime.of(18, 0));
         customer.setPhoneNumber("+491112223334");
 
         Address customerAddress = new Address();
@@ -124,7 +128,9 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         owner2.setFlowerShopType("Concept Store");
         owner2.setLink("https://petalsparadise.blumeo.test");
         owner2.setLogo("https://images-platform.99static.com//yrVX8ufudrS38A20MkM0ADXc6eA=/0x0:1904x1904/fit-in/500x500/99designs-contests-attachments/87/87532/attachment_87532959");
-        owner2.setDate(new Date());
+
+        owner2.setOpeningTime(LocalTime.of(10, 0));
+        owner2.setClosingTime(LocalTime.of(20, 0));
 
         Address owner2Address = new Address();
         owner2Address.setCity("Düsseldorf");

@@ -3,8 +3,7 @@ package de.fhdo.project.blumeo.dto.user;
 import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.user.Role;
 import lombok.Data;
-
-import java.util.Date;
+import java.time.LocalTime;
 
 @Data
 public class UserDTO {
@@ -12,7 +11,7 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
-    private Role role; // OWNER or USER
+    private Role role;
 
     private String phoneNumber;
     private Address address;
@@ -20,7 +19,10 @@ public class UserDTO {
     private Double longitude;
     private String shopName;
     private String description;
-    private Date date;
+
+    private LocalTime openingTime;
+    private LocalTime closingTime;
+
     private String link;
     private String flowerShopType;
     private String deliveryOption;

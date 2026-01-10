@@ -13,7 +13,6 @@ import { onMounted } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 
 import Header from './components/Header/Header.vue'
-import OwnerHeader from './components/Header/OwnerHeader.vue'
 import Footer from './components/Footer/Footer.vue'
 
 const userStore = useUserStore()

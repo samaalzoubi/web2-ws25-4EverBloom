@@ -1,9 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Login from '../components/Login/Login.vue';
 import Register from '../components/Login/Register.vue';
-import OwnerProfile from "@/components/Profile/OwnerProfile.vue";
-import UserProfile from "@/components/Profile/UserProfile.vue";
-import OwnerAccount from "@/components/Profile/OwnerAccount.vue";
+import OwnerProfileEdit from "@/components/Profile/OwnerProfileEdit.vue";
+import CustomerProfileEdit from "@/components/Profile/CustomerProfileEdit.vue";
 import CustomerOrders from "@/components/Order/CustomerOrders.vue";
 import AdminOrders from "@/components/Order/AdminOrders.vue";
 import HomePage from "@/views/customer-views/HomePage.vue";
@@ -20,16 +19,12 @@ const routes = [
     component: Register
   },
   {
-    path: '/ownerProfile',
-    component: OwnerProfile
+    path: '/ownerProfileEdit',
+    component: OwnerProfileEdit
   },  
   {
-    path: '/userProfile',
-    component: UserProfile
-  },
-   {
-    path: '/ownerAccount',
-    component: OwnerAccount
+    path: '/customerProfileEdit',
+    component: CustomerProfileEdit
   },
   {
     path: '/customer-orders',
