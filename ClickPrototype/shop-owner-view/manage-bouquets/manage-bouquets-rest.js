@@ -19,7 +19,8 @@ export async function deleteBouquet(bouquetId) {
     method: "DELETE"
   });
 
-  if (!response.ok && response.status !== 204) {
-    throw new Error("Failed to delete bouquet");
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || `Delete failed (HTTP ${response.status})`);
   }
 }

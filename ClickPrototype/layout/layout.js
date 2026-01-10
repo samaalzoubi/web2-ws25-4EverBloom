@@ -1,11 +1,15 @@
 import { initCart } from "./cart.js";
 
 export async function loadLayout() {
-  await Promise.all([
-    loadHeader(),
-    loadFooter(),
-    initCart()
-  ]);
+  const page = document.body.dataset.page;
+
+  const tasks = [loadHeader(), loadFooter()];
+
+  if (page !== "owner" && page !== "checkout") {
+    tasks.push(initCart());
+  }
+
+  await Promise.all(tasks);
 }
 
 async function loadHeader() {
@@ -59,6 +63,7 @@ function initHeader() {
 
   if ((page === "checkout" && cartIcon) || (page === "owner" && cartIcon)) {
     cartIcon.style.display = "none";
+    document.querySelector(".cart")?.remove();
   }
 
   document.getElementById("logo-link")?.addEventListener("click", (e) => {

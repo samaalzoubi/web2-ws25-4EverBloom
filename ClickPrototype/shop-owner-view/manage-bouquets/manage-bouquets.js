@@ -1,5 +1,7 @@
 import { fetchBouquetsGraphQL } from "./manage-bouquets-graphql.js";
 import { createBouquet, deleteBouquet } from "./manage-bouquets-rest.js";
+import { fetchShopBouquets } from "/ClickPrototype/customer-view/shop-profile/shop-profile-rest.js"
+import { API_MODE } from "/ClickPrototype/config/api.config.js";
 
 function requireOwner() {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -51,7 +53,10 @@ toggleBtn.addEventListener("click", e => {
 /* ---------- LOAD BOUQUETS ---------- */
 async function loadBouquets() {
   try {
-    const bouquets = await fetchBouquetsGraphQL(shopId);
+    const bouquets = 
+      API_MODE == "REST" 
+      ? await fetchShopBouquets(shopId) 
+      : await fetchBouquetsGraphQL(shopId);
     renderBouquetGrid(bouquets);
   } catch (err) {
     console.error(err);
@@ -123,8 +128,7 @@ function renderBouquetGrid(bouquets) {
         await deleteBouquet(Number(b.id));
         loadBouquets();
       } catch (err) {
-        alert("Failed to delete bouquet");
-        console.error(err);
+        alert(err.message);
       }
     });
 
