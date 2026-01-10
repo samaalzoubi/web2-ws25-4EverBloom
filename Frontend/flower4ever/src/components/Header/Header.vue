@@ -8,80 +8,95 @@
       </div>
     </router-link>
 
- 
-    <nav>   
-    <div v-if="userStore.isLoggedIn">
-      <router-link to="" class="design-bouquet">
-        <span class="fx-3d">3D</span>esign Bouquet 🪄
-      </router-link>
 
-      <a
-        v-if="route.name !== 'checkout'"
-        class="user-links cart-link"
-        href="#"
-        title="Cart"
-        @click="onCartClick"
-      >
-        <span class="material-symbols-outlined">shopping_cart</span>
-        <span class="cart-count">{{ cartStore.totalQuantity }}</span>
-      </a>
-
-      <div
-        class="user-menu"
-        @click="toggleMenu"
-      >
-        <i class="fas fa-user-circle"></i>
-
-        <div v-if="isOpen" class="dropdown-menu">
-          <div class="dropdown-item">
-            <router-link to="/customer-orders" @click.stop>
-              <i class="fas fa-shopping-bag"></i>
-              <span>My Orders</span>
-            </router-link>
-          </div>
-
-          <div class="dropdown-item">
-            <router-link to="/userProfile" @click.stop>
-              <i class="fas fa-user"></i>
-              <span>View Profile</span>
-            </router-link>
-          </div>
-
-          <div class="dropdown-item">
-            <a href="#" @click.stop.prevent="logout">
-              <i class="fas fa-sign-out-alt"></i>
-              <span>Logout</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-      <router-link
-        v-else
-        to="/login"
-        class="user-links"
-      >
+    <nav>
+      <router-link v-if="!userStore.isLoggedIn" to="/login" class="user-links">
         <i class="fas fa-sign-in-alt"></i>
         <span style="margin-left: 6px;">Login</span>
       </router-link>
+
+      <template v-else>
+
+        <router-link
+          v-if="isCustomer"
+          to="/design"
+          class="design-bouquet"
+        >
+          <span class="fx-3d">3D</span>esign Bouquet 🪄
+        </router-link>
+
+        <!-- CUSTOMER CART -->
+        <a
+          v-if="isCustomer && route.name !== 'checkout'"
+          class="user-links cart-link"
+          href="#"
+          title="Cart"
+          @click.prevent="onCartClick"
+        >
+          <span class="material-symbols-outlined">shopping_cart</span>
+          <span class="cart-count">{{ cartStore.totalQuantity }}</span>
+        </a>
+
+        <!-- USER MENU -->
+        <div class="user-menu" @click="toggleMenu">
+          <i class="fas fa-user-circle"></i>
+
+          <div v-if="isOpen" class="dropdown-menu">
+
+            <!-- CUSTOMER MENU -->
+            <template v-if="isCustomer">
+              <div class="dropdown-item">
+                <router-link to="/customer-orders" @click.stop>
+                  <i class="fas fa-shopping-bag"></i> My Orders
+                </router-link>
+              </div>
+
+              <div class="dropdown-item">
+                <router-link to="/userProfile" @click.stop>
+                  <i class="fas fa-user"></i> Profile
+                </router-link>
+              </div>
+            </template>
+
+            <template v-if="isOwner">
+              <div class="dropdown-item">
+                <router-link to="/ownerProfile" @click.stop>
+                  <i class="fas fa-user"></i> Shop Profile
+                </router-link>
+              </div>
+
+              <div class="dropdown-item">
+                <router-link to="/ownerAccount" @click.stop>
+                  <i class="fas fa-cog"></i> Account
+                </router-link>
+              </div>
+            </template>
+
+            <div class="dropdown-item">
+              <a href="#" @click.stop.prevent="logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </template>
     </nav>
 
-    <CartSidebar v-if="route.name !== 'checkout'" />
+    <CartSidebar v-if="isCustomer && route.name !== 'checkout'" />
   </header>
 </template>
 
 <script>
 import { useCartStore } from '@/stores/cartStore'
 import { useUserStore } from '@/stores/userStore'
-import CartSidebar from '@/components/CartSidebar.vue'
 import { useRoute, useRouter } from 'vue-router'
+import CartSidebar from '@/components/CartSidebar.vue'
 
 export default {
-  name: "HeaderComponent",
-  components: {
-    CartSidebar
-  },
+  components: { CartSidebar },
+
   setup() {
     const cartStore = useCartStore()
     const userStore = useUserStore()
@@ -90,25 +105,38 @@ export default {
 
     return { cartStore, userStore, route, router }
   },
+
   data() {
     return {
       isOpen: false
     }
   },
+
+  computed: {
+    isOwner() {
+      return this.userStore.user?.role === "OWNER"
+    },
+    isCustomer() {
+      return this.userStore.user?.role === "CUSTOMER"
+    }
+  },
+
   methods: {
     toggleMenu() {
       this.isOpen = !this.isOpen
     },
-    onCartClick(event) {
-      event.preventDefault()
+
+    onCartClick() {
       this.cartStore.toggle()
     },
+
     logout() {
       this.userStore.logout()
       this.isOpen = false
       this.router.push('/login')
     }
   },
+
   watch: {
     'route.fullPath'() {
       this.isOpen = false
@@ -116,6 +144,7 @@ export default {
   }
 }
 </script>
+
 
 <style>
 

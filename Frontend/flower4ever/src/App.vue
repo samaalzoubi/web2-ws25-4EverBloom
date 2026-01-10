@@ -1,17 +1,6 @@
 <template>
   <div>
-    <!-- CUSTOMER HEADER -->
-    <Header
-      v-if="userStore.isLoggedIn && userStore.role === 'CUSTOMER'"
-    />
-
-    <!-- OWNER HEADER -->
-    <OwnerHeader
-      v-else-if="userStore.isLoggedIn && userStore.role === 'OWNER'"
-    />
-
-    <!-- NOT LOGGED IN -->
-    <Header v-else />
+   <Header />
 
     <router-view />
 

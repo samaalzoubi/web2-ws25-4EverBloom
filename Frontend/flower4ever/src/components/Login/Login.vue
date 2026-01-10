@@ -60,54 +60,53 @@ export default {
   },
   methods: {
     async logIn() {
-  this.loading = true
-  this.formMessage = ""
-  this.formMessageType = ""
+      this.loading = true
+      this.formMessage = ""
+      this.formMessageType = ""
 
-  try {
-    const res = await fetch("http://localhost:8080/api/v1/users/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(this.form)
-    })
+      try {
+        localStorage.removeItem("userId")
 
-    // Fehler vom Backend lesen
-    if (!res.ok) {
-      const text = await res.text()
+        const res = await fetch("http://localhost:8080/api/v1/users/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(this.form)
+        })
 
-      this.formMessage =
-        text && text.length > 0
-          ? text
-          : "Login failed"
+        if (!res.ok) {
+          const text = await res.text()
+          this.formMessage = text || "Login failed"
+          this.formMessageType = "error"
+          return
+        }
 
-      this.formMessageType = "error"
-      return
-    }
+        const userData = await res.json()
 
-    const userData = await res.json()
+        localStorage.setItem("userId", userData.id)
 
-    this.formMessage = "Login successful"
-    this.formMessageType = "success"
+        this.formMessage = "Login successful"
+        this.formMessageType = "success"
 
-    const userStore = useUserStore()
-    userStore.login(userData)
+        const userStore = useUserStore()
+        userStore.login(userData)
 
-    setTimeout(() => {
-      if (userData.role === "OWNER") {
-        router.push("/owner/dashboard")
-      } else {
-        router.push("/")
+        setTimeout(() => {
+          if (userData.role === "OWNER") {
+            router.push("/owner/dashboard")
+          } else {
+            router.push("/")
+          }
+        }, 800)
+
+      } catch (err) {
+        this.formMessage = "Server not reachable"
+        this.formMessageType = "error"
+      } finally {
+        this.loading = false
       }
-    }, 800)
-
-  } catch (err) {
-    this.formMessage = "Server not reachable"
-    this.formMessageType = "error"
-  } finally {
-    this.loading = false
+    }
   }
 }
-  }}
 </script>
 
 
