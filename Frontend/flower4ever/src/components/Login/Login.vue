@@ -83,8 +83,8 @@ export default {
         const userData = await res.json()
 
         localStorage.setItem("user", JSON.stringify(userData))
-
         localStorage.setItem("userId", userData.id)
+        localStorage.setItem("isLoggedIn", "true")
 
         this.formMessage = "Login successful"
         this.formMessageType = "success"

@@ -24,7 +24,6 @@ export async function addToCartREST(userId, bouquetId) {
 }
 
 export async function getActiveCartREST(userId) {
-  console.log(userId)
   const response = await fetch(`${REST_BASE}/cart/${userId}`, {
     headers: { Accept: "application/json" }
   });

@@ -123,10 +123,16 @@ export default {
           updatedUser.password = newPassword.value;
         }
 
-        await axios.put(
-          `http://localhost:8080/api/v1/users/${userId}`,
-          updatedUser
+        const formData = new FormData();
+
+        formData.append(
+          "user",
+          new Blob([JSON.stringify(updatedUser)], { type: "application/json" })
         );
+
+        await axios.put(`http://localhost:8080/api/v1/users/${userId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
 
         localStorage.setItem("user", JSON.stringify(updatedUser));
         user.value = updatedUser;

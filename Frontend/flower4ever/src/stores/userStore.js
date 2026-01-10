@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null, // oder User-Objekt
+    user: null,
   }),
   getters: {
     isLoggedIn: (state) => !!state.user,
@@ -13,6 +13,7 @@ export const useUserStore = defineStore('user', {
     },
     logout() {
       this.user = null
+      localStorage.clear()
     }
   }
 })

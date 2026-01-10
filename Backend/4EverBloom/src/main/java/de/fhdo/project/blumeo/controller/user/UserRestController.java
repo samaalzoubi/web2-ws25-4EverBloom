@@ -86,6 +86,6 @@ public class UserRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.noContent().build(); // HTTP 204 No Content
+        return ResponseEntity.noContent().build();
     }
 }

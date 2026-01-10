@@ -1,27 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import {
-  getActiveCart,
-  addToCart,
-  patchCartItemQuantity,
-  clearCart
-} from '@/services/cartService.js'
+import { getActiveCart, addToCart, patchCartItemQuantity, clearCart } from '@/services/cartService.js'
+import { useUserStore } from '@/stores/userStore'
 
 const DEFAULT_BOUQUET_IMAGE =
   'https://peoplesflowers.imgix.net/images/itemVariation/designers-choice-7983070-2-200515317401-21021884408.jpg?w=600&h=720&fit=crop&dpr=2'
 
-function getUserIdOrNull() {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-  const role = localStorage.getItem('role')
-
-  if (!isLoggedIn || role !== 'CUSTOMER') {
-    return null
-  }
-
-  return localStorage.getItem('userId')
-}
-
 export const useCartStore = defineStore('cart', () => {
+  const userStore = useUserStore()
+
   const cart = ref(null)
   const isOpen = ref(false)
   const loading = ref(false)
@@ -32,7 +19,7 @@ export const useCartStore = defineStore('cart', () => {
   )
 
   const isCustomer = computed(
-    () => localStorage.getItem('role') === 'CUSTOMER'
+    () => userStore.user?.role === 'CUSTOMER'
   )
 
   const canUseCart = computed(
@@ -57,7 +44,10 @@ export const useCartStore = defineStore('cart', () => {
   )
 
   const toggle = () => {
-    if (!canUseCart.value) return
+    if (!canUseCart.value) {
+      console.log(isLoggedIn.value)
+      return
+    }
     isOpen.value = !isOpen.value
   }
 
@@ -68,6 +58,17 @@ export const useCartStore = defineStore('cart', () => {
 
   const close = () => {
     isOpen.value = false
+  }
+
+  function getUserIdOrNull() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
+    const isCustomer = userStore.user?.role === 'CUSTOMER'
+
+    if (!isLoggedIn || !isCustomer) {
+      return null
+    }
+
+    return localStorage.getItem('userId')
   }
 
   async function loadActiveCart() {

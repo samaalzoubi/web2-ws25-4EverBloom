@@ -18,7 +18,7 @@
       <template v-else>
         <router-link
           v-if="isCustomer"
-          to="/design"
+          to="#"
           class="design-bouquet"
         >
           <span class="fx-3d">3D</span>esign Bouquet 🪄
@@ -113,7 +113,8 @@ export default {
       this.isOpen = !this.isOpen
     },
 
-    onCartClick() {
+    onCartClick(event) {
+      event.preventDefault()
       this.cartStore.toggle()
     },
 
