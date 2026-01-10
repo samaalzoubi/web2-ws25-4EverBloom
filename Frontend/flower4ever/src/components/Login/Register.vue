@@ -2,10 +2,7 @@
   <div class="register-container">
 
     <!-- ROLE SELECTION -->
-    <div
-      v-if="!selectedRole"
-      class="register role-select"
-    >
+    <div v-if="!selectedRole" class="register role-select">
       <h2>Please choose your account type:</h2>
       <button class="main-btn" @click="selectedRole = 'CUSTOMER'">Private</button>
       <button class="main-btn" @click="selectedRole = 'OWNER'">Business</button>
@@ -26,6 +23,10 @@
         <label>Password</label>
         <input type="password" v-model="customer.password" required />
 
+        <div class="form-message" :class="[formMessage ? 'show' : '', formMessageType]">
+          {{ formMessage }}
+        </div>
+
         <button type="submit" :disabled="loading">
           {{ loading ? 'Creating account...' : 'Register' }}
         </button>
@@ -40,6 +41,7 @@
     <!-- OWNER REGISTRATION -->
     <div v-if="selectedRole === 'OWNER'" class="register">
       <h1>Create Business Account</h1>
+      <p class="subtitle">Register your flower business</p>
 
       <form @submit.prevent="registerOwner">
         <label>Username</label>
@@ -74,7 +76,6 @@
 
         <label>Shop Type</label>
         <select v-model="owner.type">
-          <option value="">Select</option>
           <option value="bouquet">Bouquet</option>
           <option value="wedding">Wedding</option>
           <option value="event">Event</option>
@@ -93,6 +94,10 @@
         <label>Logo</label>
         <input type="file" @change="handleFileUpload($event, 'logo')" />
 
+        <div class="form-message" :class="[formMessage ? 'show' : '', formMessageType]">
+          {{ formMessage }}
+        </div>
+
         <button type="submit" :disabled="loading">
           {{ loading ? 'Creating account...' : 'Register Business' }}
         </button>
@@ -108,35 +113,35 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
-import { useUserStore } from '@/stores/userStore'
-import router from '@/router/router'
+import { ref, reactive } from "vue"
+import router from "@/router/router"
 
 export default {
   setup() {
-    const userStore = useUserStore()
     const selectedRole = ref(null)
     const loading = ref(false)
+    const formMessage = ref("")
+    const formMessageType = ref("")
 
     const customer = reactive({
-      username: '',
-      email: '',
-      password: ''
+      username: "",
+      email: "",
+      password: ""
     })
 
     const owner = reactive({
-      username: '',
-      email: '',
-      password: '',
-      shopName: '',
-      shopAddress: '',
-      offer: '',
+      username: "",
+      email: "",
+      password: "",
+      shopName: "",
+      shopAddress: "",
+      offer: "",
       certificate: null,
-      hours: '',
-      phone: '',
-      social: '',
-      type: '',
-      delivery: '',
+      hours: "",
+      phone: "",
+      social: "",
+      type: "",
+      delivery: "",
       logo: null
     })
 
@@ -146,24 +151,34 @@ export default {
 
     const registerCustomer = async () => {
       loading.value = true
+      formMessage.value = ""
+
       try {
-        const res = await fetch('http://localhost:8080/api/v1/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("http://localhost:8080/api/v1/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             username: customer.username,
             email: customer.email,
             password: customer.password,
-            role: 'CUSTOMER'
+            role: "CUSTOMER"
           })
         })
 
-        if (!res.ok) throw new Error()
+      if (!res.ok) {
+        const text = await res.text()
+        formMessage.value = text
+        formMessageType.value = "error"
+        return
+      }
 
-        alert('Registration successful, please login')
-        router.push('/Login')
+        formMessage.value = "Account created successfully"
+        formMessageType.value = "success"
+        setTimeout(() => router.push("/Login"), 1500)
+
       } catch {
-        alert('Registration failed')
+        formMessage.value = "Server not reachable"
+        formMessageType.value = "error"
       } finally {
         loading.value = false
       }
@@ -171,33 +186,45 @@ export default {
 
     const registerOwner = async () => {
       loading.value = true
+      formMessage.value = ""
+
       try {
-        const res = await fetch('http://localhost:8080/api/v1/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("http://localhost:8080/api/v1/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ...owner,
-            role: 'OWNER'
+            username: owner.username,
+            email: owner.email,
+            password: owner.password,
+            role: "OWNER"
           })
         })
 
-        if (!res.ok) throw new Error()
+        if (!res.ok) {
+          formMessage.value = "Business registration failed"
+          formMessageType.value = "error"
+          return
+        }
 
-        alert('Owner registered, please login')
-        router.push('/Login')
+        formMessage.value = "Business account created"
+        formMessageType.value = "success"
+        setTimeout(() => router.push("/Login"), 1500)
+
       } catch {
-        alert('Owner registration failed')
+        formMessage.value = "Server not reachable"
+        formMessageType.value = "error"
       } finally {
         loading.value = false
       }
     }
-
 
     return {
       selectedRole,
       customer,
       owner,
       loading,
+      formMessage,
+      formMessageType,
       handleFileUpload,
       registerCustomer,
       registerOwner
@@ -205,6 +232,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 .register-container {
@@ -283,6 +311,105 @@ button:hover {
 
 .register-text a:hover {
   text-decoration: underline;
+}
+
+.form-message {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease;
+}
+
+.form-message.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.form-message.success {
+  background-color: #e8f7ef;
+  color: #1e7f4f;
+  border: 1px solid #b7e4cd;
+}
+
+.form-message.error {
+  background-color: #fdecea;
+  color: #b42318;
+  border: 1px solid #f5c2bd;
+}
+
+
+
+select {
+  position: relative;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+select::selection {
+  width: 100%;
+  padding: 12px 44px 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select::after {
+  content: "expand_more";
+  font-family: "Material Symbols Outlined";
+  font-size: 22px;
+  color: #777;
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+select:hover {
+  border-color: #c7a6d8;
+}
+
+select:focus {
+  outline: none;
+  border-color: #c7a6d8;
+  box-shadow: 0 0 0 3px rgba(199, 166, 216, 0.25);
+}
+
+select option[value=""] {
+  color: #aaa;
+}
+
+
+textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  resize: vertical;
+}
+
+placeholder {
+  color: #aaa;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #c7a6d8;
+  box-shadow: 0 0 0 3px rgba(199, 166, 216, 0.25);
 }
 
 </style>

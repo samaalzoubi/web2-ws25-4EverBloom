@@ -24,6 +24,11 @@
         />
       </div>
 
+      <!-- FORM MESSAGE -->
+      <div class="form-message" :class="[formMessage ? 'show' : '', formMessageType]">
+        {{ formMessage }}
+      </div>
+
       <button type="submit" :disabled="loading">
         {{ loading ? 'Logging in...' : 'Login' }}
       </button>
@@ -36,54 +41,75 @@
   </div>
 </template>
 
-
 <script>
-import { useUserStore } from '@/stores/userStore'
-import router from '@/router/router'
+import { useUserStore } from "@/stores/userStore"
+import router from "@/router/router"
 
 export default {
   name: "Login",
   data() {
     return {
       loading: false,
+      formMessage: "",
+      formMessageType: "", // success | error
       form: {
-        email: '',
-        password: ''
+        email: "",
+        password: ""
       }
     }
   },
   methods: {
     async logIn() {
-      this.loading = true
-      try {
-        const res = await fetch('http://localhost:8080/api/v1/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(this.form)
-        })
+  this.loading = true
+  this.formMessage = ""
+  this.formMessageType = ""
 
-        if (!res.ok) throw new Error()
+  try {
+    const res = await fetch("http://localhost:8080/api/v1/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(this.form)
+    })
 
-        const userData = await res.json()
+    // Fehler vom Backend lesen
+    if (!res.ok) {
+      const text = await res.text()
 
-        const userStore = useUserStore()
-        userStore.login(userData)
+      this.formMessage =
+        text && text.length > 0
+          ? text
+          : "Login failed"
 
-        // Redirect nach Rolle
-        if (userData.role === 'OWNER') {
-          router.push('/owner/dashboard')
-        } else {
-          router.push('/')
-        }
-      } catch {
-        alert('Login fehlgeschlagen')
-      } finally {
-        this.loading = false
-      }
+      this.formMessageType = "error"
+      return
     }
+
+    const userData = await res.json()
+
+    this.formMessage = "Login successful"
+    this.formMessageType = "success"
+
+    const userStore = useUserStore()
+    userStore.login(userData)
+
+    setTimeout(() => {
+      if (userData.role === "OWNER") {
+        router.push("/owner/dashboard")
+      } else {
+        router.push("/")
+      }
+    }, 800)
+
+  } catch (err) {
+    this.formMessage = "Server not reachable"
+    this.formMessageType = "error"
+  } finally {
+    this.loading = false
   }
 }
+  }}
 </script>
+
 
 <style scoped>
 .login-container {
@@ -162,5 +188,33 @@ button:hover {
 
 .register-text a:hover {
   text-decoration: underline;
+}
+.form-message {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease;
+}
+
+.form-message.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.form-message.success {
+  background-color: #e8f7ef;
+  color: #1e7f4f;
+  border: 1px solid #b7e4cd;
+}
+
+.form-message.error {
+  background-color: #fdecea;
+  color: #b42318;
+  border: 1px solid #f5c2bd;
 }
 </style>

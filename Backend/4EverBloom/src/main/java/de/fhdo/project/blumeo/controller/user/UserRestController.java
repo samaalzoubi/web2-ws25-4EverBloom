@@ -23,14 +23,16 @@ public class UserRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         UserDTO user = userService.authenticate(
                 request.getEmail(),
                 request.getPassword()
         );
 
         if (user == null) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity
+                    .status(401)
+                    .body("Invalid email or password");
         }
 
         return ResponseEntity.ok(user);
@@ -45,9 +47,15 @@ public class UserRestController {
     // User erstellen
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterRequest request) {
-        UserDTO user = userService.createUser(request);
-        return ResponseEntity.status(201).body(user); // HTTP 201 CREATED
+    public ResponseEntity<?> createUser(@RequestBody RegisterRequest request) {
+        try {
+            UserDTO user = userService.createUser(request);
+            return ResponseEntity.status(201).body(user);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     // User nach ID abrufen
