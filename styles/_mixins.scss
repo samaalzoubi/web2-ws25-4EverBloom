@@ -1,6 +1,17 @@
-//GLOBAL MIXINS
+/*
+  Purpose:
+  This file contains reusable Sass mixins that encapsulate repetitive CSS declaration blocks used across the project.
 
-//FLEX UTILITIES
+  Design decisions:
+  - Common layout, positioning and animation patterns are abstracted into mixins to reduce code duplication.
+  - Parameters are used to keep mixins flexible while maintaining consistent styling behavior.
+*/
+
+/* Flexbox utility mixins
+  
+  Provides a configurable flex container with optional centering.
+  This avoids repeating flexbox alignment rules across components.
+*/
 @mixin flex-center($direction: row, $center: true) {
   display: flex;
   flex-direction: $direction;
@@ -10,12 +21,18 @@
   }
 }
 
-//TRANSITIONS
+/* Transition utility mixin
+
+  Centralizes transition definitions to ensure consistent animation timing and easing throughout the UI.
+*/
 @mixin transition($props: all, $time: 0.3s, $ease: ease) {
   transition: $props $time $ease;
 }
 
-//POSITION UTILITIES
+/* Positioning utility mixin
+
+  Simplifies absolute positioning by allowing selective control over top, right, bottom, and left values.
+*/
 @mixin absolute($top: auto, $right: auto, $bottom: auto, $left: auto) {
   position: absolute;
   top: $top;

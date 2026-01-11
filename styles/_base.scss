@@ -1,3 +1,15 @@
+/*
+  Purpose:
+  This file defines the global base styles applied across the entire application.
+  It establishes consistent defaults for layout, typography and form elements.
+
+  Design decisions:
+  - Global reset rules are applied to ensure consistent spacing and box sizing.
+  - A shared font family is defined at the base level for visual consistency.
+  - Layout-related rules are centralized here to avoid duplication in page-specific files.
+  - Common UI elements (headings, labels, inputs) are styled once and reused everywhere.
+*/
+
 @use './variables' as *;
 @use './mixins' as *;
 

@@ -4,45 +4,101 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile Page</title>
-<link rel="stylesheet" href="/web2-ws25-4EverBloom/styles/main.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
 </head>
 
 <body>
+  <div id="header"></div>
 
-  <div class="container">
-    <!-- Back Button -->
-    <a href="/web2-ws25-4EverBloom/customer/home-page/home-page.html" class="back-btn"> Back</a>
+  <main>
+    <div class="container">
+        <!-- Back Button -->
+        <a href="/customer/home-page/home-page.html" class="back-btn"> Back</a>
 
-    <h1>Profile Settings</h1>
+        <h1>Profile Settings</h1>
 
-    <!-- Change Profile Picture -->
-    <div class="card">
-      <h2>Change Profile Picture</h2>
-      <label for="profile-pic">Upload New Picture</label>
-      <input type="file" id="profile-pic" accept="image/*">
-      <button>Update Picture</button>
-    </div>
+        <!-- Change Profile Picture -->
+        <div class="card">
+          <h2>Change Profile Picture</h2>
+          <label for="profile-pic">Upload New Picture</label>
+          <input type="file" id="profile-pic" accept="image/*">
+          <button>Update Picture</button>
+        </div>
 
-    <!-- Change Password -->
-    <div class="card">
-      <h2>Change Password</h2>
-      <label for="current-password">Current Password</label>
-      <input type="password" id="current-password">
-      <label for="new-password">New Password</label>
-      <input type="password" id="new-password">
-      <label for="confirm-password">Confirm New Password</label>
-      <input type="password" id="confirm-password">
-      <button>Change Password</button>
-    </div>
+        <!-- Change Password -->
+        <div class="card">
+          <h2>Change Password</h2>
+          <label for="current-password">Current Password</label>
+          <input type="password" id="current-password">
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password">
+          <label for="confirm-password">Confirm New Password</label>
+          <input type="password" id="confirm-password">
+          <button>Change Password</button>
+        </div>
 
-    <!-- Delete Account -->
-    <div class="card">
-      <h2>Delete Account</h2>
-      <p style="color: var(--color-subtitle);">Warning: This action cannot be undone.</p>
-      <button class="danger-btn">Delete Account</button>
-    </div>
+        <!-- Delete Account -->
+        <div class="card">
+          <h2>Delete Account</h2>
+          <p style="color: var(--color-subtitle);">Warning: This action cannot be undone.</p>
+          <button class="danger-btn">Delete Account</button>
+        </div>
+      </div>
+  </main>
 
-  </div>
+  <div id="footer"></div>
+  <script>
+    //Fetch header
+      fetch("/Header/header.html")
+        .then(response => response.text())
+        .then(data => {
+            const mount = document.getElementById('header');
+            mount.innerHTML = data;
+            initHeader(mount);
+            document.dispatchEvent(new Event('header:ready'));
+        })
+        .catch(err => console.error("Header konnte nicht geladen werden:", err));
 
+        function initHeader() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+            const loginLink = document.querySelector('#login-link');
+            const userLinks = document.querySelectorAll('.design-bouquet__user-links');
+            const designBouquetButton = document.querySelector('.design-bouquet')
+
+            if (isLoggedIn) {
+                loginLink?.classList.add('hidden');
+                userLinks.forEach(el => el.classList.remove('hidden'));
+                designBouquetButton?.classList.remove('hidden');
+            } else {
+                loginLink?.classList.remove('hidden');
+                userLinks.forEach(el => el.classList.add('hidden'));
+                designBouquetButton?.classList.add('hidden');
+            }
+
+            // Logout-Handler
+            const logout = document.querySelector('.design-bouquet__logout-link');
+            if (logout) {
+                logout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.setItem('isLoggedIn', "false");
+                localStorage.removeItem('login-email');
+                localStorage.removeItem('login-password');
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('totalCartQuantity');
+                window.location.href = '/customer/home-page/home-page.html';
+                });
+            }
+        }
+
+        //Fetch footer
+        fetch("/footer/footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(err => console.error("Footer konnte nicht geladen werden:", err));
+</script>
 </body>
 </html>

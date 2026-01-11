@@ -1,3 +1,12 @@
+/*
+  Purpose:
+  This file centralizes all reusable design values used across the project.
+
+  Design decisions:
+  - Colors are defined as variables to ensure visual consistency and to allow easy global changes.
+  - Semantic naming is used (e.g. header-background, accent, subtitle) instead of page-specific names to improve reusability.
+*/
+
 //COLORS
 $color-header-background: rgba(255, 255, 255, 0.7);
 $color-background: #ffffff;

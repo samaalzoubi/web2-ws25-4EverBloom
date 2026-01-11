@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blümeo | Home-Page</title>
-    <link rel="stylesheet" href="/web2-ws25-4EverBloom/styles/main.css" />
+    <link rel="stylesheet" href="/styles/main.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="back-video">
-            <video class="back-video__video" autoplay loop muted playsinline src="/web2-ws25-4EverBloom/assets/flowers_background.mp4"></video>
+            <video class="back-video__video" autoplay loop muted playsinline src="/assets/flowers_background.mp4"></video>
             <div class="back-video__citation">
                 <p>“I must have flowers, always, and always.” <strong>― Claude Monet</strong></p>
             </div>
@@ -43,14 +43,14 @@
             <button class="carousel__button carousel__button--prev" data-carousel-button="prev">&#10594;</button>
             <button class="carousel__button carousel__button--next" data-carousel-button="next">&#10596;</button>
             <div class="carousel__track"">
-                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-1.jpg" alt="Flower Shop Logo 1">
-                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-2.jpg" alt="Flower Shop Logo 2">
-                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-3.webp" alt="Flower Shop Logo 3">
-                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-4.jpg" alt="Flower Shop Logo 4">
-                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-5.webp" alt="Flower Shop Logo 5">
-                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-6.avif" alt="Flower Shop Logo 6">
-                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-7.jpg.avif" alt="Flower Shop Logo 7">
-                <img src="/web2-ws25-4EverBloom/assets/flower-shop-logo-8.png" alt="Flower Shop Logo 8">
+                <img src="/assets/flower-shop-logo-1.jpg" alt="Flower Shop Logo 1">
+                <img src="/assets/flower-shop-logo-2.jpg" alt="Flower Shop Logo 2">
+                <img src="/assets/flower-shop-logo-3.webp" alt="Flower Shop Logo 3">
+                <img src="/assets/flower-shop-logo-4.jpg" alt="Flower Shop Logo 4">
+                <img src="/assets/flower-shop-logo-5.webp" alt="Flower Shop Logo 5">
+                <img src="/assets/flower-shop-logo-6.avif" alt="Flower Shop Logo 6">
+                <img src="/assets/flower-shop-logo-7.jpg.avif" alt="Flower Shop Logo 7">
+                <img src="/assets/flower-shop-logo-8.png" alt="Flower Shop Logo 8">
             </div>
         </div>
 
@@ -65,13 +65,13 @@
         <div class="listCart"></div>
         <div class="listCart__buttons">
             <div class="listCart__buttons--close">CLOSE</div>
-            <div class="listCart__buttons--checkout"> <a href="checkout.html">CHECKOUT</a> </div>
+            <div class="listCart__buttons--checkout"> <a href="#">CHECKOUT</a> </div>
         </div>
     </div>
     <div id="footer"></div>
     <script>
       //Fetch header
-      fetch("/web2-ws25-4EverBloom/Header/header.html")
+      fetch("/Header/header.html")
         .then(response => response.text())
         .then(data => {
             const mount = document.getElementById('header');
@@ -108,25 +108,22 @@
                 localStorage.removeItem('login-password');
                 localStorage.removeItem('cartItems');
                 localStorage.removeItem('totalCartQuantity');
-                window.location.href = '/web2-ws25-4EverBloom/customer/home-page/home-page.html';
+                window.location.href = '/customer/home-page/home-page.html';
                 });
             }
         }
 
         //Fetch footer
-        fetch("/web2-ws25-4EverBloom/footer/footer.html")
+        fetch("/footer/footer.html")
         .then(response => response.text())
         .then(data => {
             document.getElementById('footer').innerHTML = data;
         })
         .catch(err => console.error("Footer konnte nicht geladen werden:", err));
 
-
-
-
         //Fetch Flower Bouquets Data (Mock Data)
         let products = null
-        fetch("/web2-ws25-4EverBloom/customer/home-page/testBouquetsData.json")
+        fetch("/customer/home-page/testBouquetsData.json")
         .then(response => response.json())
         .then(data => {
             products = data;
@@ -283,7 +280,7 @@
         //Toggle map button to be redirected to the map-page
         const btn = document.getElementById('open-map');
         btn.addEventListener("click", () => {
-            window.location.href = "/web2-ws25-4EverBloom/customer/map/map.html";
+            window.location.href = "/customer/map/map.html";
         })
 
 </script>

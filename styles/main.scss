@@ -1,8 +1,21 @@
+/*
+  Purpose:
+  This file serves as the central entry point for all Sass stylesheets.
+  It composes the final CSS by importing shared resources and page-specific modules.
+
+  Design decisions:
+  - Variables are imported first to centralize reusable values such as colors across the entire project.
+  - Mixins are imported globally to avoid repetition of common CSS patterns (flex layouts, transitioning, position utilities).
+  - Base styles are separated to define global defaults and resets.
+  - Page-specific styles are modularized and imported individually to keep concerns separated and styles maintainable.
+*/
+
 @use './variables' as *;
 @use './mixins' as *;
 
 @use './base';
 
+/* Page-specific styles */
 @use './pages/footer';
 @use './pages/header';
 @use './pages/chat';

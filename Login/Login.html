@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blumeo | Login & Register</title>
-    <link rel="stylesheet" href="/web2-ws25-4EverBloom/styles/main.css"/>
+    <link rel="stylesheet" href="/styles/main.css"/>
   </head>
   <body>
     <!-- Navigation -->
@@ -79,7 +79,7 @@
       const showRegister = document.getElementById("show-register");
       const showLogin = document.getElementById("show-login");
 
-      fetch("/web2-ws25-4EverBloom/Header/header.html")
+      fetch("/Header/header.html")
         .then(res => res.text())
         .then(data => (document.getElementById("header").innerHTML = data))
         .catch(err => console.error("Header konnte nicht geladen werden:", err));
@@ -116,7 +116,7 @@
 
         if (storedUser && storedUser.password === password) {
           localStorage.setItem("isLoggedIn", "true");
-          window.location.href = "/web2-ws25-4EverBloom/customer/home-page/home-page.html";
+          window.location.href = "/customer/home-page/home-page.html";
         } else {
           alert("Invalid email or password. Please try again.");
         }

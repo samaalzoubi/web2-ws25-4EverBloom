@@ -3,24 +3,24 @@
         "id": 1,
         "name": "Amaryllis Bouquet",
         "price": "€45,00",
-        "image": "/web2-ws25-4EverBloom/assets/bouquet1.png"
+        "image": "/assets/bouquet1.png"
     },
     {
         "id": 2,
         "name": "Dried Vanilla Sky",
         "price": "€49,00",
-        "image": "/web2-ws25-4EverBloom/assets/bouquet2.png"
+        "image": "/assets/bouquet2.png"
     },
     {
         "id": 3,
         "name": "Flamingo Stripes",
         "price": "€80,00",
-        "image": "/web2-ws25-4EverBloom/assets/bouquet3.png"
+        "image": "/assets/bouquet3.png"
     },
     {
         "id": 4,
         "name": "French Martini",
         "price": "€90,00",
-        "image": "/web2-ws25-4EverBloom/assets/bouquet4.png"
+        "image": "/assets/bouquet4.png"
     }
 ]
