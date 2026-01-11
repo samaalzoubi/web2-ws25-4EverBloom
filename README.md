@@ -53,7 +53,9 @@ Responsibilities were divided by features, pages, classes, and services.
 ### 🌸 Private Customers
 - **Registration & Login:** Create and access user accounts easily (authentication implemented without advanced security mechanisms).  
 - **Home Page:** Displays the most recently added bouquets as well as a carousel featuring participating flower shops. 
-- **Map Page:** By clicking the map icon on the Home Page, customers can view all participating flower shops and their locations. Selecting a shop logo redirects the user to the corresponding flower shop profile.  
+- **Map Page:** By clicking the map icon on the Home Page, customers can view all participating flower shops and their locations. Selecting a shop logo redirects the user to the corresponding flower shop profile.
+> **Note:** 
+> Map is using the Geocoding API https://geocode.maps.co internally, so sometimes it can come to the "Error fetching vehicles"-failure (429 Too Many Requests on GET request for "https://geocode.maps.co/reverse") because of the limited use of the corresponding API.
 - **Flower Shop Pages:** View local florist profiles including available bouquets and contact information.
 - **Shopping Cart:** Add items to the cart, remove individual items, or clear the entire cart.
 - **Checkout:** Proceed with the order process and provide additional details such as delivery information.
@@ -85,18 +87,26 @@ Frontend Folder:
 - HTML
 - CSS
 - JavaScript
-- Vue.js
+- Vue.js 3.2
 
 Branch lab2/bem:
 - HTML and CSS following the BEM methodology
 - Sass (SCSS) for modular and maintainable styling
-- Partially JavaScript
+- JavaScript (partial usage)
 (Note: Vue.js is not used in this branch.)
 
 **Backend**
 - Java
 - Spring Boot
-- H2 Database (in-memory database for development and testing)
+- REST APIs
+- GraphQL
+- Spring MVC (server-side rendering, Lab 4)
+- Thymeleaf (server-side rendering, Lab 4)
+
+**Database & Persistence**
+- JPA/Hibernate
+- Spring Data JPA
+- H2 in-memory database
 
 **Development & Tooling**
 - Git & Github
