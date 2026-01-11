@@ -74,7 +74,35 @@ Responsibilities were divided by features, pages, classes, and services.
 ![UML Diagram](ClickPrototype/assets/uml-dig.png)
 
 ## 9. Tech Stack
-_(List technologies, frameworks, and tools used)_
+**Frontend**
+
+ClickPrototype Folder:
+- HTML
+- CSS
+- JavaScript
+
+Frontend Folder:
+- HTML
+- CSS
+- JavaScript
+- Vue.js
+
+Branch lab2/bem:
+- HTML and CSS following the BEM methodology
+- Sass (SCSS) for modular and maintainable styling
+- Partially JavaScript
+(Note: Vue.js is not used in this branch.)
+
+**Backend**
+- Java
+- Spring Boot
+- H2 Database (in-memory database for development and testing)
+
+**Development & Tooling**
+- Git & Github
+- IntelliJ IDEA (backend development)
+- Visual Studio Code (frontend development)
+- Maven (build and dependency management)
 
 ## 10. User Flow / Module Description
 _(Explain how users interact with the app step-by-step)_
