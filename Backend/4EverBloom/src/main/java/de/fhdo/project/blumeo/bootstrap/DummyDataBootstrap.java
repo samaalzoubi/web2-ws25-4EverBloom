@@ -104,9 +104,6 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         customer.setEmail("alice@blumeo.test");
         customer.setPassword("customerpassword");
         customer.setRole(Role.CUSTOMER);
-
-        customer.setOpeningTime(LocalTime.of(9, 0));
-        customer.setClosingTime(LocalTime.of(18, 0));
         customer.setPhoneNumber("+491112223334");
 
         Address customerAddress = new Address();

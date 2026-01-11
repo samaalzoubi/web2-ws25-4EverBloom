@@ -3,6 +3,7 @@ package de.fhdo.project.blumeo.controller.order;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,13 @@ import de.fhdo.project.blumeo.services.OrderService;
 //Lab5
 @CrossOrigin
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping(
+        value = "/api/v1/orders",
+        produces = {
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_XML_VALUE
+        }
+)
 public class OrderController {
 
     private final OrderService orderService;

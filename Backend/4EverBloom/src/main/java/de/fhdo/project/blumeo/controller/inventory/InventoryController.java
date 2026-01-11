@@ -2,6 +2,7 @@ package de.fhdo.project.blumeo.controller.inventory;
 
 import de.fhdo.project.blumeo.dto.inventory.ShopStemDTO;
 import de.fhdo.project.blumeo.dto.inventory.UpdateShopStemRequest;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.fhdo.project.blumeo.dto.inventory.CreateShopStemRequest;
@@ -16,7 +17,11 @@ import java.util.List;
 //Lab5
 @RestController
 @RequestMapping(
-        value = "/api/v1/shops/{shopId}/inventory/stems"
+        value = "/api/v1/shops/{shopId}/inventory/stems",
+        produces = {
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_XML_VALUE
+        }
 )
 public class InventoryController {
 

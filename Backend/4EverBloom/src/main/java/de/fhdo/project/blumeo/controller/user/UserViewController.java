@@ -24,7 +24,7 @@ public class UserViewController {
     public String showRegisterForm(Model model) {
         model.addAttribute("registerRequest", new RegisterRequest());
         model.addAttribute("isLoggedIn", false);
-        return "Login/UserRegister"; // Thymeleaf template
+        return "Login/UserRegister";
     }
 
     // -------------------- Submit registration form --------------------
@@ -34,7 +34,7 @@ public class UserViewController {
             userService.createUser(registerRequest);
             model.addAttribute("success", "You have been successfully registered!");
         } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage()); // e.g. "Email already exists"
+            model.addAttribute("error", e.getMessage());
         }
         model.addAttribute("registerRequest", registerRequest);
         model.addAttribute("isLoggedIn", false);
@@ -61,7 +61,7 @@ public class UserViewController {
         }
         model.addAttribute("success", "Login successful!");
         model.addAttribute("isLoggedIn", true);
-        // Redirect to dashboard or home page after successful login
-        return "redirect:/";
+        //In a real server-rendered application we would be redirected to the home-page
+        return "Login/loginPage";
     }
 }

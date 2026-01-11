@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <header th:fragment="header">
-  <a href="/ClickPrototype/customer/home-page/home-page.html">
+  <a href="#">
     <div class="logo">
       <img src="/assets/Logo.png" alt="Flower Logo" width="70" height="70">
       <div class="logo-text-part">
@@ -12,10 +12,10 @@
   </a>
 
     <nav>
-      <a id="login-link" href="/ClickPrototype/Login/Login.html" th:if="${!isLoggedIn}">Login</a>
+      <a id="login-link" href="#" th:if="${!isLoggedIn}">Login</a>
 
     <div class="design-bouquet" th:if="${isLoggedIn}">
-      <a class="user-links" href="../Customer/DesignBouquet.html" title="Design a Bouquet">
+      <a class="user-links" href="#" title="Design a Bouquet">
         <span class="fx-3d">3D</span>esign Bouquet 🪄
         </a>
       </div>
@@ -24,7 +24,7 @@
         <span class="cart-count" th:text="${cart != null ? cart.totalQuantity : 0}">0</span>
       </a>
 
-      <a id="userMenuButton" href="/ClickPrototype/Profile/profile.html" th:if="${isLoggedIn}">
+      <a id="userMenuButton" href="#" th:if="${isLoggedIn}">
         <span class="material-symbols-outlined">account_circle</span>
       </a>
 
@@ -33,8 +33,8 @@
           <img id="profileImage" src="" alt="Profile Image" class="hidden">
         </div>
         <p id="userEmail"></p> 
-        <a href="../Profile/profile.html" class="option-btn">View Profile</a>
-        <a href="/ClickPrototype/Login/Login.html" class="option-btn">Logout</a>
+        <a href="#" class="option-btn">View Profile</a>
+        <a href="#" class="option-btn">Logout</a>
       </div>
      
     </nav>

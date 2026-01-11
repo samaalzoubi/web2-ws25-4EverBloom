@@ -6,7 +6,6 @@
     <title>Checkout</title>
     <link rel="stylesheet" href="/style/Style.css">
     <link rel="stylesheet" href="/style/checkout.css">
-    <link rel="stylesheet" href="/style/header.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -19,7 +18,9 @@
                 <h1>List Product in Cart</h1>
                 <div class="list" th:each="cartItem : ${cart.items}">
                     <div class="item">
-                        <img src="/assets/bouquets/bouquet1.png" alt="">
+                        <img th:src="${cartItem.imageUrl != null && !#strings.isEmpty(cartItem.imageUrl)
+                                     ? cartItem.imageUrl
+                                     : '/assets/bouquets/bouquet1.png'}" alt="">
                         <div class="info">
                             <div class="name" th:text="${cartItem.bouquetName}">Amaryllis Bouquet</div>
                             <div class="price" th:text="${'€' + cartItem.unitPrice + '/1 bouquet'}">€45/1 bouquet</div>

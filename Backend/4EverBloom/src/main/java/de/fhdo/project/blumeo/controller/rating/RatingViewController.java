@@ -30,7 +30,7 @@ public class RatingViewController {
     }
 
     @GetMapping("/customer/orders")
-    public String showCustomerOrders(@RequestParam(name = "customerId", required = false, defaultValue = "1") Long customerId,
+    public String showCustomerOrders(@RequestParam(name = "customerId", required = false, defaultValue = "2") Long customerId,
                                       Model model) {
         List<Order> orders = orderRepository.findByCustomer_Id(customerId);
         

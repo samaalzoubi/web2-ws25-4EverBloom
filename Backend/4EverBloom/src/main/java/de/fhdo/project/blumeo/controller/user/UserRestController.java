@@ -13,7 +13,13 @@ import java.util.List;
 
 //Lab5
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping(
+        value = "/api/v1/users",
+        produces = {
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_XML_VALUE
+        }
+)
 @CrossOrigin
 public class UserRestController {
 
