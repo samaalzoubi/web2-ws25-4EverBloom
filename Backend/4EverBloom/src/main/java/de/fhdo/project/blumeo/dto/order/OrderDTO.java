@@ -1,10 +1,10 @@
 package de.fhdo.project.blumeo.dto.order;
 
+import java.util.List;
+
 import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
 import lombok.Data;
-
-import java.util.List;
 
 //Lab3
 @Data
@@ -22,6 +22,7 @@ public class OrderDTO {
 
     private List<OrderLineDTO> orderLines;
 
+    private Integer rating;
 
     public String getTotalAmountFormatted() {
         if (totalAmount == null) return "0.00";

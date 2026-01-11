@@ -1,6 +1,8 @@
 package de.fhdo.project.blumeo.controller.rating;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import de.fhdo.project.blumeo.dto.rating.RatingRequestDTO;
 import de.fhdo.project.blumeo.entity.order.Order;
 import de.fhdo.project.blumeo.repository.order.OrderRepository;
+import de.fhdo.project.blumeo.repository.rating.RatingRepository;
 import de.fhdo.project.blumeo.services.RatingService;
 import jakarta.validation.Valid;
 
@@ -23,10 +26,13 @@ public class RatingViewController {
 
     private final RatingService ratingService;
     private final OrderRepository orderRepository;
+    private final RatingRepository ratingRepository;
 
-    public RatingViewController(RatingService ratingService, OrderRepository orderRepository) {
+    public RatingViewController(RatingService ratingService, OrderRepository orderRepository, 
+                                RatingRepository ratingRepository) {
         this.ratingService = ratingService;
         this.orderRepository = orderRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @GetMapping("/customer/orders")
@@ -34,8 +40,16 @@ public class RatingViewController {
                                       Model model) {
         List<Order> orders = orderRepository.findByCustomer_Id(customerId);
         
+        // Check which orders have ratings
+        Map<Long, Boolean> hasRating = new HashMap<>();
+        for (Order order : orders) {
+            boolean rated = ratingRepository.findByOrder_OrderIdAndCustomer_Id(order.getOrderId(), customerId).isPresent();
+            hasRating.put(order.getOrderId(), rated);
+        }
+        
         model.addAttribute("customerId", customerId);
         model.addAttribute("orders", orders);
+        model.addAttribute("hasRating", hasRating);
         return "Rating/customers_Rating";
     }
 

@@ -40,12 +40,12 @@
         />
         <select v-model="selectedStatus" class="filter-select" @change="filterOrders">
           <option value="all">All Statuses</option>
-          <option value="Created">Created</option>
-          <option value="Confirmed">Confirmed</option>
-          <option value="In Delivery">In Delivery</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Cancelled">Cancelled</option>
-          <option value="Paid">Paid</option>
+          <option value="CREATED">Created</option>
+          <option value="CONFIRMED">Confirmed</option>
+          <option value="IN_DELIVERY">In Delivery</option>
+          <option value="DELIVERED">Delivered</option>
+          <option value="CANCELLED">Cancelled</option>
+          <option value="PAID">Paid</option>
         </select>
       </div>
 
@@ -105,10 +105,6 @@
             >
               <i class="fas fa-redo"></i> Reorder
             </button>
-
-            <button class="btn-help" @click="getHelp(order)">
-              <i class="fas fa-question-circle"></i> Help
-            </button>
           </div>
 
           <!-- Rating Box for Delivered Orders -->
@@ -145,8 +141,8 @@
             </div>
           </div>
 
-          <!-- Thank you message -->
-          <div v-if="order.rated" class="rating-thank-you">
+          <!-- Thank you message - only for DELIVERED orders -->
+          <div v-if="order.status === 'DELIVERED' && order.rated" class="rating-thank-you">
             <i class="fas fa-check-circle"></i>
             <span>Thank you for your rating! We appreciate your feedback.</span>
           </div>
@@ -292,12 +288,12 @@ export default {
 
     getStatusClass(status) {
       const classes = {
-        'Created': 'status-pending',
-        'Confirmed': 'status-preparing',
-        'In Delivery': 'status-out',
-        'Delivered': 'status-delivered',
-        'Cancelled': 'status-cancelled',
-        'Paid': 'status-delivered'
+        'CREATED': 'status-pending',
+        'CONFIRMED': 'status-preparing',
+        'IN_DELIVERY': 'status-out',
+        'DELIVERED': 'status-delivered',
+        'CANCELLED': 'status-cancelled',
+        'PAID': 'status-delivered'
       };
       return classes[status] || '';
     },
@@ -321,7 +317,7 @@ export default {
     },
 
     canCancel(order) {
-      return order.status !== 'DELIVERED' && order.status !== 'CANCELLED';
+      return order.status === 'CREATED' || order.status === 'CONFIRMED';
     },
 
     async cancelOrder(orderId) {
@@ -445,10 +441,6 @@ export default {
 
     reorderItems(order) {
       alert('Reorder functionality: Items will be added to cart.');
-    },
-
-    getHelp(order) {
-      alert(`Need help with order ${order.id}? Contact support.`);
     }
   }
 };

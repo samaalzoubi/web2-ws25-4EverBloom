@@ -302,7 +302,7 @@ const renderStats = (stats) => `
  */
 const renderOrderCard = (order) => {
   const statusClass = `status-${order.status.toLowerCase().replace(/ /g, '-')}`;
-  const canAccept = order.status === 'CREATED' || order.status === 'CONFIRMED';
+  const canAccept = order.status !== 'DELIVERED' && order.status !== 'CANCELLED';
   const canCancel = order.status !== 'DELIVERED' && order.status !== 'CANCELLED';
   
   return `
@@ -332,9 +332,11 @@ const renderOrderCard = (order) => {
       <div class="order-total">Total: ${formatCurrency(order.totalAmount || 0)}</div>
       
       <div class="order-actions">
-        <button class="btn btn-accept" onclick="window.acceptOrder(${order.orderId})">
-          <i class="fas fa-check"></i> Accept
-        </button>
+        ${canAccept ? `
+          <button class="btn btn-accept" onclick="window.acceptOrder(${order.orderId})">
+            <i class="fas fa-check"></i> Accept
+          </button>
+        ` : ''}
         ${canCancel ? `
           <button class="btn btn-cancel" onclick="window.cancelOrder(${order.orderId})">
             <i class="fas fa-times"></i> Cancel

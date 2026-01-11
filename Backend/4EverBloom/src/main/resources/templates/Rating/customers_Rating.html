@@ -460,7 +460,8 @@
           </div>
           <div class="order-total" th:text="${order.totalAmount != null ? '€' + #numbers.formatDecimal(order.totalAmount,1,2) : '€0.00'}">€0.00</div>
 
-          <div class="rating-box" th:with="oid=${order.orderId}">
+          <!-- Only show rating box if order is DELIVERED and doesn't have a rating yet -->
+          <div class="rating-box" th:with="oid=${order.orderId}" th:if="${order.status.name() == 'DELIVERED' && !hasRating.get(order.orderId)}">
             <h4>How was your experience?</h4>
             <div class="stars" th:attr="data-order-id=${oid}">
               <i class="fa-solid fa-star" data-value="1"></i>
@@ -486,6 +487,12 @@
               <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
               <span>Thank you for your rating! We appreciate your feedback.</span>
             </div>
+          </div>
+
+          <!-- Show thank you message if order is DELIVERED and already has a rating -->
+          <div class="rating-thank-you" th:with="oid=${order.orderId}" th:if="${order.status.name() == 'DELIVERED' && hasRating.get(order.orderId)}" style="margin-top: 1rem; padding: 1rem; background: #e8f5e9; border-radius: 8px; text-align: center; color: #2e7d32;">
+            <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+            <span>Thank you for your rating! We appreciate your feedback.</span>
           </div>
         </div>
       </div>

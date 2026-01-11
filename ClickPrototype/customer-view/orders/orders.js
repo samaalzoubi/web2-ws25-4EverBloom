@@ -231,7 +231,7 @@ function createOrderCard(order) {
 
     <div class="order-total">€${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</div>
 
-    ${order.status === 'DELIVERED' ? `
+    ${order.status === 'DELIVERED' && !order.rating ? `
     <div class="rating-box">
       <h4>How was your experience?</h4>
       <div class="stars" data-order-id="${order.orderId}">
@@ -255,6 +255,13 @@ function createOrderCard(order) {
         <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
         <span>Thank you for your rating! We appreciate your feedback!</span>
       </div>
+    </div>
+    ` : ''}
+    
+    ${order.status === 'DELIVERED' && order.rating ? `
+    <div class="rating-thank-you" style="margin-top: 1rem; padding: 1rem; background: #e8f5e9; border-radius: 8px; text-align: center; color: #2e7d32;">
+      <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+      <span>Thank you for your rating! We appreciate your feedback!</span>
     </div>
     ` : ''}
   `;

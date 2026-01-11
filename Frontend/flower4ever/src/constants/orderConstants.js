@@ -1,15 +1,15 @@
 export const API_BASE_URL = 'http://localhost:8080/api/v1';
 
 export const ORDER_STATUS = {
-  CREATED: 'Created',
-  CONFIRMED: 'Confirmed',
-  IN_DELIVERY: 'In Delivery',
-  DELIVERED: 'Delivered',
-  CANCELLED: 'Cancelled',
-  PAID: 'Paid',
-  PENDING: 'Pending',
-  PREPARING: 'Preparing',
-  OUT_FOR_DELIVERY: 'Out for Delivery'
+  CREATED: 'CREATED',
+  CONFIRMED: 'CONFIRMED',
+  IN_DELIVERY: 'IN_DELIVERY',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+  PAID: 'PAID',
+  PENDING: 'PENDING',
+  PREPARING: 'PREPARING',
+  OUT_FOR_DELIVERY: 'OUT_FOR_DELIVERY'
 };
 
 export const API_ENDPOINTS = {
