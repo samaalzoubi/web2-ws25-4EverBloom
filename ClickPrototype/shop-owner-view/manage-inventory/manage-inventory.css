@@ -1,38 +1,14 @@
 .inventory-wrapper {
-  display: grid;
-  grid-template-columns: 260px 1fr;
   gap: 2rem;
-  max-width: 1400px;
+  width: 100%;
   margin: 120px auto;
   padding: 0 2rem;
+  display: flex;
 }
 
-/* SIDEBAR */
-.side-alert {
-  background: #f8eaff;
-  border-radius: 20px;
-  padding: 1.5rem;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(140,80,255,0.1);
-}
-
-.side-alert span {
-  font-size: 32px;
-  color: #b14dff;
-}
-
-.side-alert h4 {
-  margin: 1rem 0 0.5rem;
-  color: #4b248c;
-}
-
-.side-alert p {
-  color: #7a58b8;
-}
-
-/* CONTENT */
 .inventory-content {
   padding-right: 1rem;
+  width: 80vw;
 }
 
 .title-block h2 {
@@ -110,3 +86,82 @@
 .back-link span {
   font-size: 20px;
 }
+
+.inventory-table {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.inventory-table table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.inventory-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 14px 16px;
+  font-weight: 600;
+  text-align: left;
+  color: #4b3c8a;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.inventory-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: #333;
+  vertical-align: middle;
+}
+
+.inventory-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.inventory-table tbody tr:hover {
+  background: rgba(183, 155, 211, 0.2);
+}
+
+.inventory-table th:last-child,
+.inventory-table td:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Delete button */
+.inventory-table .delete-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: #4b3c8a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inventory-table .btn-delete:hover {
+  background: #9f7cc1;
+  color: #fff;
+  border-color: transparent;
+}
+
+@media (max-width: 800px) {
+  .inventory-table {
+    max-height: none;
+  }
+
+  .inventory-table table {
+    min-width: 650px;
+  }
+}
+
