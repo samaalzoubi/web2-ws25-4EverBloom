@@ -58,12 +58,6 @@ public class UserMapper {
         return user;
     }
 
-    public void updateEntity(User user, UserDTO dto) {
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
-    }
-
     private String buildAddressString(Address addr) {
         return String.format("%s, %s %s, %s",
                 addr.getStreetAddress(),
