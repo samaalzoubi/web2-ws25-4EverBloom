@@ -79,13 +79,4 @@ _(List technologies, frameworks, and tools used)_
 ## 10. User Flow / Module Description
 _(Explain how users interact with the app step-by-step)_
 
-## 11. Future Enhancements
-_(List possible improvements or planned features for future versions)_
-
-## 12. Conclusion
-_(Summarize what makes the project unique and impactful)_
-
-## 13. References
-_(Include APIs, design inspirations, or external resources used)_
-
 
