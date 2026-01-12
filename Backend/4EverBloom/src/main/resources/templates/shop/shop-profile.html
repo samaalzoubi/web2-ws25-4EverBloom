@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blümeo | Florist Profile</title>
+    <link rel="stylesheet" href="/style/Style.css">
+    <link rel="stylesheet" href="/style/shop-profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<main>
+    <section class="shop-info">
+        <div class="shop-title">
+            <div class="shop-name-with-logo">
+                <h2 th:text="${shop.shopName}">Flower Shop</h2>
+                <img class="shop-logo"
+                     th:src="${shop.logo != null and !#strings.isEmpty(shop.logo) ? shop.logo : '/assets/flower-shop-logo-default.jpg'}"
+                     alt="Shop logo">
+            </div>
+
+            <p class="tagline"
+               th:text="${shop.description != null and !#strings.isEmpty(shop.description) ? shop.description : 'Elegance in Every Stem'}">
+                Elegance in Every Stem
+            </p>
+        </div>
+
+        <div class="shop-details">
+            <p>
+                📍
+                <span th:text="${shop.address.streetAddress}">Street</span>,
+                <span th:text="${shop.address.zipCode}">ZIP</span>
+                <span th:text="${shop.address.city}">City</span>
+            </p>
+
+            <p>
+                🌐
+                <a th:href="${shop.link != null and !#strings.isEmpty(shop.link) ? shop.link : '#'}"
+                   th:attr="target=${shop.link != null and !#strings.isEmpty(shop.link) ? '_blank' : null}"
+                   th:text="${shop.link != null and !#strings.isEmpty(shop.link) ? shop.link : 'Website not available'}">
+                    Website not available
+                </a>
+            </p>
+
+            <p>
+                📞
+                <span th:text="${shop.phoneNumber != null and !#strings.isEmpty(shop.phoneNumber) ? shop.phoneNumber : 'No phone number'}">
+            No phone number
+          </span>
+            </p>
+        </div>
+    </section>
+
+    <nav class="shop-tabs">
+        <a href="#"
+           th:classappend="'active'">
+            Catalog
+        </a>
+        <a href="#">
+            About
+        </a>
+        <a href="#">
+            Subscriptions
+        </a>
+        <a href="#">
+            Reviews
+        </a>
+        <a href="#">
+            Delivery Info
+        </a>
+    </nav>
+
+    <section class="bouquet-section">
+        <h2>Catalog</h2>
+
+        <div class="bouquet-grid">
+            <p th:if="${bouquets == null or #lists.isEmpty(bouquets)}">
+                This shop has no premade bouquets yet.
+            </p>
+
+            <div class="bouquet-card"
+                 th:each="bouquet : ${bouquets}"
+                 th:if="${bouquets != null and !#lists.isEmpty(bouquets)}">
+
+                <img th:src="${bouquet.imageUrl != null and !#strings.isEmpty(bouquet.imageUrl)
+                        ? bouquet.imageUrl
+                        : '/assets/bouquets/bouquet1.png'}"
+                     alt="Bouquet image">
+
+                <h3 th:text="${bouquet.name}">Bouquet name</h3>
+
+                <p class="price"
+                   th:text="${'€' + bouquet.price}">
+                    €0.00
+                </p>
+
+                <div th:if="${successBouquetId != null and successBouquetId == bouquet.id}"
+                     class="success-msg"
+                     th:text="${success}">
+                </div>
+
+                <div th:if="${errorBouquetId != null and errorBouquetId == bouquet.id}"
+                     class="error-msg"
+                     th:text="${error}">
+                </div>
+
+                <form th:action="@{/shops/profile/cart/items}" method="post">
+                    <input type="hidden" name="bouquetId" th:value="${bouquet.id}">
+                    <input type="hidden" name="shopId" th:value="${shop.id}">
+                    <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
