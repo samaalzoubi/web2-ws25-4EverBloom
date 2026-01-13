@@ -53,3 +53,34 @@ export async function fetchShopsGraphQL() {
   const data = await graphqlRequest(query);
   return data.allOwners;
 }
+
+export async function fetchShopByIdGraphQL(shopId) {
+  const query = `
+    query ($id: ID!) {
+      userById(id: $id) {
+        id
+        role
+        shopName
+        description
+        phoneNumber
+        link
+        logo
+        address {
+          streetAddress
+          zipCode
+          city
+        }
+      }
+    }
+  `;
+
+  const response = await fetch(GRAPHQL_BASE, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables: { id: shopId } })
+  });
+
+  const result = await response.json();
+  if (result.errors) throw new Error("GraphQL returned errors");
+  return result.data.userById;
+}
