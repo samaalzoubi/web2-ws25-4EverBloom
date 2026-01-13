@@ -60,6 +60,10 @@
       </div>
     </section>
 
+    <div v-if="errorMessage" class="page-error">
+        {{ errorMessage }}
+    </div>
+
     <div v-if="bouquets.length === 0" class="empty-state">
       <p>No bouquets found for this shop.</p>
     </div>
@@ -77,6 +81,7 @@ const shopId = Number(route.query.shopId) || JSON.parse(localStorage.getItem('us
 
 const bouquets = ref([]);
 const showForm = ref(false);
+const errorMessage = ref('')
 
 const form = ref({
   name: "",
@@ -86,31 +91,35 @@ const form = ref({
 });
 
 const loadBouquets = async () => {
+  errorMessage.value = ''
   try {
     bouquets.value = await fetchShopBouquetsGraphQL(shopId);
   } catch (err) {
-    console.error("Failed to load bouquets:", err);
+    errorMessage.value = err?.message || 'Failed to load bouquets.'
   }
 };
 
 const submitBouquet = async () => {
+  errorMessage.value = ''
   try {
     await createPremadeBouquet(shopId, form.value);
     await loadBouquets();
     showForm.value = false;
     form.value = { name: "", imageUrl: "", fixedPrice: null, description: "" };
   } catch (err) {
-    console.error("Failed to create bouquet:", err);
+    errorMessage.value = err?.message || 'Failed to create bouquet.'
   }
 };
 
 const removeBouquet = async (id) => {
   if (!confirm("Are you sure you want to delete this?")) return;
+
+  errorMessage.value = ''
   try {
     await deleteBouquet(id);
     await loadBouquets();
   } catch (err) {
-    console.error("Failed to delete:", err);
+    errorMessage.value = err?.message || "Bouquet cannot be deleted."
   }
 };
 
@@ -120,8 +129,6 @@ onMounted(loadBouquets);
 </script>
 
 <style scoped>
-/* Unified Styles from Prototype CSS */
-
 .bouquet-wrapper {
   max-width: 1500px;
   margin: 100px auto 0 auto;
@@ -284,7 +291,6 @@ onMounted(loadBouquets);
 .edit-btn { background: #dcd2ff; color: #5a2db7; }
 .delete-btn { background: #ffe6e6; color: #d34444; }
 
-/* New Disabled State for Buttons */
 .actions a.disabled {
   background: #f0f0f0;
   color: #a0a0a0;
@@ -322,4 +328,15 @@ onMounted(loadBouquets);
   width: 100%;
   color: #7b5db2;
 }
+
+.page-error {
+  margin: 12px 0 6px 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #ffecec;
+  border: 1px solid #f5c2c2;
+  color: #9f1c1c;
+  font-weight: 500;
+}
+
 </style>

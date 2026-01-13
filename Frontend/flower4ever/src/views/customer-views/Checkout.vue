@@ -1,6 +1,6 @@
 <script setup>
 import { useCartStore } from '@/stores/cartStore'
-import { reactive, computed, onMounted, ref } from 'vue'
+import { reactive, computed, onMounted, ref, watch } from 'vue'
 import CartItemList from '@/components/CartItemList.vue';
 import { useUserStore } from "@/stores/userStore"
 import { useRouter } from 'vue-router'
@@ -32,10 +32,19 @@ const errorMessage = ref('')
 const checkoutFormRef = ref(null)
 
 onMounted(async () => {
-  if (!cartStore.cart) {
+  if (cartStore.canUseCart) {
     await cartStore.loadActiveCart()
   }
 })
+
+watch(
+  () => cartStore.canUseCart, 
+  async (ok) => {
+    if (ok) await cartStore.loadActiveCart()
+  }, 
+  { immediate: true }
+)
+
 
 function formatPriceEUR(value) {
   return new Intl.NumberFormat("de-DE", {
