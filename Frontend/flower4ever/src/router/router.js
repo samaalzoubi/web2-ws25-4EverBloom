@@ -8,9 +8,9 @@ import AdminOrders from "@/components/Order/AdminOrders.vue";
 import HomePage from "@/views/customer-views/HomePage.vue";
 import Map from "@/views/customer-views/Map.vue";
 import Checkout from "@/views/customer-views/Checkout.vue";
-import CustomerShopProfile from "@/views/customer-views/shop-profile.vue";
-import ManageBouquets from "@/views/shop-owner-view/manage-bouquets.vue";
-import ManageInventory from "@/views/shop-owner-view/manage-inventory.vue";
+import CustomerShopProfile from "@/views/customer-views/ShopProfile.vue";
+import ManageBouquets from "@/views/shop-owner-view/ManageBouquets.vue";
+import ManageInventory from "@/views/shop-owner-view/ManageInventory.vue";
 import ShopOwnerHome from '@/views/shop-owner-view/ShopOwnerHome.vue'
 
 const routes = [
