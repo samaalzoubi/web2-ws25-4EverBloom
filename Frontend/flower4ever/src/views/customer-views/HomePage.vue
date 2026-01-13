@@ -25,9 +25,7 @@ function handleAddToCart(bouquet) {
 }
 
 function callShopProfile(shopId) {
-    //TODO
-    console.log("Hey there! You are trying to call shop-profile-page... Well, it hasn't been implemented yet!")
-    //router.push({ name: 'shop-profile', query: { shopId: shopId } })
+  router.push({ name: 'shop-profile', query: { shopId: shopId } })
 }
 </script>
 

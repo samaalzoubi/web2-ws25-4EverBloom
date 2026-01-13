@@ -57,8 +57,7 @@ function addShopsToMap() {
 
     marker.bindPopup(popupHtml)
 
-    //TODO: navigation zum Shop-Profile
-    /*marker.on('popupopen', e => {
+    marker.on('popupopen', e => {
       const root = e.popup.getElement()
       const btn = root?.querySelector('.popup-btn')
       if (btn) {
@@ -66,7 +65,7 @@ function addShopsToMap() {
           router.push({ name: 'shop-profile', query: { shopId: shop.id } })
         })
       }
-    })*/
+    })
 
     bounds.push([lat, lon])
   })

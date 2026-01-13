@@ -57,7 +57,7 @@ const routes = [
   },
   {
     path: '/shop-profile',
-    name: 'ShopProfile',
+    name: 'shop-profile',
     component: CustomerShopProfile
   },
   {

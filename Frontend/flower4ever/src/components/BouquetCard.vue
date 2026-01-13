@@ -22,6 +22,7 @@
           <div class="bouquet-card__shop">
             <img
               class="bouquet-card__shop-logo"
+              v-if="bouquet.shopLogo"
               :src="bouquet.shopLogo"
               alt="Shop logo"
               @click.stop="$emit('shop-click', bouquet.shopId)"
@@ -52,6 +53,10 @@ function formatPriceEUR(value) {
 </script>
 
 <style scoped>
+.bouquet-card {
+  list-style: none;
+}
+
 .bouquet-card__bottom-row {
   display: flex;
   align-items: center;

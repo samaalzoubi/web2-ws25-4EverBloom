@@ -69,11 +69,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { 
-  fetchShopBouquetsGraphQL, 
-  createPremadeBouquet, 
-  deletePremadeBouquet 
-} from "@/services/api/bouquetGraphqlService.js";
+import { fetchShopBouquetsGraphQL, createPremadeBouquet } from "@/services/api/bouquetGraphqlService.js";
+import { deleteBouquet } from "@/services/api/bouquetRestService.js";
 
 const route = useRoute();
 const shopId = Number(route.query.shopId) || JSON.parse(localStorage.getItem('user'))?.shopId || 1;
@@ -110,7 +107,7 @@ const submitBouquet = async () => {
 const removeBouquet = async (id) => {
   if (!confirm("Are you sure you want to delete this?")) return;
   try {
-    await deletePremadeBouquet(id);
+    await deleteBouquet(id);
     await loadBouquets();
   } catch (err) {
     console.error("Failed to delete:", err);
