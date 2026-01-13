@@ -59,7 +59,7 @@
         >
           <div class="order-header">
             <div>
-              <div class="order-id">{{ order.id }}</div>
+              <div class="order-id">Order ID: {{ order.id }}</div>
               <div class="order-date">{{ formatDate(order.orderDate) }}</div>
             </div>
             <span class="status-badge" :class="getStatusClass(order.status)">
@@ -258,7 +258,6 @@ export default {
   async mounted() {
     const userStore = useUserStore();
     this.userId = userStore.user?.userId || userStore.user?.id || 2;
-    console.log('Customer userId:', this.userId);
     await this.loadOrders();
   },
   methods: {

@@ -16,6 +16,7 @@ import ShopOwnerHome from '@/views/shop-owner-view/ShopOwnerHome.vue'
 const routes = [
   {
     path: '/login',
+    name: 'Login',
     component: Login
   },
   {

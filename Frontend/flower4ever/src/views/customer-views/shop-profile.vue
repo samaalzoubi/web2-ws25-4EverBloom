@@ -44,7 +44,7 @@ function handleAddToCart(bouquet) {
       <div class="shop-details">
         <p>
           <strong>Phone:</strong> {{ shop.phoneNumber }}<br />
-          <strong>Website:</strong>
+          <strong>Website: </strong>
           <a :href="shop.link" target="_blank">{{ shop.link }}</a><br />
           <strong>Address:</strong>
           {{ shop.address?.streetAddress }}, {{ shop.address?.city }}, {{ shop.address?.zipCode }}
