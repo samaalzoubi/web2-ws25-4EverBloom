@@ -500,7 +500,7 @@ export default {
 
 .admin-orders-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(120deg, var(--color-background), var(--color-background-secondary));
   padding: 2rem 0;
   font-family: 'Poppins', sans-serif;
 }
