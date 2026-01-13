@@ -45,3 +45,52 @@ export async function fetchFlowersGraphQL() {
   const data = await graphqlRequest(query);
   return data.latestPremadeBouquetsPerShop;
 }
+
+export async function fetchShopBouquetsGraphQL(shopId) {
+  const query = `
+    query ($shopId: ID!) {
+      bouquetsForShop(shopId: $shopId) {
+        id
+        name
+        price
+        imageUrl
+      }
+    }
+  `;
+
+  const response = await fetch(GRAPHQL_BASE, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables: { shopId } })
+  });
+
+  const result = await response.json();
+  if (result.errors) throw new Error("GraphQL returned errors");
+  return result.data.bouquetsForShop;
+}
+
+export async function createPremadeBouquet(shopId, data) {
+  const mutation = `
+    mutation CreatePremadeBouquet($shopId: ID!, $request: CreatePremadeBouquetRequest!) {
+      createPremadeBouquet(shopId: $shopId, request: $request) {
+        id
+        name
+        description
+        imageUrl
+        price
+      }
+    }
+  `;
+  const variables = {
+    shopId: Number(shopId),
+    request: {
+      name: data.name,
+      description: data.description,
+      imageUrl: data.imageUrl,
+      fixedPrice: data.fixedPrice,
+      occasions: data.occasions || []
+    }
+  };
+  const result = await graphqlRequest(mutation, variables);
+  return result.createPremadeBouquet;
+}
