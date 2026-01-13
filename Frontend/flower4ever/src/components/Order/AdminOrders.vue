@@ -55,8 +55,9 @@
       <div v-else-if="error" class="error">{{ error }}</div>
 
       <!-- Empty -->
-      <div v-else-if="filteredOrders.length === 0" class="no-orders">
-        No orders found.
+      <div v-else-if="filteredOrders.length === 0" class="no-orders-message">
+        <i class="fas fa-inbox"></i>
+        <p>There are no orders yet!</p>
       </div>
 
       <!-- Orders Grid -->
@@ -579,5 +580,27 @@ export default {
 .rating-not-rated {
   color: #999;
   font-style: italic;
+}
+
+/* No Orders Message */
+.no-orders-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.no-orders-message i {
+  font-size: 4rem;
+  color: #7b68ad;
+  margin-bottom: 1rem;
+}
+
+.no-orders-message p {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 0;
+  font-weight: 500;
 }
 </style>

@@ -433,15 +433,13 @@
       </div>
       
       <div class="orders-grid" id="orders-grid" th:attr="data-customer-id=${customerId}">
-        <div class="order-card" th:if="${#lists.isEmpty(orders)}">
-          <div class="order-header">
-            <div>
-              <div class="order-id">No orders yet</div>
-              <div class="order-date">Place an order to leave a rating.</div>
-            </div>
-          </div>
+        <!-- No Orders Message -->
+        <div class="no-orders-message" th:if="${#lists.isEmpty(orders)}">
+          <i class="fas fa-inbox"></i>
+          <p>There are no orders yet!</p>
         </div>
-
+        
+        <!-- Order Cards -->
         <div class="order-card" th:each="order : ${orders}" th:attr="data-status=${order.status}">
           <div class="order-header">
             <div>

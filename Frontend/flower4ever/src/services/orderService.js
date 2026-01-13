@@ -80,10 +80,49 @@ export default {
   // Update order (items, total, etc.)
   async updateOrder(orderId, orderData) {
     try {
-      const response = await apiClient.put(API_ENDPOINTS.ORDER_BY_ID(orderId), orderData);
-      return this.transformBackendOrder(response.data);
+      console.log('🔍 Starting order update for orderId:', orderId);
+      console.log('🔍 Order data received:', orderData);
+      console.log('🔍 Items to update:', orderData.items);
+      
+      // Validate that all items have bouquetId
+      const itemsWithMissingIds = orderData.items.filter(item => !item.bouquetId && !item.id);
+      if (itemsWithMissingIds.length > 0) {
+        console.error('❌ Items missing bouquetId:', itemsWithMissingIds);
+        throw new Error(`Cannot update order: ${itemsWithMissingIds.length} item(s) are missing bouquet IDs. Please remove newly added items before saving.`);
+      }
+      
+      // Transform frontend order format to backend DTO format
+      const backendOrderData = {
+        orderId: orderId,
+        totalAmount: orderData.total,
+        orderLines: orderData.items.map((item, index) => {
+          const orderLine = {
+            bouquetId: item.bouquetId || item.id,
+            bouquetName: item.name,
+            quantity: item.quantity,
+            price: item.price
+          };
+          console.log(`🔍 Item ${index}:`, item, '→', orderLine);
+          return orderLine;
+        })
+      };
+      
+      console.log('📤 Sending to backend:', JSON.stringify(backendOrderData, null, 2));
+      const response = await apiClient.put(API_ENDPOINTS.ORDER_BY_ID(orderId), backendOrderData);
+      console.log('✅ Backend response:', response.data);
+      
+      // Try to transform response, but if it fails, just return the raw data
+      try {
+        return this.transformBackendOrder(response.data);
+      } catch (transformError) {
+        console.warn('⚠️ Failed to transform response, returning raw data:', transformError);
+        return response.data;
+      }
     } catch (error) {
-      console.error('Error updating order:', error);
+      console.error('❌ Error updating order:', error);
+      console.error('❌ Error message:', error.message);
+      console.error('❌ Error response:', error.response?.data);
+      console.error('❌ Error status:', error.response?.status);
       throw error;
     }
   },
@@ -109,6 +148,7 @@ export default {
     const orderItems = backendOrder.orderLines || backendOrder.orderItems || backendOrder.items || [];
     const transformedItems = orderItems.map(item => ({
       id: item.orderLineId || item.id,
+      bouquetId: item.bouquetId || item.bouquet?.id,  // ✅ Preserve bouquetId
       name: item.bouquetName || item.bouquet?.name || item.name || 'Unknown Item',
       quantity: item.quantity || 1,
       price: item.price || item.bouquet?.price || 0
