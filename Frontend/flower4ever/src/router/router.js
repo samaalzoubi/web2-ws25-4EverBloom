@@ -11,6 +11,7 @@ import Checkout from "@/views/customer-views/Checkout.vue";
 import CustomerShopProfile from "@/views/customer-views/shop-profile.vue";
 import ManageBouquets from "@/views/shop-owner-view/manage-bouquets.vue";
 import ManageInventory from "@/views/shop-owner-view/manage-inventory.vue";
+import ShopOwnerHome from '@/views/shop-owner-view/ShopOwnerHome.vue'
 
 const routes = [
   {
@@ -68,7 +69,13 @@ const routes = [
     path: '/manage-inventory',
     name: 'ManageInventory',
     component: ManageInventory
-  }
+  },
+{
+  path: '/shop-owner-home', 
+  name: 'OwnerHome',
+  component: ShopOwnerHome
+}
+
 ]
 
 export default createRouter({

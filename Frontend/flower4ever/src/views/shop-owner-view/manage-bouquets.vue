@@ -1,6 +1,6 @@
 <template>
   <main class="bouquet-wrapper">
-    <router-link to="/" class="back-link">
+    <router-link :to="{ path: '/shop-owner-home', query: { shopId: shopId } }" class="back-link">
       <span class="material-symbols-outlined">arrow_back</span>
       Back to Home
     </router-link>
@@ -12,8 +12,8 @@
 
     <div class="action-row">
       <a href="#" class="add-btn" @click.prevent="toggleForm">
-        <span class="material-symbols-outlined">add</span>
-        Create New Bouquet
+        <span class="material-symbols-outlined">{{ showForm ? 'close' : 'add' }}</span>
+        {{ showForm ? 'Cancel' : 'Create New Bouquet' }}
       </a>
     </div>
 
@@ -33,21 +33,50 @@
         <div class="card-details">
           <div class="top-row">
             <h3>{{ bouquet.name }}</h3>
-            <div class="price">€{{ bouquet.price }}</div>
+            <div class="price">€{{ (bouquet.price || bouquet.fixedPrice)?.toFixed(2) }}</div>
+          </div>
+          
+          <p class="description">{{ bouquet.description }}</p>
+
+          <div class="stock stock-green">
+            In Stock
+          </div>
+          
+          <div class="actions">
+            <a href="#" class="view-btn disabled" @click.prevent>
+               <span class="material-symbols-outlined" style="font-size: 18px;">visibility</span>
+               View
+            </a>
+            <a href="#" class="edit-btn disabled" @click.prevent>
+               <span class="material-symbols-outlined" style="font-size: 18px;">edit</span>
+               Edit
+            </a>
+            <a href="#" class="delete-btn" @click.prevent="removeBouquet(bouquet.id)">
+               <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+               Delete
+            </a>
           </div>
         </div>
       </div>
     </section>
+
+    <div v-if="bouquets.length === 0" class="empty-state">
+      <p>No bouquets found for this shop.</p>
+    </div>
   </main>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { fetchShopBouquetsGraphQL, createPremadeBouquet } from "@/services/api/bouquetGraphqlService.js";
+import { 
+  fetchShopBouquetsGraphQL, 
+  createPremadeBouquet, 
+  deletePremadeBouquet 
+} from "@/services/api/bouquetGraphqlService.js";
 
 const route = useRoute();
-const shopId = route.query.shopId || 1;
+const shopId = Number(route.query.shopId) || JSON.parse(localStorage.getItem('user'))?.shopId || 1;
 
 const bouquets = ref([]);
 const showForm = ref(false);
@@ -78,21 +107,24 @@ const submitBouquet = async () => {
   }
 };
 
-const toggleForm = () => {
-  showForm.value = !showForm.value;
+const removeBouquet = async (id) => {
+  if (!confirm("Are you sure you want to delete this?")) return;
+  try {
+    await deletePremadeBouquet(id);
+    await loadBouquets();
+  } catch (err) {
+    console.error("Failed to delete:", err);
+  }
 };
+
+const toggleForm = () => { showForm.value = !showForm.value; };
 
 onMounted(loadBouquets);
 </script>
 
 <style scoped>
-body {
-  font-family: "Poppins", sans-serif;
-  background: #f5efff;
-  margin: 0;
-}
+/* Unified Styles from Prototype CSS */
 
-/* WRAPPER */
 .bouquet-wrapper {
   max-width: 1500px;
   margin: 100px auto 0 auto;
@@ -106,9 +138,9 @@ body {
 }
 
 .back-link {
-  position: static;
-  margin-left: 0.2rem;
-  margin-top: -0.5rem;
+  position: static;          
+  margin-left: 0.2rem;       
+  margin-top: -0.5rem;       
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -176,13 +208,13 @@ body {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(120, 60, 200, 0.12);
+  box-shadow: 0 10px 30px rgba(120,60,200,0.12);
   transition: 0.3s;
 }
 
 .bouquet-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 38px rgba(80, 30, 150, 0.18);
+  box-shadow: 0 20px 38px rgba(80,30,150,0.18);
 }
 
 .image-box {
@@ -219,6 +251,50 @@ body {
   font-weight: 600;
 }
 
+.description {
+  margin: 0.4rem 0 0.7rem;
+  color: #865ed1;
+  font-size: 0.95rem;
+}
+
+.stock {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.stock-green { background: #e8ffee; color: #169444; }
+
+.actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.actions a {
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.view-btn { background: #f1e9ff; color: #6336c8; }
+.edit-btn { background: #dcd2ff; color: #5a2db7; }
+.delete-btn { background: #ffe6e6; color: #d34444; }
+
+/* New Disabled State for Buttons */
+.actions a.disabled {
+  background: #f0f0f0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .create-form {
   margin-top: 1rem;
   display: flex;
@@ -241,5 +317,12 @@ body {
   padding: 0.7rem;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  width: 100%;
+  color: #7b5db2;
 }
 </style>
