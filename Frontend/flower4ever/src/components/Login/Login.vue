@@ -94,7 +94,7 @@ export default {
 
         setTimeout(() => {
           if (userData.role === "OWNER") {
-            router.push("/owner/dashboard")
+            router.push("/shop-owner-home")
           } else {
             router.push("/")
           }

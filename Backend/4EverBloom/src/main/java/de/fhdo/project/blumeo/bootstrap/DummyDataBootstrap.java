@@ -83,6 +83,7 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         owner.setFlowerShopType("Boutique");
         owner.setLink("https://roseparadise.blumeo.test");
         owner.setLogo("https://i.etsystatic.com/34374772/r/il/c338b0/5033583096/il_fullxfull.5033583096_cwje.jpg");
+        owner.setDescription("Exquisite flowers, timeless elegance.");
 
         owner.setOpeningTime(LocalTime.of(9, 0));
         owner.setClosingTime(LocalTime.of(18, 0));

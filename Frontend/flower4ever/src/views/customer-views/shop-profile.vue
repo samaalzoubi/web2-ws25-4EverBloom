@@ -4,8 +4,10 @@ import { useRoute } from 'vue-router'
 import { fetchShopByIdGraphQL } from '@/services/api/userGraphqlService.js'
 import { fetchShopBouquetsGraphQL } from '@/services/api/bouquetGraphqlService.js'
 import BouquetCard from '@/components/BouquetCard.vue'
+import { useCartStore } from '@/stores/cartStore'
 
 const route = useRoute()
+const cartStore = useCartStore()
 const shopId = route.query.shopId || ''
 
 const shop = ref(null)
@@ -19,6 +21,10 @@ onMounted(async () => {
     console.error('Failed to load shop profile:', error)
   }
 })
+
+function handleAddToCart(bouquet) {
+  cartStore.addBouquet(bouquet.id)
+}
 </script>
 
 <template>
@@ -63,6 +69,7 @@ onMounted(async () => {
           v-for="b in bouquets"
           :key="b.id"
           :bouquet="b"
+          @add-to-cart="handleAddToCart"
         />
       </div>
     </section>
