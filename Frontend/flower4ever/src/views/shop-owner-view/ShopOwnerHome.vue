@@ -10,16 +10,20 @@
     <main class="owner-home-container">
       <section class="feature-grid">
         <div class="feature-card disabled">
-          <div class="icon-box"><span class="material-symbols-outlined">home</span></div>
+          <div class="icon-box">
+            <span class="material-symbols-outlined">home</span>
+          </div>
           <h3>Dashboard</h3>
           <p>Coming soon</p>
         </div>
 
-        <router-link 
-          class="feature-card" 
+        <router-link
+          class="feature-card"
           :to="{ path: '/manage-bouquets', query: { shopId: shopId } }"
         >
-          <div class="icon-box"><span class="material-symbols-outlined">local_florist</span></div>
+          <div class="icon-box">
+            <span class="material-symbols-outlined">local_florist</span>
+          </div>
           <h3>Manage Bouquets</h3>
           <p>Create & delete bouquets</p>
         </router-link>
@@ -35,38 +39,48 @@
           <p>Manage stems & stock</p>
         </router-link>
 
-        <router-link 
-          class="feature-card" 
+        <router-link
+          class="feature-card"
           :to="{ path: '/admin-orders', query: { shopId: shopId } }"
         >
-          <div class="icon-box"><span class="material-symbols-outlined">shopping_bag</span></div>
+          <div class="icon-box">
+            <span class="material-symbols-outlined">shopping_bag</span>
+          </div>
           <h3>Orders</h3>
           <p>View customer orders</p>
         </router-link>
 
         <div class="feature-card disabled">
-          <div class="icon-box"><span class="material-symbols-outlined">chat</span></div>
+          <div class="icon-box">
+            <span class="material-symbols-outlined">chat</span>
+          </div>
           <h3>Messages</h3>
           <p>Coming soon</p>
         </div>
 
-        <router-link 
-          class="feature-card" 
+        <router-link
+          class="feature-card"
           :to="{ path: '/ownerProfileEdit', query: { shopId: shopId } }"
         >
-          <div class="icon-box"><span class="material-symbols-outlined">storefront</span></div>
+          <div class="icon-box">
+            <span class="material-symbols-outlined">storefront</span>
+          </div>
           <h3>Shop Profile</h3>
           <p>Edit shop information</p>
         </router-link>
 
         <div class="feature-card disabled">
-          <div class="icon-box"><span class="material-symbols-outlined">credit_card</span></div>
+          <div class="icon-box">
+            <span class="material-symbols-outlined">credit_card</span>
+          </div>
           <h3>Subscription</h3>
           <p>Coming soon</p>
         </div>
 
         <div class="feature-card disabled">
-          <div class="icon-box"><span class="material-symbols-outlined">settings</span></div>
+          <div class="icon-box">
+            <span class="material-symbols-outlined">settings</span>
+          </div>
           <h3>Settings</h3>
           <p>Coming soon</p>
         </div>
@@ -76,8 +90,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 const route = useRoute();
 const shopId = ref(null);
@@ -85,11 +99,11 @@ const shopId = ref(null);
 onMounted(() => {
   // 1. Try to get shopId from URL first (Crucial for page reloads)
   const urlShopId = route.query.shopId;
-  
+
   // 2. Fallback to localStorage if not in URL
-  const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-  
-  shopId.value = urlShopId || storedUser.shopId || 1; 
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+  shopId.value = urlShopId || storedUser.shopId || 1;
 
   // Optional: Debugging log to see what ID is being used
   console.log("Current Shop ID initialized to:", shopId.value);
@@ -97,8 +111,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined");
 
 .welcome-banner {
   margin-top: 120px;
@@ -151,7 +165,7 @@ onMounted(() => {
   padding: 1.6rem;
   border-radius: 18px;
   height: 190px;
-  box-shadow: 0 4px 15px rgba(150, 94, 255, 0.10);
+  box-shadow: 0 4px 15px rgba(150, 94, 255, 0.1);
   text-decoration: none;
   color: #472891;
   display: flex;

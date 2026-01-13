@@ -25,12 +25,15 @@
       </div>
 
       <!-- FORM MESSAGE -->
-      <div class="form-message" :class="[formMessage ? 'show' : '', formMessageType]">
+      <div
+        class="form-message"
+        :class="[formMessage ? 'show' : '', formMessageType]"
+      >
         {{ formMessage }}
       </div>
 
       <button type="submit" :disabled="loading">
-        {{ loading ? 'Logging in...' : 'Login' }}
+        {{ loading ? "Logging in..." : "Login" }}
       </button>
 
       <p class="register-text">
@@ -42,8 +45,8 @@
 </template>
 
 <script>
-import { useUserStore } from "@/stores/userStore"
-import router from "@/router/router"
+import { useUserStore } from "@/stores/userStore";
+import router from "@/router/router";
 
 export default {
   name: "Login",
@@ -54,63 +57,61 @@ export default {
       formMessageType: "", // success | error
       form: {
         email: "",
-        password: ""
-      }
-    }
+        password: "",
+      },
+    };
   },
   methods: {
     async logIn() {
-      this.loading = true
-      this.formMessage = ""
-      this.formMessageType = ""
+      this.loading = true;
+      this.formMessage = "";
+      this.formMessageType = "";
 
       try {
-        localStorage.removeItem("userId")
+        localStorage.removeItem("userId");
 
         const res = await fetch("http://localhost:8080/api/v1/users/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.form)
-        })
+          body: JSON.stringify(this.form),
+        });
 
         if (!res.ok) {
-          const text = await res.text()
-          this.formMessage = text || "Login failed"
-          this.formMessageType = "error"
-          return
+          const text = await res.text();
+          this.formMessage = text || "Login failed";
+          this.formMessageType = "error";
+          return;
         }
 
-        const userData = await res.json()
+        const userData = await res.json();
 
-        localStorage.setItem("user", JSON.stringify(userData))
-        localStorage.setItem("userId", userData.id)
-        localStorage.setItem("isLoggedIn", "true")
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("userId", userData.id);
+        localStorage.setItem("isLoggedIn", "true");
 
-        this.formMessage = "Login successful"
-        this.formMessageType = "success"
+        this.formMessage = "Login successful";
+        this.formMessageType = "success";
 
-        const userStore = useUserStore()
-        userStore.login(userData)
+        const userStore = useUserStore();
+        userStore.login(userData);
 
         setTimeout(() => {
           if (userData.role === "OWNER") {
-            router.push("/owner/dashboard")
+            router.push("/shop-owner-home");
           } else {
-            router.push("/")
+            router.push("/");
           }
-        }, 800)
-
+        }, 800);
       } catch (err) {
-        this.formMessage = "Server not reachable"
-        this.formMessageType = "error"
+        this.formMessage = "Server not reachable";
+        this.formMessageType = "error";
       } finally {
-        this.loading = false
+        this.loading = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
-
 
 <style scoped>
 .login-container {

@@ -1,9 +1,14 @@
 <template>
   <div class="user-profile-container">
     <form @submit.prevent="saveProfile">
-      <router-link to="/" class="back" style="align-self: left"
-        ><button>Back</button>
-      </router-link>
+      <RouterLink
+        class="back-link"
+        :to="{ path: '/shop-owner-home', query: { shopId: shopId } }"
+      >
+        <span class="material-symbols-outlined">arrow_back</span>
+        Back to Home
+      </RouterLink>
+
       <div class="profile-header">
         <img
           class="profile-avatar"
@@ -67,9 +72,7 @@
       <div>
         <h4>Delete Account</h4>
         <p>Warning: This action cannot be undone!</p>
-        <button type="button" class="danger-btn" @click="deleteAccount">
-          Delete Account
-        </button>
+        <button type="button" class="danger-btn">Delete Account</button>
       </div>
     </form>
   </div>
@@ -165,6 +168,7 @@ export default {
     });
 
     const saveProfile = async () => {
+      console.log("SAVE CLICKED");
       if (newPassword.value !== confirmPassword.value) {
         showMessage("Passwords do not match", "error");
         return;
@@ -264,10 +268,6 @@ h1 {
   margin-top: 0;
 }
 
-.back {
-  align-self: flex-start;
-}
-
 .user-profile-container {
   background: linear-gradient(120deg, #ffffff, #d4bdf0);
   color: #333333;
@@ -334,14 +334,14 @@ textarea:focus {
 }
 
 .danger-btn {
-  background-color: #e74c3c;
+  background-color: grey;
   color: black;
   max-width: 25%;
   align-self: center;
 }
 
 .danger-btn:hover {
-  background-color: #c0392b;
+  background-color: grey;
 }
 
 .form-message {
@@ -388,6 +388,20 @@ textarea:focus {
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #7c5ca6;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #7a3ec8;
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.back-link span {
+  font-size: 20px;
 }
 
 .profile-info h2 {

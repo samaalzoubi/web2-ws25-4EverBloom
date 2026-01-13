@@ -1,9 +1,14 @@
 <template>
   <div class="user-profile-container">
     <form @submit.prevent="saveProfile">
-      <router-link to="/" class="back" style="align-self: left"
-        ><button>Back</button>
-      </router-link>
+      <RouterLink
+        class="back-link"
+        :to="{ path: '/', query: { shopId: shopId } }"
+      >
+        <span class="material-symbols-outlined">arrow_back</span>
+        Back to Home
+      </RouterLink>
+
       <div class="profile-header">
         <img
           class="profile-avatar"
@@ -44,8 +49,7 @@
         <input type="password" v-model="confirmPassword" />
       </div>
 
-      <button type="submit">Save Profile</button>
-
+      <button type="button" @click="saveProfile">Save Profile</button>
       <div
         class="form-message"
         :class="[formMessage ? 'show' : '', formMessageType]"
@@ -111,38 +115,58 @@ export default {
     };
 
     const saveProfile = async () => {
+      console.log("SAVE CLICKED");
+      // Passwort-Check
       if (newPassword.value !== confirmPassword.value) {
         showMessage("Passwords do not match", "error");
         return;
       }
 
       try {
-        const updatedUser = { ...user.value };
+        // Wir schicken genau das User-Objekt, das im Formular steht
+        const updatedUser = {
+          ...user.value,
+          address: {
+            streetAddress: user.value.address.streetAddress || "",
+            city: user.value.address.city || "",
+            state: user.value.address.state || "",
+            zipCode: user.value.address.zipCode || "",
+          },
+        };
 
+        // Passwort nur mitsenden, wenn es geändert wurde
         if (newPassword.value) {
           updatedUser.password = newPassword.value;
         }
 
+        // Multipart-Payload bauen
         const formData = new FormData();
-
         formData.append(
           "user",
           new Blob([JSON.stringify(updatedUser)], { type: "application/json" })
         );
 
-        await axios.put(`http://localhost:8080/api/v1/users/${userId}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" }
-        });
+        // WICHTIG: Backend-Antwort speichern!
+        const response = await axios.put(
+          `http://localhost:8080/api/v1/users/${userId}`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
 
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-        user.value = updatedUser;
+        const savedUser = response.data; // 👈 das ist die echte Datenbank-Version
+
+        // Diese Version speichern – nicht dein lokales Objekt
+        localStorage.setItem("user", JSON.stringify(response.data));
+        user.value = savedUser;
 
         showMessage("Profile updated successfully", "success");
 
+        // Passwortfelder leeren
         currentPassword.value = "";
         newPassword.value = "";
         confirmPassword.value = "";
       } catch (err) {
+        console.error(err);
         showMessage("Update failed", "error");
       }
     };
@@ -354,6 +378,10 @@ button[type="submit"] {
   justify-self: stretch;
 }
 
+.submit-row {
+  grid-column: 1 / -1;
+}
+
 input,
 textarea {
   width: 100%;
@@ -364,7 +392,17 @@ textarea {
   background: #fcfbfe;
 }
 
-.back {
-  align-self: flex-start;
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #7a3ec8;
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.back-link span {
+  font-size: 20px;
 }
 </style>

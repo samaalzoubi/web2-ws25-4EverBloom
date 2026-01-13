@@ -1,9 +1,7 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
-<section class="petals-of-happiness">
+  <section v-if="isCustomer" class="petals-of-happiness">
     <h3>
       <slot name="title">Petals of Happiness</slot>
     </h3>
@@ -13,6 +11,33 @@
     </ul>
   </section>
 </template>
+
+<script>
+import { useUserStore } from "@/stores/userStore";
+
+export default {
+  setup() {
+    const userStore = useUserStore();
+
+    return { userStore };
+  },
+
+  data() {
+    return {
+      isOpen: false,
+    };
+  },
+
+  computed: {
+    isOwner() {
+      return this.userStore.user?.role === "OWNER";
+    },
+    isCustomer() {
+      return this.userStore.user?.role === "CUSTOMER";
+    },
+  },
+};
+</script>
 
 <style scoped>
 .petals-of-happiness {
@@ -29,7 +54,7 @@
 .petals-of-happiness h3 {
   font-size: 1.8rem;
   font-weight: 450;
-  letter-spacing: 0.06rem; 
+  letter-spacing: 0.06rem;
   color: rgb(51, 51, 51);
   margin-bottom: 1.5rem;
   position: relative;
@@ -49,12 +74,13 @@
 .flower-suggestions {
   display: grid;
   list-style: none;
-  gap: 50px 48px; 
+  gap: 50px 48px;
   grid-template-columns: repeat(2, minmax(260px, 1fr));
-  margin: 0; padding: 0;
-  align-items: start; 
+  margin: 0;
+  padding: 0;
+  align-items: start;
   max-width: 1100px;
-  width: 100%; 
+  width: 100%;
   justify-items: center;
 }
 </style>
