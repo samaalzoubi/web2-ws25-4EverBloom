@@ -1,9 +1,14 @@
 <script setup>
 import { useCartStore } from '@/stores/cartStore'
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, ref } from 'vue'
 import CartItemList from '@/components/CartItemList.vue';
+import { useUserStore } from "@/stores/userStore"
+import { useRouter } from 'vue-router'
+import orderService from '@/services/orderService.js'
 
 const cartStore = useCartStore()
+const userStore = useUserStore()
+const router = useRouter()
 
 const totalQuantity = computed(() => cartStore.totalQuantity || 0)
 const totalPrice = computed(() => cartStore.totalPrice || 0)
@@ -22,6 +27,10 @@ const form = reactive({
   cvv: ''
 })
 
+const isSubmitting = ref(false)
+const errorMessage = ref('')
+const checkoutFormRef = ref(null)
+
 onMounted(async () => {
   if (!cartStore.cart) {
     await cartStore.loadActiveCart()
@@ -35,44 +44,64 @@ function formatPriceEUR(value) {
   }).format(value);
 }
 
-/*async function placeOrder() {
-  if (!cartStore.items.length) {
-    alert('Your cart is empty.')
+function buildAddress() {
+  return {
+    street: form.street.trim(),
+    city: form.city.trim(),
+    state: form.state.trim(),
+    zipCode: form.zip.trim()
+  }
+}
+
+async function placeOrder() {
+  errorMessage.value = ''
+
+  if (!userStore.isLoggedIn || !userStore.user?.id) {
+    router.push({ name: 'Login' })
     return
   }
 
-  // hier später richtige Backend-Order-Logik einbauen
-  const payload = {
-    userId: cartStore.cart?.userId,
-    cart: cartStore.cart, // dein CartResponseDTO
-    contactInfo: {
-      fullName: form.fullName,
-      email: form.email,
-      phone: form.phone
-    },
-    deliveryInfo: {
-      street: form.street,
-      city: form.city,
-      state: form.state,
-      zip: form.zip
-    },
-    paymentInfo: {
-      cardNumber: form.cardNumber,
-      cardHolder: form.cardHolder,
-      expiry: form.expiry,
-      cvv: form.cvv
-    }
+  if (!cartStore.items?.length) {
+    alert('Your cart is empty')
+    return
   }
 
-  console.log('PLACE ORDER PAYLOAD', payload)
-  alert('Thank you for your order!')
+  if (!checkoutFormRef.value?.reportValidity()) {
+    return
+  }
 
-  // optional: Cart leeren
-  // await cartStore.clear()
+  const userId = userStore.user.id
+  const bouquetIds = cartStore.items.map(i => i.bouquetId)
+  const quantities = cartStore.items.map(i => i.quantity)
+  const address = buildAddress()
 
-  // wie früher: zur Bestellübersicht
-  router.push({ name: 'customer-orders' }) // Route anpassen
-}*/
+  isSubmitting.value = true
+
+  try {
+    const createdOrder = await orderService.createOrder(
+      userId,
+      bouquetIds,
+      quantities,
+      address
+    )
+
+    await cartStore.clear()
+
+    alert(`Thank you for your order! Order ID: ${createdOrder?.orderId ?? 'N/A'}`)
+
+    router.push({ name: 'CustomerOrders' })
+  } catch (err) {
+    console.error(err)
+    errorMessage.value =
+      err?.response?.data?.message ||
+      err?.message ||
+      'Failed to place order'
+
+    alert('Failed to place order: ' + errorMessage.value)
+  } finally {
+    isSubmitting.value = false
+  }
+}
 </script>
 
 <template>
@@ -97,7 +126,7 @@ function formatPriceEUR(value) {
 
             <section class="checkout">
                 <h1>CHECKOUT</h1>
-                <form class="checkout-form" @submit.prevent="placeOrder">
+                <form class="checkout-form" ref="checkoutFormRef">
                     <div class="checkout-card">
                         <h2 class="section-title">
                             <span class="icon">👤</span> Contact Information
@@ -240,12 +269,13 @@ function formatPriceEUR(value) {
                 </div>
                 <button 
                     class="buttonOrder"
+                    :class="{ 'disabled': isSubmitting || !cartStore.items.length }"
                     type="button"
-                    :disabled="!cartStore.items.length"
                     @click="placeOrder"
                 >
-                    Place Order
+                  {{ isSubmitting ? 'Processing...' : 'Place Order' }}
                 </button>
+                <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
             </section>
         </div>
     </main>
@@ -362,6 +392,12 @@ main {
 
 .buttonOrder:hover {
   background: #b896de;
+}
+
+.buttonOrder.disabled {
+  pointer-events: none;
+  cursor: default;
+  background: grey;
 }
 
 .returnCart h1 {

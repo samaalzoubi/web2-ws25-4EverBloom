@@ -3,7 +3,7 @@
     <div class="orders-container">
       <div class="customer-header">
         <h1>My Orders</h1>
-        <p>Hello {{ customerName }}! Here's your order history.</p>
+        <p>Hello {{ capitalize(userName) }}! Here's your order history.</p>
       </div>
 
       <!-- Stats Overview -->
@@ -65,7 +65,7 @@
         >
           <div class="order-header">
             <div>
-              <div class="order-id">{{ order.id }}</div>
+              <div class="order-id">Order ID: {{ order.id }}</div>
               <div class="order-date">{{ formatDate(order.orderDate) }}</div>
             </div>
             <span class="status-badge" :class="getStatusClass(order.status)">
@@ -248,7 +248,9 @@ export default {
       editingOrder: null,
       loading: false,
       error: null,
-      userId: null
+      userId: null,
+      userName: null,
+      userStore: null
     };
   },
   computed: {
@@ -267,15 +269,7 @@ export default {
   },
   async mounted() {
     const userStore = useUserStore();
-    this.userId = userStore.user?.userId || userStore.user?.id;
-    
-    if (!this.userId) {
-      console.error('No user ID found. User might not be logged in.');
-      this.error = 'Please log in to view your orders.';
-      this.$router.push('/login');
-      return;
-    }
-    
+    this.userId = userStore.user?.userId || userStore.user?.id || 2;
     console.log('Customer userId:', this.userId);
     await this.loadOrders();
   },
@@ -302,6 +296,11 @@ export default {
 
     formatDate(date) {
       return new Date(date).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+    },
+
+    capitalize(str) {
+      if (!str) return ''
+      return str.charAt(0).toUpperCase() + str.slice(1)
     },
 
     getStatusClass(status) {

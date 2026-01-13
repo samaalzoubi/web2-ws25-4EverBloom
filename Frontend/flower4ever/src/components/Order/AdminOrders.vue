@@ -65,7 +65,7 @@
         <div v-for="order in filteredOrders" :key="order.id" class="order-card">
           <div class="order-header">
             <div>
-              <div class="order-id">{{ order.id }}</div>
+              <div class="order-id">Order ID: {{ order.id }}</div>
               <div class="order-date">{{ formatDate(order.orderDate) }}</div>
             </div>
             <span class="status-badge" :class="getStatusClass(order.status)">
@@ -73,7 +73,7 @@
             </span>
           </div>
 
-          <div class="order-customer">{{ order.customer?.name || 'Unknown' }}</div>
+          <div class="order-customer">Customer ID: {{ order.customerId || 'Unknown' }}</div>
 
           <div class="order-items">
             <div v-if="order.items && order.items.length > 0">
@@ -93,7 +93,7 @@
               <span class="rating-value">{{ order.rating }} out of 5</span>
               <span class="rating-stars">{{ getStarDisplay(order.rating) }}</span>
             </template>
-            <template v-else-if="order.status === 'Delivered'">
+            <template v-else>
               <span class="rating-label">Rate:</span>
               <span class="rating-not-rated">Not rated yet</span>
             </template>

@@ -1,6 +1,9 @@
 <template>
   <header class="main-header">
-    <router-link :to="homeLink" class="logo-container">
+    <router-link
+      :to="this.logoTarget"
+      class="logo-container"
+    >
       <img src="@/assets/Logo.png" alt="Flower Logo" width="70" height="70" />
       <div class="logo-text">
         <h1>BLÜMEO</h1>
@@ -8,14 +11,19 @@
       </div>
     </router-link>
 
+
     <nav>
       <router-link v-if="!userStore.isLoggedIn" to="/login">
         <i class="fas fa-sign-in-alt"></i>
-        <span style="margin-left: 6px">Login</span>
+        <span style="margin-left: 6px;">Login</span>
       </router-link>
 
       <template v-else>
-        <router-link v-if="isCustomer" to="#" class="design-bouquet">
+        <router-link
+          v-if="isCustomer"
+          to="#"
+          class="design-bouquet"
+        >
           <span class="fx-3d">3D</span>esign Bouquet 🪄
         </router-link>
 
@@ -30,18 +38,11 @@
           <span class="cart-count">{{ cartStore.totalQuantity }}</span>
         </a>
 
-        <template v-if="isOwner && !isOnOwnerHome">
-          <div class="shop-view-text">
-            <router-link to="/shop-owner-home" @click.stop>
-              <i></i> Shop view
-            </router-link>
-          </div>
-        </template>
-
         <div class="user-menu" @click="toggleMenu">
           <i class="far fa-user-circle"></i>
-
+    
           <div v-if="isOpen" class="dropdown-menu">
+
             <template v-if="isCustomer">
               <div class="dropdown-item">
                 <router-link to="/customer-orders" @click.stop>
@@ -78,70 +79,68 @@
 </template>
 
 <script>
-import { useCartStore } from "@/stores/cartStore";
-import { useUserStore } from "@/stores/userStore";
-import { useRoute, useRouter } from "vue-router";
-import CartSidebar from "@/components/CartSidebar.vue";
+import { useCartStore } from '@/stores/cartStore'
+import { useUserStore } from '@/stores/userStore'
+import { useRoute, useRouter } from 'vue-router'
+import CartSidebar from '@/components/CartSidebar.vue'
 
 export default {
   components: { CartSidebar },
 
   setup() {
-    const cartStore = useCartStore();
-    const userStore = useUserStore();
-    const route = useRoute();
-    const router = useRouter();
+    const cartStore = useCartStore()
+    const userStore = useUserStore()
+    const route = useRoute()
+    const router = useRouter()
 
-    return { cartStore, userStore, route, router };
+    return { cartStore, userStore, route, router }
   },
 
   data() {
     return {
-      isOpen: false,
-    };
+      isOpen: false
+    }
   },
 
   computed: {
     isOwner() {
-      return this.userStore.user?.role === "OWNER";
+      return this.userStore.user?.role === "OWNER"
     },
     isCustomer() {
-      return this.userStore.user?.role === "CUSTOMER";
+      return this.userStore.user?.role === "CUSTOMER"
     },
-    isOnOwnerHome() {
-      return this.$route.path === "/shop-owner-home";
-    },
+    logoTarget() {
+      return this.userStore.isLoggedIn && this.userStore.user?.role === 'OWNER'
+        ? { name: 'OwnerHome' }
+        : { name: 'home' }
+    }
   },
 
   methods: {
     toggleMenu() {
-      this.isOpen = !this.isOpen;
-    },
-
-    homeLink() {
-      if (this.isOwner) return "/shop-owner-home";
-      return "/";
+      this.isOpen = !this.isOpen
     },
 
     onCartClick(event) {
-      event.preventDefault();
-      this.cartStore.toggle();
+      event.preventDefault()
+      this.cartStore.toggle()
     },
 
     logout() {
-      this.userStore.logout();
-      this.isOpen = false;
-      this.router.push("/login");
-    },
+      this.userStore.logout()
+      this.isOpen = false
+      this.router.push('/login')
+    }
   },
 
   watch: {
-    "route.fullPath"() {
-      this.isOpen = false;
-    },
-  },
-};
+    'route.fullPath'() {
+      this.isOpen = false
+    }
+  }
+}
 </script>
+
 
 <style>
 .main-header {
@@ -205,6 +204,7 @@ export default {
   display: block !important;
 }
 
+
 nav {
   display: flex !important;
   align-items: center !important;
@@ -235,7 +235,7 @@ nav i:hover {
   border: 3px solid transparent;
   border-radius: 1em;
   background: linear-gradient(white, white) padding-box,
-    linear-gradient(to left, #7e4bb1, rgb(241, 194, 236)) border-box;
+              linear-gradient(to left, #7e4bb1, rgb(241, 194, 236)) border-box;
   padding: 8px 16px;
   font-size: 15px;
   font-weight: 600;
@@ -243,17 +243,20 @@ nav i:hover {
 
 .design-bouquet:hover {
   background: linear-gradient(#d4bdf0, #d4bdf0) padding-box,
-    linear-gradient(to left, #7e4bb1, rgb(241, 194, 236)) border-box;
+              linear-gradient(to left, #7e4bb1, rgb(241, 194, 236)) border-box;
 }
 
 .fx-3d {
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: .05em;
   background: linear-gradient(180deg, #fff, #f7f1ff 90%, #d2c6ff);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 1px 1px 0 #7265b3, 2px 2px 0 #4735a3, 3px 3px 0 #8985a6;
+  text-shadow:
+    1px 1px 0 #7265b3,
+    2px 2px 0 #4735a3,
+    3px 3px 0 #8985a6;
 }
 
 .cart-link {
@@ -286,14 +289,9 @@ nav i:hover {
   font-size: 28px;
 }
 
-.user-menu i {
-  color: #4b3c8a;
+.user-menu i{
+  color:#4b3c8a;
   font-size: 23px;
-}
-
-.shop-view-text {
-  color: #4b3c8a;
-  margin-top: -7px;
 }
 
 .dropdown-menu {

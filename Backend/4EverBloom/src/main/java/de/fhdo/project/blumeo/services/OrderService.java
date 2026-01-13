@@ -37,9 +37,6 @@ public class OrderService {
 
     @Transactional
     public OrderDTO createOrder(Long userId, List<Long> bouquetIds, List<Integer> quantities, Address address) {
-
-
-        // ---- Basic validation 
         if (bouquetIds == null || quantities == null || bouquetIds.isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item");
         }
@@ -47,14 +44,12 @@ public class OrderService {
             throw new IllegalArgumentException("Bouquet IDs and quantities must have same size");
         }
 
-
         User customer = userRepository.findByIdAndRole(userId, Role.CUSTOMER).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Order order = new Order();
         order.setCustomer(customer);
         order.setDeliveryAddress(address);
         order.setStatus(OrderStatus.CREATED);
-// total represents totalamount
         double total = 0;
         User shop = null;
 
