@@ -3,7 +3,7 @@
     <div class="orders-container">
       <div class="customer-header">
         <h1>My Orders</h1>
-        <p>Hello {{ customerName }}! Here's your order history.</p>
+        <p>Hello {{ capitalize(userName) }}! Here's your order history.</p>
       </div>
 
       <!-- Stats Overview -->
@@ -242,7 +242,9 @@ export default {
       editingOrder: null,
       loading: false,
       error: null,
-      userId: null
+      userId: null,
+      userName: null,
+      userStore: null
     };
   },
   computed: {
@@ -256,9 +258,19 @@ export default {
     }
   },
   async mounted() {
-    const userStore = useUserStore();
-    this.userId = userStore.user?.userId || userStore.user?.id || 2;
-    await this.loadOrders();
+    this.userStore = useUserStore();
+    this.$watch(
+      () => this.userStore.user?.id,
+      async (id) => {
+        if (!id) return
+
+        this.userId = id
+        this.userName = this.userStore.user?.username || null
+
+        await this.loadOrders()
+      },
+      { immediate: true }
+    )
   },
   methods: {
     async loadOrders() {
@@ -283,6 +295,11 @@ export default {
 
     formatDate(date) {
       return new Date(date).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+    },
+
+    capitalize(str) {
+      if (!str) return ''
+      return str.charAt(0).toUpperCase() + str.slice(1)
     },
 
     getStatusClass(status) {
