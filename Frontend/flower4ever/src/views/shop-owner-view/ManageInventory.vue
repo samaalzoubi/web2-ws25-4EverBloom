@@ -33,7 +33,7 @@
         <button type="submit">Save Item</button>
       </form>
 
-      <div class="inventory-table" v-if="!error">
+      <div class="inventory-table" v-if="!error && stems?.length > 0">
         <table>
           <thead>
             <tr>
@@ -62,9 +62,13 @@
         </table>
       </div>
 
-      <p v-if="error" class="error-msg">
+      <p v-else-if="error" class="error-msg">
         {{ error }}
       </p>
+
+      <div v-else class="empty-state">
+        No stems in inventory
+      </div>
     </section>
   </main>
 </template>
@@ -81,7 +85,7 @@ import {
 const route = useRoute();
 
 // Robust shopId retrieval
-const shopId = Number(route.query.shopId) || JSON.parse(localStorage.getItem('user') || '{}').shopId;
+const shopId = Number(route.query.shopId) || JSON.parse(localStorage.getItem('user'))?.id || 1;
 
 const stems = ref([]);
 const showCreate = ref(false);

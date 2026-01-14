@@ -1,7 +1,7 @@
 #Lab6
 
 extend type Query {
-    shopStems(shopId: ID!): [ShopStemDTO!]!
+    shopStems(shopId: ID!): [ShopStemDTO!]
     shopStem(shopId: ID!, stemId: ID!): ShopStemDTO!
 }
 
