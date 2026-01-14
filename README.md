@@ -143,7 +143,7 @@ Branch lab2/bem:
 - Start the backend (Spring Boot). It is running on the port 8080. The entry point is: `/web2-ws25-4EverBloom/Backend/4EverBloom/src/main/java/de/fhdo/project/blumeo/Application.java`
 - Before starting the frontend, select the API style (**REST** or **GraphQL**) used to communicate with the backend
   You can configure this here: `/web2-ws25-4EverBloom/ClickPrototype/config/api.config.js`
-- Start the frontend using **Live Server**. The entry point is the **login page**: `web2-ws25-4EverBloom/ClickPrototype/common-view/login/login.html`
+- Start the frontend using **Live Server**. The entry point is the **login page**: `/web2-ws25-4EverBloom/ClickPrototype/common-view/login/login.html`
 - There are two login types: **private customer** or **flower shop**
 - Log in as a customer using the following test data:
   - **Email:** `alice@blumeo.test`
