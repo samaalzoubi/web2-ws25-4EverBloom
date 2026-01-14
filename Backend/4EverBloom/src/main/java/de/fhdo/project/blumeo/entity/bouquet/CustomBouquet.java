@@ -41,10 +41,5 @@ public class CustomBouquet extends Bouquet {
         c.setBouquet(this);
         this.components.add(c);
     }
-
-    public void removeComponent(BouquetComponent c) {
-        c.setBouquet(null);
-        this.components.remove(c);
-    }
 }
 
