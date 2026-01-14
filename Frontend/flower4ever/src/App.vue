@@ -5,6 +5,8 @@
     <router-view />
 
     <Footer />
+
+    <Chatbot v-if="userStore.isLoggedIn" />
   </div>
 </template>
 
@@ -14,6 +16,7 @@ import { useUserStore } from "@/stores/userStore";
 
 import Header from "./components/Header/Header.vue";
 import Footer from "./components/Footer/Footer.vue";
+import Chatbot from "./components/Order/Chatbot.vue";
 
 const userStore = useUserStore();
 
@@ -21,7 +24,10 @@ onMounted(async () => {
   try {
     const userId = localStorage.getItem("userId");
 
-    if (!userId) return;
+    if (!userId) {
+      userStore.logout();
+      return;
+    }
 
     const response = await fetch(
       `http://localhost:8080/api/v1/users/${userId}`
