@@ -88,9 +88,9 @@ export default {
 
     const parsedUser = JSON.parse(storedUserRaw);
 
-    const user = ref({
-      ...parsedUser,
-      address: parsedUser.address || {
+    const normalizeUser = (raw) => ({
+      ...raw,
+      address: raw.address ?? {
         streetAddress: "",
         city: "",
         state: "",
@@ -98,6 +98,7 @@ export default {
       },
     });
 
+    const user = ref(normalizeUser(parsedUser));
     const userId = parsedUser.id;
 
     const defaultAvatar =
@@ -114,14 +115,12 @@ export default {
 
     const saveProfile = async () => {
       console.log("SAVE CLICKED");
-      // Passwort-Check
       if (newPassword.value !== confirmPassword.value) {
         showMessage("Passwords do not match", "error");
         return;
       }
 
       try {
-        // Wir schicken genau das User-Objekt, das im Formular steht
         const updatedUser = {
           ...user.value,
           address: {
@@ -132,34 +131,29 @@ export default {
           },
         };
 
-        // Passwort nur mitsenden, wenn es geändert wurde
         if (newPassword.value) {
           updatedUser.password = newPassword.value;
         }
 
-        // Multipart-Payload bauen
         const formData = new FormData();
         formData.append(
           "user",
           new Blob([JSON.stringify(updatedUser)], { type: "application/json" })
         );
 
-        // WICHTIG: Backend-Antwort speichern!
         const response = await axios.put(
           `http://localhost:8080/api/v1/users/${userId}`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
 
-        const savedUser = response.data; // 👈 das ist die echte Datenbank-Version
+        const normalized = normalizeUser(response.data);
 
-        // Diese Version speichern – nicht dein lokales Objekt
-        localStorage.setItem("user", JSON.stringify(response.data));
-        user.value = savedUser;
+        localStorage.setItem("user", JSON.stringify(normalized));
+        user.value = normalized;
 
         showMessage("Profile updated successfully", "success");
 
-        // Passwortfelder leeren
         currentPassword.value = "";
         newPassword.value = "";
         confirmPassword.value = "";
