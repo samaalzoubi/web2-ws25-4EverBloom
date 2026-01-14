@@ -77,7 +77,7 @@ import { fetchShopBouquetsGraphQL, createPremadeBouquet } from "@/services/api/b
 import { deleteBouquet } from "@/services/api/bouquetRestService.js";
 
 const route = useRoute();
-const shopId = Number(route.query.shopId) || JSON.parse(localStorage.getItem('user'))?.shopId || 1;
+const shopId = Number(route.query.shopId) || JSON.parse(localStorage.getItem('user'))?.id || 1;
 
 const bouquets = ref([]);
 const showForm = ref(false);
@@ -93,6 +93,7 @@ const form = ref({
 const loadBouquets = async () => {
   errorMessage.value = ''
   try {
+  console.log(shopId)
     bouquets.value = await fetchShopBouquetsGraphQL(shopId);
   } catch (err) {
     errorMessage.value = err?.message || 'Failed to load bouquets.'

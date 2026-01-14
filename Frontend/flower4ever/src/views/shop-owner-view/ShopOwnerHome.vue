@@ -101,9 +101,9 @@ onMounted(() => {
   const urlShopId = route.query.shopId;
 
   // 2. Fallback to localStorage if not in URL
-  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const storedUser = JSON.parse(localStorage.getItem('user'))?.id
 
-  shopId.value = urlShopId || storedUser.shopId || 1;
+  shopId.value = urlShopId || storedUser || 1;
 
   // Optional: Debugging log to see what ID is being used
   console.log("Current Shop ID initialized to:", shopId.value);
