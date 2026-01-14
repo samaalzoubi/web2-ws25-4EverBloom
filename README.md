@@ -20,23 +20,22 @@ By combining **technology, creativity and community**, BLÜMEO supports both cus
 
 ## 4. Benefits of the Project
 ### For Customers:
-- Design personalized bouquets in 3D using the website and order from local florists.  
 - Place orders independently of their location with just a few clicks.  
-- Explore unique floral combinations visually before purchasing. (?) 
+- Explore unique floral combinations visually before purchasing.
 - Enjoy a fast, convenient, and interactive online experience.  
+- Design personalized bouquets in 3D using the website and order from local florists (coming soon).  
 
 ### For Local Florists:
 - Gain digital presence **without needing their own website**.  
 - Manage inventory, pricing, and product listings online with an easy-to-use interface.  
 - Reach new customers and expand their market without technical knowledge or effort.  
 - Access insights and analytics to track performance and improve services.  
-- Benefit from new advertising and marketing opportunities on the platform.  
+- Benefit from new advertising and marketing opportunities on the platform (coming soon).  
 - Simplify product and order management, saving time and effort.
 
 ## 5. Target Groups
 - **Private Customers:** Individuals who want to buy or design personalized bouquets for any occasion.  
 - **Local Flower Shops:** Small and medium-sized florists looking to digitize their business.   
-- **Administrators:** Manage users, shops, orders, and system integrity.
 
 ## 6. Team Members
 All team members contributed to both frontend and backend development.
@@ -114,7 +113,63 @@ Branch lab2/bem:
 - Visual Studio Code (frontend development)
 - Maven (build and dependency management)
 
-## 10. User Flow / Module Description
-_(Explain how users interact with the app step-by-step)_
+## 10. Where to Find the Project Components
+- **Lab 2** is located on the dedicated branch lab2/bem. This branch contains the BEM and SCSS implementation in the folder: web2-ws25-4EverBloom/...
+> **Note:** 
+> The Click Prototype in this branch differs from the final version, as BEM and SCSS were not used in the subsequent labs.
+- The **Click Prototype** can be found on the main branch in the folder: web2-ws25-4EverBloom/ClickPrototype/
+- The **Frontend (Vue.js)** application is also located on the main branch in the folder: web2-ws25-4EverBloom/Frontend/flower4ever/
+- **Backend** could be found on the main branch as well in the folder: web2-ws25-4EverBloom/Backend/4EverBloom
 
+## 11. How to Start
+### Testing Lab 2
+- Make sure you are on the **`lab2/bem`** branch
+- Open the folder `web2-ws25-4EverBloom/...` in an IDE of your choice (preferably **VS Code**)
+- Install the **Live Server** extension for VS Code
+- Start the application using Live Server. The entry point of the application is the **Login page (Login.html)**
+- Register as a customer using the following test data:
+  - **Username:** Test  
+  - **Email:** test@gmail.com  
+  - **Password:** 123
+- After registration, you can log in with the same credentials
+- The test credentials are stored in the browser’s **local storage**
+- After a successful login, you will be redirected to the **home page** of the application
 
+### Testing ClickPrototype (Lab 1, 3, 4, 5, 6, 7)
+- Make sure you are on the **`main`** branch
+- Open the folder `/web2-ws25-4EverBloom/` for frontend and `/web2-ws25-4EverBloom/Backend/4EverBloom` for backend in an IDE of your choice (preferably **VS Code** for Frontend and **IntelliJ** for backend)
+- Install the **Live Server** extension for VS Code
+- Start the backend (Spring Boot). It is running on the port 8080. The entry point is: `/web2-ws25-4EverBloom/Backend/4EverBloom/src/main/java/de/fhdo/project/blumeo/Application.java`
+- Before starting the frontend, select the API style (**REST** or **GraphQL**) used to communicate with the backend
+  You can configure this here: `/web2-ws25-4EverBloom/ClickPrototype/config/api.config.js`
+- Start the frontend using **Live Server**. The entry point is the **login page**: `/web2-ws25-4EverBloom/ClickPrototype/common-view/login/login.html`
+- There are two login types: **private customer** or **flower shop**
+- Log in as a customer using the following test data:
+  - **Email:** `alice@blumeo.test`
+  - **Password:** `customerpassword`
+- Log in as a flower shop using the following test data:
+  - **Email:** `blossoms@outlook.com`
+  - **Password:** `blossomsflowers`
+- You can also create your own account and log in either as a customer or as a business account
+- Login data is stored in the browser’s **local storage**
+- After a successful login, you will be redirected to the appropriate **home page** depending on your role
+
+### Testing Vue-based Frontend (Lab 8)
+- Make sure you are on the **`main`** branch
+- Open the folder `/web2-ws25-4EverBloom/Frontend/flower4ever` for frontend and `/web2-ws25-4EverBloom/Backend/4EverBloom` for backend in an IDE of your choice (preferably **VS Code** for Frontend and **IntelliJ** for backend)
+- Start the backend (Spring Boot). It is running on the port 8080. The entry point is: `web2-ws25-4EverBloom/Backend/4EverBloom/src/main/java/de/fhdo/project/blumeo/Application.java`
+- Since the frontend is a **Vue-based application**, **Node.js** and **npm** must be installed on the system
+  - Make sure **Node.js (including npm)** is installed
+  - Install the required dependencies: **npm install**
+  - Start the development server: **npm run serve**
+  - The application is running on the http://localhost:3000/ 
+- There are two login types: **private customer** or **flower shop**
+- Log in as a customer using the following test data:
+  - **Email:** `alice@blumeo.test`
+  - **Password:** `customerpassword`
+- Log in as a flower shop using the following test data:
+  - **Email:** `blossoms@outlook.com`
+  - **Password:** `blossomsflowers`
+- You can also create your own account and log in either as a customer or as a business account
+- Login data is stored in the browser’s **local storage**
+- After a successful login, you will be redirected to the appropriate **home page** depending on your role

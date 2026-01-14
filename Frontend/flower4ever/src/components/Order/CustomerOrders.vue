@@ -3,7 +3,7 @@
     <div class="orders-container">
       <div class="customer-header">
         <h1>My Orders</h1>
-        <p>Hello {{ customerName }}! Here's your order history.</p>
+        <p>Hello {{ capitalize(userName) }}! Here's your order history.</p>
       </div>
 
       <!-- Stats Overview -->
@@ -51,6 +51,12 @@
 
       <!-- Orders Grid -->
       <div class="orders-grid">
+        <!-- No Orders Message -->
+        <div v-if="filteredOrders.length === 0" class="no-orders-message">
+          <i class="fas fa-inbox"></i>
+          <p>There are no orders yet!</p>
+        </div>
+
         <div
           v-for="order in filteredOrders"
           :key="order.id"
@@ -59,7 +65,7 @@
         >
           <div class="order-header">
             <div>
-              <div class="order-id">{{ order.id }}</div>
+              <div class="order-id">Order ID: {{ order.id }}</div>
               <div class="order-date">{{ formatDate(order.orderDate) }}</div>
             </div>
             <span class="status-badge" :class="getStatusClass(order.status)">
@@ -242,10 +248,16 @@ export default {
       editingOrder: null,
       loading: false,
       error: null,
-      userId: null
+      userId: null,
+      userName: null,
+      userStore: null
     };
   },
   computed: {
+    customerName() {
+      const userStore = useUserStore();
+      return userStore.user?.name || userStore.user?.username || 'Customer';
+    },
     stats() {
       return {
         total: this.orders.length,
@@ -284,6 +296,11 @@ export default {
 
     formatDate(date) {
       return new Date(date).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+    },
+
+    capitalize(str) {
+      if (!str) return ''
+      return str.charAt(0).toUpperCase() + str.slice(1)
     },
 
     getStatusClass(status) {
@@ -400,20 +417,52 @@ export default {
     },
 
     async saveChanges() {
+      // Store orderId before potential state changes
+      const orderId = this.editingOrder?.id;
+      const orderData = this.editingOrder;
+      
+      if (!orderId || !orderData) {
+        alert('Error: No order to update');
+        return;
+      }
+      
       try {
         // ✅ NOW USING REAL BACKEND API
-        await orderService.updateOrder(this.editingOrder.id, this.editingOrder);
+        console.log('Sending order update for:', orderId);
+        console.log('Order data:', orderData);
         
-        const index = this.orders.findIndex(o => o.id === this.editingOrder.id);
-        if (index !== -1) {
-          this.orders[index] = { ...this.editingOrder };
-        }
-        this.filterOrders();
+        const result = await orderService.updateOrder(orderId, orderData);
+        console.log('Update successful, result:', result);
+        
+        // Reload orders from server to ensure data consistency
+        await this.loadOrders();
+        
+        // Close modal and show success
         this.closeEditModal();
-        alert(`Order ${this.editingOrder.id} updated successfully!`);
+        alert(`Order ${orderId} updated successfully!`);
       } catch (error) {
-        alert('Failed to update order. Please try again.');
         console.error('Update order error:', error);
+        console.error('Error response:', error.response?.data);
+        console.error('Error status:', error.response?.status);
+        console.error('Full error object:', error);
+        
+        // Check if it's actually a transformation error rather than API error
+        if (error.response && error.response.status === 200) {
+          console.warn('API returned 200 but transformation failed');
+          // Reload anyway since backend succeeded
+          await this.loadOrders();
+          this.closeEditModal();
+          alert(`Order ${orderId} updated successfully!`);
+          return;
+        }
+        
+        // Show more specific error message
+        const errorMessage = error.response?.data?.message 
+          || error.response?.data?.error 
+          || error.message
+          || 'The order update endpoint may not be available. Please contact support.';
+        
+        alert(`Failed to update order: ${errorMessage}`);
       }
     },
 
@@ -451,9 +500,32 @@ export default {
 
 .admin-orders-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(120deg, var(--color-background), var(--color-background-secondary));
   padding: 2rem 0;
   font-family: 'Poppins', sans-serif;
+}
+
+/* No Orders Message */
+.no-orders-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.no-orders-message i {
+  font-size: 4rem;
+  color: #7b68ad;
+  margin-bottom: 1rem;
+}
+
+.no-orders-message p {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 0;
+  font-weight: 500;
 }
 
 /* Rating Box */

@@ -55,8 +55,9 @@
       <div v-else-if="error" class="error">{{ error }}</div>
 
       <!-- Empty -->
-      <div v-else-if="filteredOrders.length === 0" class="no-orders">
-        No orders found.
+      <div v-else-if="filteredOrders.length === 0" class="no-orders-message">
+        <i class="fas fa-inbox"></i>
+        <p>There are no orders yet!</p>
       </div>
 
       <!-- Orders Grid -->
@@ -64,7 +65,7 @@
         <div v-for="order in filteredOrders" :key="order.id" class="order-card">
           <div class="order-header">
             <div>
-              <div class="order-id">{{ order.id }}</div>
+              <div class="order-id">Order ID: {{ order.id }}</div>
               <div class="order-date">{{ formatDate(order.orderDate) }}</div>
             </div>
             <span class="status-badge" :class="getStatusClass(order.status)">
@@ -72,7 +73,7 @@
             </span>
           </div>
 
-          <div class="order-customer">{{ order.customer?.name || 'Unknown' }}</div>
+          <div class="order-customer">Customer ID: {{ order.customerId || 'Unknown' }}</div>
 
           <div class="order-items">
             <div v-if="order.items && order.items.length > 0">
@@ -92,7 +93,7 @@
               <span class="rating-value">{{ order.rating }} out of 5</span>
               <span class="rating-stars">{{ getStarDisplay(order.rating) }}</span>
             </template>
-            <template v-else-if="order.status === 'Delivered'">
+            <template v-else>
               <span class="rating-label">Rate:</span>
               <span class="rating-not-rated">Not rated yet</span>
             </template>
@@ -579,5 +580,27 @@ export default {
 .rating-not-rated {
   color: #999;
   font-style: italic;
+}
+
+/* No Orders Message */
+.no-orders-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.no-orders-message i {
+  font-size: 4rem;
+  color: #7b68ad;
+  margin-bottom: 1rem;
+}
+
+.no-orders-message p {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 0;
+  font-weight: 500;
 }
 </style>

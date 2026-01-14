@@ -37,9 +37,6 @@ public class OrderService {
 
     @Transactional
     public OrderDTO createOrder(Long userId, List<Long> bouquetIds, List<Integer> quantities, Address address) {
-
-
-        // ---- Basic validation 
         if (bouquetIds == null || quantities == null || bouquetIds.isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item");
         }
@@ -47,14 +44,12 @@ public class OrderService {
             throw new IllegalArgumentException("Bouquet IDs and quantities must have same size");
         }
 
-
         User customer = userRepository.findByIdAndRole(userId, Role.CUSTOMER).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Order order = new Order();
         order.setCustomer(customer);
         order.setDeliveryAddress(address);
         order.setStatus(OrderStatus.CREATED);
-// total represents totalamount
         double total = 0;
         User shop = null;
 
@@ -144,18 +139,51 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
         
-        // Update fields as needed
+        // Only allow updates for orders in CREATED status
+        if (order.getStatus() != OrderStatus.CREATED) {
+            throw new IllegalStateException("Cannot update order that is not in CREATED status");
+        }
+        
+        // Update delivery address if provided
         if (orderUpdate.getAddress() != null) {
             order.setDeliveryAddress(orderUpdate.getAddress());
         }
         
+        // Update total amount if provided
         if (orderUpdate.getTotalAmount() != null) {
             order.setTotalAmount(orderUpdate.getTotalAmount());
         }
         
-        // Note: Updating order lines would require more complex logic
-        // For now, we're keeping it simple
+        // Update order lines (items) if provided
+        if (orderUpdate.getOrderLines() != null && !orderUpdate.getOrderLines().isEmpty()) {
+            // Clear existing order lines
+            order.getOrderLines().clear();
+            
+            // Add updated order lines
+            for (var itemDTO : orderUpdate.getOrderLines()) {
+                OrderLine orderLine = new OrderLine();
+                orderLine.setOrder(order);
+                orderLine.setQuantity(itemDTO.getQuantity());
+                orderLine.setPrice(itemDTO.getPrice());
+                
+                // Find and set the bouquet
+                if (itemDTO.getBouquetId() != null) {
+                    Bouquet bouquet = bouquetRepository.findById(itemDTO.getBouquetId())
+                            .orElseThrow(() -> new IllegalArgumentException("Bouquet not found: " + itemDTO.getBouquetId()));
+                    orderLine.setBouquet(bouquet);
+                }
+                
+                order.getOrderLines().add(orderLine);
+            }
+            
+            // Recalculate total amount based on order lines
+            double newTotal = order.getOrderLines().stream()
+                    .mapToDouble(ol -> ol.getPrice().doubleValue() * ol.getQuantity())
+                    .sum();
+            order.setTotalAmount(newTotal);
+        }
         
-        return orderMapper.toDto(order);
+        Order savedOrder = orderRepository.save(order);
+        return orderMapper.toDto(savedOrder);
     }
 }

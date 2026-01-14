@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 
 const props = defineProps({
   shops: {

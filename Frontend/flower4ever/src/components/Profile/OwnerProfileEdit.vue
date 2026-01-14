@@ -70,8 +70,6 @@
       </div>
 
       <div>
-        <h4>Delete Account</h4>
-        <p>Warning: This action cannot be undone!</p>
         <button type="button" class="danger-btn">Delete Account</button>
       </div>
     </form>
@@ -335,7 +333,7 @@ textarea:focus {
 .danger-btn {
   background-color: grey;
   color: black;
-  max-width: 25%;
+  width: 200px;
   align-self: center;
 }
 

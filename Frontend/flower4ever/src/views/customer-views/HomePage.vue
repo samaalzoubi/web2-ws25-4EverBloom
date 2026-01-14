@@ -72,6 +72,9 @@ function callShopProfile(shopId) {
                 @add-to-cart="handleAddToCart"
                 @shop-click="callShopProfile"
             ></BouquetCard>
+            <div v-if="cartStore.error" class="cart-error">
+              {{ cartStore.error }}
+            </div>
         </PetalsSection>
     </main>
 </template>
@@ -197,6 +200,20 @@ main {
   color: white;
   text-align: center;
   padding: 0 1rem;
+}
+
+.cart-error {
+  margin: 20px auto;
+  padding: 12px 16px;
+  max-width: 600px;
+
+  background: #ffecec;
+  color: #9f1c1c;
+  border: 1px solid #f5c2c2;
+  border-radius: 10px;
+
+  font-weight: 500;
+  text-align: center;
 }
 
 @media(max-width: 900px){

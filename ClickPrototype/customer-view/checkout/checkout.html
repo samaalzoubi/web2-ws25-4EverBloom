@@ -20,7 +20,7 @@
 
             <div class="checkout">
                 <h1>CHECKOUT</h1>
-                <form action="" class="checkout-form">
+                <form id="checkout-form" class="checkout-form">
                     <div class="checkout-card">
                         <h2 class="section-title">
                             <span class="icon">👤</span> Contact Information
@@ -35,13 +35,13 @@
                             <div class="group">
                                 <label>
                                     Email
-                                    <input type="email" id="email" name="email" required>
+                                    <input type="email" id="email" name="email" pattern=".*@.*" required>
                                 </label>
                             </div>
                             <div class="group">
                                 <label>
                                     Phone Number
-                                    <input type="tel" id="phone" name="phone" required>
+                                    <input type="tel" id="phone" name="phone" pattern="[0-9]+" title="Please enter only numbers" required>
                                 </label>
                             </div>
                         </div>
@@ -144,7 +144,7 @@
                         <div class="totalPrice">0 €</div>
                     </div>
                 </div>
-                <button class="buttonOrder">
+                <button type="submit" class="buttonOrder" form="checkout-form">
                     Place Order
                 </button>
             </div>
