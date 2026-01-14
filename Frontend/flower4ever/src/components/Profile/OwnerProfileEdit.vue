@@ -68,10 +68,6 @@
       >
         {{ formMessage }}
       </div>
-
-      <div>
-        <button type="button" class="danger-btn">Delete Account</button>
-      </div>
     </form>
   </div>
 </template>
