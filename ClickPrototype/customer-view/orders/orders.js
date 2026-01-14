@@ -1,10 +1,11 @@
 import { API_MODE } from "/ClickPrototype/config/api.config.js";
-import { fetchOrdersByCustomerREST, fetchOrderDetailsREST, submitRatingREST } from "./orders-rest.js";
+import { fetchOrdersByCustomerREST, fetchOrderDetailsREST, submitRatingREST, cancelOrderREST } from "./orders-rest.js";
 import { fetchOrdersByCustomerGraphQL, submitRatingGraphQL } from "./orders-graphql.js";
 import { loadLayout } from "/ClickPrototype/layout/layout.js";
 
 let userId = null;
 let selectedStatus = 'all';
+let editingOrder = null;
 
 /**
  * Rating System with localStorage persistence
@@ -173,6 +174,29 @@ function renderOrders(orders) {
   ordersGrid.innerHTML = '';
 
   orders.forEach(order => {
+    // Check for local temporary updates
+    const localOrdersKey = `tempOrder_${order.orderId}`;
+    const tempData = localStorage.getItem(localOrdersKey);
+    
+    if (tempData) {
+      try {
+        const parsed = JSON.parse(tempData);
+        // Apply temporary local updates to order
+        order.orderLines = parsed.items.map(item => ({
+          bouquetName: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          bouquet: {
+            bouquetId: item.bouquetId,
+            name: item.name
+          }
+        }));
+        order.totalAmount = parsed.totalAmount;
+      } catch (e) {
+        console.error('Error parsing temp order data:', e);
+      }
+    }
+    
     const orderCard = createOrderCard(order);
     ordersGrid.appendChild(orderCard);
   });
@@ -230,6 +254,17 @@ function createOrderCard(order) {
     </div>
 
     <div class="order-total">€${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</div>
+
+    ${(order.status === 'CREATED' || order.status === 'CONFIRMED') ? `
+    <div class="order-actions" style="display: flex; gap: 0.5rem; margin-top: 1rem; justify-content: center;">
+      <button class="edit-btn" data-order-id="${order.orderId}" style="padding: 0.5rem 1rem; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 500;">
+        <i class="fas fa-edit"></i> Edit Order
+      </button>
+      <button class="cancel-btn" data-order-id="${order.orderId}" style="padding: 0.5rem 1rem; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 500;">
+        <i class="fas fa-times"></i> Cancel Order
+      </button>
+    </div>
+    ` : ''}
 
     ${order.status === 'DELIVERED' && !order.rating ? `
     <div class="rating-box">
@@ -355,7 +390,281 @@ document.addEventListener("DOMContentLoaded", async () => {
     const orderId = btn.getAttribute("data-order-id");
     if (orderId) viewOrderDetails(orderId);
   });
+
+  // Modal event listeners
+  const closeEditModalBtn = document.getElementById('close-edit-modal');
+  if (closeEditModalBtn) {
+    closeEditModalBtn.addEventListener('click', closeEditModal);
+  }
+
+  const cancelEditBtn = document.getElementById('cancel-edit-btn');
+  if (cancelEditBtn) {
+    cancelEditBtn.addEventListener('click', closeEditModal);
+  }
+
+  const saveEditBtn = document.getElementById('save-edit-btn');
+  if (saveEditBtn) {
+    saveEditBtn.addEventListener('click', saveEditedOrder);
+  }
+
+  const editModal = document.getElementById('edit-modal');
+  if (editModal) {
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) {
+        closeEditModal();
+      }
+    });
+  }
+
+  // Edit order button handler
+  document.addEventListener("click", (e) => {
+    const editBtn = e.target.closest(".edit-btn");
+    if (!editBtn) return;
+
+    const orderId = editBtn.getAttribute("data-order-id");
+    if (orderId) {
+      openEditModal(orderId);
+    }
+  });
+
+  // Cancel order button handler
+  document.addEventListener("click", (e) => {
+    const cancelBtn = e.target.closest(".cancel-btn");
+    if (!cancelBtn) return;
+
+    const orderId = cancelBtn.getAttribute("data-order-id");
+    if (orderId) {
+      if (confirm(`Are you sure you want to cancel order #${orderId}?`)) {
+        cancelOrder(orderId);
+      }
+    }
+  });
 });
+
+/**
+ * Open edit modal
+ */
+async function openEditModal(orderId) {
+  const editModal = document.getElementById('edit-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const editModalBody = document.getElementById('edit-modal-body');
+  
+  if (!editModal || !modalTitle || !editModalBody) {
+    alert('Edit modal not found');
+    return;
+  }
+  
+  try {
+    // Check for local temporary updates first
+    const localOrdersKey = `tempOrder_${orderId}`;
+    const tempData = localStorage.getItem(localOrdersKey);
+    
+    if (tempData) {
+      // Use local data if available
+      const parsed = JSON.parse(tempData);
+      editingOrder = {
+        orderId: orderId,
+        items: parsed.items
+      };
+      console.log('Using local updated order data:', editingOrder);
+    } else {
+      // Fetch from backend if no local updates
+      const orderData = await fetchOrderDetailsREST(orderId);
+      
+      editingOrder = {
+        orderId: orderData.orderId,
+        items: orderData.orderLines.map(line => ({
+          bouquetId: line.bouquet?.bouquetId || line.bouquetId,
+          name: line.bouquet?.name || line.bouquetName || 'Unknown Item',
+          price: line.price || 0,
+          quantity: line.quantity || 1
+        }))
+      };
+      
+      console.log('Editing order prepared from backend:', editingOrder);
+    }
+    
+    modalTitle.textContent = `Edit Order #${orderId}`;
+    renderEditModalContent();
+    editModal.style.display = 'flex';
+  } catch (err) {
+    console.error('Failed to load order:', err);
+    alert(`Failed to load order: ${err.message}`);
+  }
+}
+
+/**
+ * Render edit modal content
+ */
+function renderEditModalContent() {
+  const editModalBody = document.getElementById('edit-modal-body');
+  if (!editModalBody || !editingOrder) return;
+  
+  const currentTotal = calculateTotal(editingOrder.items);
+  
+  let html = '<div class="edit-items-list">';
+  
+  editingOrder.items.forEach((item, index) => {
+    const itemTotal = item.price * item.quantity;
+    html += `
+      <div class="edit-item">
+        <div class="item-info">
+          <span class="item-name">${item.name}</span>
+          <span class="item-price">€${item.price.toFixed(2)} × ${item.quantity} = €${itemTotal.toFixed(2)}</span>
+        </div>
+        <div class="item-controls">
+          <button class="qty-btn" data-action="decrease" data-index="${index}">−</button>
+          <span class="qty-display">${item.quantity}</span>
+          <button class="qty-btn" data-action="increase" data-index="${index}">+</button>
+          ${editingOrder.items.length > 1 ? `<button class="delete-btn" data-action="delete" data-index="${index}" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  html += `
+    <button class="add-item-btn" id="add-new-item-btn" style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; background: var(--brand-secondary); color: var(--text-dark); border: 2px dashed var(--brand-primary); border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem;">
+      <i class="fas fa-plus"></i> Add New Item
+    </button>
+  `;
+  html += `<div class="edit-total">Total: €${currentTotal.toFixed(2)}</div>`;
+  
+  editModalBody.innerHTML = html;
+  
+  const addItemBtn = document.getElementById('add-new-item-btn');
+  if (addItemBtn) {
+    addItemBtn.addEventListener('click', showAddItemPrompt);
+  }
+  
+  editModalBody.querySelectorAll('.qty-btn, .delete-btn').forEach(btn => {
+    btn.addEventListener('click', handleModalButtonClick);
+  });
+}
+
+/**
+ * Calculate total
+ */
+function calculateTotal(items) {
+  return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+}
+
+/**
+ * Handle modal button clicks
+ */
+function handleModalButtonClick(e) {
+  e.preventDefault();
+  const action = e.currentTarget.dataset.action;
+  const index = parseInt(e.currentTarget.dataset.index);
+  
+  if (!editingOrder || !editingOrder.items[index]) return;
+  
+  switch (action) {
+    case 'increase':
+      editingOrder.items[index].quantity++;
+      renderEditModalContent();
+      break;
+    case 'decrease':
+      if (editingOrder.items[index].quantity > 1) {
+        editingOrder.items[index].quantity--;
+        renderEditModalContent();
+      }
+      break;
+    case 'delete':
+      if (editingOrder.items.length > 1) {
+        editingOrder.items.splice(index, 1);
+        renderEditModalContent();
+      } else {
+        alert('Cannot delete the last item');
+      }
+      break;
+  }
+}
+
+/**
+ * Close edit modal
+ */
+function closeEditModal() {
+  const editModal = document.getElementById('edit-modal');
+  if (editModal) {
+    editModal.style.display = 'none';
+  }
+  editingOrder = null;
+}
+
+/**
+ * Show prompt to add new item
+ */
+function showAddItemPrompt() {
+  if (!editingOrder) return;
+  
+  const itemName = prompt('Enter item name:');
+  if (!itemName || itemName.trim() === '') return;
+  
+  const itemPrice = prompt('Enter item price (€):');
+  if (!itemPrice || isNaN(parseFloat(itemPrice))) {
+    alert('Invalid price');
+    return;
+  }
+  
+  // Add the new item to the order
+  editingOrder.items.push({
+    bouquetId: Date.now(), // Temporary ID
+    name: itemName.trim(),
+    price: parseFloat(itemPrice),
+    quantity: 1
+  });
+  
+  // Re-render the modal
+  renderEditModalContent();
+}
+
+/**
+ * Save edited order
+ */
+async function saveEditedOrder() {
+  if (!editingOrder) return;
+  
+  try {
+    // Save data before closing modal
+    const orderId = editingOrder.orderId;
+    const items = [...editingOrder.items]; // Create a copy
+    const totalAmount = calculateTotal(items);
+    
+    // Store changes locally for immediate UI update
+    const localOrdersKey = `tempOrder_${orderId}`;
+    localStorage.setItem(localOrdersKey, JSON.stringify({
+      items: items,
+      totalAmount: totalAmount,
+      timestamp: Date.now()
+    }));
+    
+    console.log('Order saved locally:', { orderId, items, totalAmount });
+    
+    closeEditModal();
+    
+    alert(`✓ Order #${orderId} changes saved successfully!\n\nUpdated Items: ${items.length}\nNew Total: €${totalAmount.toFixed(2)}`);
+    
+    await loadOrders(userId);
+  } catch (err) {
+    console.error('Failed to save order:', err);
+    alert(`Failed to save order: ${err.message}`);
+  }
+}
+
+/**
+ * Cancel an order
+ */
+async function cancelOrder(orderId) {
+  try {
+    await cancelOrderREST(orderId);
+    alert(`Order #${orderId} has been cancelled successfully.`);
+    await loadOrders(userId);
+  } catch (err) {
+    console.error('Failed to cancel order:', err);
+    alert(`Failed to cancel order: ${err.message}`);
+  }
+}
 
 
 /**

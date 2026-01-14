@@ -273,10 +273,12 @@
 }
 
 .status-pending { background: #ffb84d; }
-.status-preparing { background: #4da6ff; }
+.status-confirmed { background: #4da6ff; }
+.status-preparing { background: #9b59b6; }
 .status-out { background: #ff66b2; }
 .status-delivered { background: #63d471; }
 .status-cancelled { background: #e57373; }
+.status-paid { background: #3498db; }
 
 .order-customer {
   font-weight: 600;
@@ -580,15 +582,83 @@
 }
 
 /* Edit Modal Specific */
+.edit-items-list {
+  margin-bottom: 1.5rem;
+}
+
 .edit-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.6);
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: var(--radius-sm);
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
   border: 1px solid var(--brand-secondary);
+  transition: var(--transition);
+  gap: 1rem;
+}
+
+.edit-item:hover {
+  border-color: var(--brand-primary);
+  box-shadow: 0 2px 8px rgba(123, 104, 173, 0.15);
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.item-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 1rem;
+}
+
+.item-price {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--brand-primary);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.qty-btn:hover {
+  background: var(--brand-dark);
+  transform: scale(1.1);
+}
+
+.qty-btn:active {
+  transform: scale(0.95);
+}
+
+.qty-display {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 1rem;
 }
 
 .edit-item-controls {
@@ -619,8 +689,8 @@
 .delete-btn {
   background: #e57373 !important;
   color: white !important;
-  width: 32px !important;
-  height: 32px !important;
+  width: 36px !important;
+  height: 36px !important;
   border-radius: 50% !important;
   display: flex !important;
   align-items: center !important;
@@ -628,12 +698,17 @@
   border: none !important;
   cursor: pointer !important;
   transition: var(--transition) !important;
-  font-size: 0.8rem !important;
+  font-size: 1rem !important;
+  margin-left: 0.5rem;
 }
 
 .delete-btn:hover {
   background: #d32f2f !important;
   transform: scale(1.1) !important;
+}
+
+.delete-btn:active {
+  transform: scale(0.95) !important;
 }
 
 #add-item {
@@ -656,15 +731,15 @@
 }
 
 .edit-total {
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 700;
+  text-align: right;
+  font-size: 1.3rem;
+  font-weight: bold;
   color: var(--brand-dark);
-  margin: 1.5rem 0;
+  margin-top: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius);
-  border: 1px solid var(--brand-secondary);
+  background: rgba(183, 155, 211, 0.1);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--brand-primary);
 }
 
 /* Chatbot */

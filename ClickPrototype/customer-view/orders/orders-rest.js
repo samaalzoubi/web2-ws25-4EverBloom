@@ -102,6 +102,15 @@ export async function createOrderREST(userId, bouquetIds, quantities, address) {
 
   return await response.json();
 }
+
+/**
+ * Cancel an order by updating its status to CANCELLED
+ * PATCH /api/v1/orders/{orderId}/status?status=CANCELLED
+ */
+export async function cancelOrderREST(orderId) {
+  return await updateOrderStatusREST(orderId, 'CANCELLED');
+}
+
 /**
  * Submit a rating using REST API
  * POST /api/v1/ratings
