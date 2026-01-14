@@ -44,21 +44,23 @@ function handleAddToCart(bouquet) {
       <div class="shop-details">
         <p>
           <strong>Phone:</strong> {{ shop.phoneNumber }}<br />
-          <strong>Website: </strong>
+          <strong>Website:</strong>
           <a :href="shop.link" target="_blank">{{ shop.link }}</a><br />
           <strong>Address:</strong>
-          {{ shop.address?.streetAddress }}, {{ shop.address?.city }}, {{ shop.address?.zipCode }}
+          {{ shop.address?.streetAddress }},
+          {{ shop.address?.city }},
+          {{ shop.address?.zipCode }}
         </p>
       </div>
     </section>
 
-    <!-- ===== NAVIGATION TABS ===== -->
+    <!-- ===== NAVIGATION TABS (STATIC) ===== -->
     <nav class="shop-tabs">
-      <a href="#" class="active">Catalog</a>
-      <a href="#">About</a>
-      <a href="#">Subscriptions</a>
-      <a href="#">Reviews</a>
-      <a href="#">Delivery Info</a>
+      <span class="tab active">Catalog</span>
+      <span class="tab disabled">About</span>
+      <span class="tab disabled">Subscriptions</span>
+      <span class="tab disabled">Reviews</span>
+      <span class="tab disabled">Delivery Info</span>
     </nav>
 
     <!-- ===== BOUQUETS GRID ===== -->
@@ -77,22 +79,21 @@ function handleAddToCart(bouquet) {
 </template>
 
 <style scoped>
+/* ===== PAGE LAYOUT ===== */
 main {
   flex: 1;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 40px 0px;
-  margin-top: 67px;
   flex-direction: column;
+  padding: 40px 0;
+  margin-top: 67px;
 }
 
+/* ===== SHOP HEADER ===== */
 .shop-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3rem 5rem 2.5rem 5rem;
-  margin: 0;
+  padding: 3rem 5rem 2.5rem;
   border-bottom: 1px solid #e5e5e5;
   flex-wrap: wrap;
   width: 100%;
@@ -113,10 +114,9 @@ main {
   font-family: "Playfair Display", serif;
   font-size: 2.8rem;
   margin: 0;
-  letter-spacing: 1px;
 }
 
-.shop-title .tagline {
+.tagline {
   font-style: italic;
   color: #888;
   margin-top: 0.5rem;
@@ -125,25 +125,16 @@ main {
 
 .shop-logo {
   height: 80px;
-  width: auto;
-  object-fit: contain;
   border-radius: 8px;
 }
 
 .shop-details {
-  flex: 1;
   min-width: 300px;
   line-height: 1.8;
-  font-size: 1rem;
   text-align: right;
-  color: var(--color-text-dark);
 }
 
-.shop-details a {
-  color: #2b6a9b;
-  text-decoration: none;
-}
-
+/* ===== TABS ===== */
 .shop-tabs {
   display: flex;
   justify-content: center;
@@ -154,12 +145,32 @@ main {
   width: 100%;
 }
 
-.shop-tabs a.active,
-.shop-tabs a:hover {
-  border-bottom: 2px solid var(--color-hover);
-  color: var(--color-hover);
+.shop-tabs .tab {
+  font-weight: 500;
+  padding-bottom: 0.3rem;
 }
 
+/* ACTIVE TAB (Catalog only) */
+.shop-tabs .tab.active {
+  color: var(--color-hover);
+  border-bottom: 2px solid var(--color-hover);
+  cursor: default;
+}
+
+/* DISABLED TABS */
+.shop-tabs .tab.disabled {
+  color: #9ca3af;        /* light grey */
+  opacity: 0.6;
+  cursor: default;
+  pointer-events: none; /* disables hover + click */
+  border-bottom: none;
+}
+/* Prevent hover highlighting on disabled tabs */
+.shop-tabs .tab.disabled:hover {
+  color: #9ca3af;
+  border-bottom: none;
+}
+/* ===== BOUQUET GRID ===== */
 .bouquet-section {
   padding: 2.5rem;
   max-width: 1200px;
@@ -170,8 +181,6 @@ main {
   font-family: "Playfair Display", serif;
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  display: inline-block;
-  padding-bottom: 0.3rem;
 }
 
 .bouquet-grid {
