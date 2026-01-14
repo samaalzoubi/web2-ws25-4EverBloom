@@ -84,9 +84,9 @@ Responsibilities were divided by features, pages, classes, and services.
 
 ![UML Diagram](ClickPrototype/assets/use%20case%20diagram.png)
 
-## 8. System Architecture
+## 8. Domain Model
 
-![UML Diagram](ClickPrototype/assets/uml-dig.png)
+![UML Diagram](ClickPrototype/assets/UML-updated.png)
 
 ## 9. Tech Stack
 
