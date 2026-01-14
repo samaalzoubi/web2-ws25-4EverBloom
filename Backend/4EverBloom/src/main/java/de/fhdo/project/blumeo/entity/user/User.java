@@ -1,9 +1,13 @@
 package de.fhdo.project.blumeo.entity.user;
 
 import java.time.LocalTime;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import de.fhdo.project.blumeo.entity.bouquet.CustomBouquet;
 import de.fhdo.project.blumeo.entity.order.Address;
+import de.fhdo.project.blumeo.entity.order.Order;
+import de.fhdo.project.blumeo.entity.rating.Rating;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -51,4 +55,13 @@ public class User {
 
     @Column(name = "closing_time")
     private LocalTime closingTime;
+
+    @OneToMany(mappedBy = "designedByCustomer", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CustomBouquet> customBouquets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Rating> ratings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 }
