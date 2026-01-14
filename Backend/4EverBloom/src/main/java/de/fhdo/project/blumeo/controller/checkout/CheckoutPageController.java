@@ -36,7 +36,7 @@ public class CheckoutPageController {
 
         model.addAttribute("isLoggedIn", true);
 
-        return "checkout";
+        return "checkout/checkout";
     }
 
     @PostMapping("/user/{userId}")

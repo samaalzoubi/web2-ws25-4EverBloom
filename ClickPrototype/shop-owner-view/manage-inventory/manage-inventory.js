@@ -44,8 +44,8 @@ async function loadInventory() {
   try {
     const items = await fetchShopStems(shopId);
 
-    if (!items.length) {
-      body.innerHTML = `<tr><td colspan="6">No inventory items found.</td></tr>`;
+    if (!items || !items.length) {
+      body.innerHTML = `<tr><td colspan="1">No inventory items found.</td></tr>`;
       return;
     }
 
