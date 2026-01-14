@@ -114,7 +114,11 @@ Branch lab2/bem:
 - Visual Studio Code (frontend development)
 - Maven (build and dependency management)
 
-## 10. User Flow / Module Description
-_(Explain how users interact with the app step-by-step)_
-
+## 10. Where to Find the Project Components
+- **Lab 2** is located on the dedicated branch lab2/bem. This branch contains the BEM and SCSS implementation in the folder: web2-ws25-4EverBloom/...
+> **Note:** 
+> The Click Prototype in this branch differs from the final version, as BEM and SCSS were not used in the subsequent labs.
+- The **Click Prototype** can be found on the main branch in the folder: web2-ws25-4EverBloom/ClickPrototype/
+- The **Frontend (Vue.js)** application is also located on the main branch in the folder: web2-ws25-4EverBloom/Frontend/flower4ever/
+- **Backend** could be found on the main branch as well in the folder: web2-ws25-4EverBloom/Backend/4EverBloom
 
