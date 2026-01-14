@@ -83,7 +83,6 @@ public class OrderController {
         return ResponseEntity.ok(dto);
     }
 
-    // Update order (items, total, etc.)
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderDTO> updateOrder(
             @PathVariable Long orderId,

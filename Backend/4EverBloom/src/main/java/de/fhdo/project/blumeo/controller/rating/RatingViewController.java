@@ -39,8 +39,7 @@ public class RatingViewController {
     public String showCustomerOrders(@RequestParam(name = "customerId", required = false, defaultValue = "2") Long customerId,
                                       Model model) {
         List<Order> orders = orderRepository.findByCustomer_Id(customerId);
-        
-        // Check which orders have ratings
+
         Map<Long, Boolean> hasRating = new HashMap<>();
         for (Order order : orders) {
             boolean rated = ratingRepository.findByOrder_OrderIdAndCustomer_Id(order.getOrderId(), customerId).isPresent();

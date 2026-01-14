@@ -45,13 +45,11 @@ public class UserRestController {
         return ResponseEntity.ok(user);
     }
 
-    // Alle User mit der Rolle OWNER abrufen
     @GetMapping(value = "/owners", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<UserDTO> getAllOwners() {
         return userService.getAllOwners();
     }
 
-    // User erstellen
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> createUser(@RequestBody RegisterRequest request) {
@@ -65,14 +63,12 @@ public class UserRestController {
         }
     }
 
-    // User nach ID abrufen
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         UserDTO user = userService.getUserById(id);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
-    // User aktualisieren
     @PutMapping(
             value = "/{id}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
@@ -88,7 +84,6 @@ public class UserRestController {
                 : ResponseEntity.notFound().build();
     }
 
-    // User löschen
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

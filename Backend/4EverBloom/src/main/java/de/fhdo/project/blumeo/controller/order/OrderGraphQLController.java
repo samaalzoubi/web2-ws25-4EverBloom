@@ -20,8 +20,6 @@ public class OrderGraphQLController {
         this.orderService = orderService;
     }
 
-    /* -------------------- Queries -------------------- */
-
     @QueryMapping
     public OrderDTO order(@Argument Long orderId) {
         return orderService.getOrder(orderId);
@@ -36,8 +34,6 @@ public class OrderGraphQLController {
     public List<OrderDTO> ordersByShop(@Argument Long shopId) {
         return orderService.getOrdersByShopId(shopId);
     }
-
-    /* -------------------- Mutations -------------------- */
 
     @MutationMapping
     public OrderDTO createOrder(
@@ -59,8 +55,6 @@ public class OrderGraphQLController {
     ) {
         return orderService.updateStatus(orderId, status);
     }
-
-    /* -------------------- GraphQL Input Records -------------------- */
 
     public record AddressInput(
             String streetAddress,

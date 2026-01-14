@@ -19,7 +19,6 @@ public class UserViewController {
         this.userService = userService;
     }
 
-    // -------------------- Show registration form --------------------
     @GetMapping("/create")
     public String showRegisterForm(Model model) {
         model.addAttribute("registerRequest", new RegisterRequest());
@@ -27,7 +26,6 @@ public class UserViewController {
         return "Login/UserRegister";
     }
 
-    // -------------------- Submit registration form --------------------
     @PostMapping("/create")
     public String registerUser(@ModelAttribute RegisterRequest registerRequest, Model model) {
         try {
@@ -41,7 +39,6 @@ public class UserViewController {
         return "Login/UserRegister";
     }
 
-    // -------------------- Show login form --------------------
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("authRequest", new AuthRequest());
@@ -49,7 +46,6 @@ public class UserViewController {
         return "Login/loginPage";
     }
 
-    // -------------------- Submit login form --------------------
     @PostMapping("/login")
     public String login(@ModelAttribute AuthRequest authRequest, Model model) {
         UserDTO user = userService.authenticate(authRequest.getEmail(), authRequest.getPassword());
