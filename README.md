@@ -135,7 +135,7 @@ Branch lab2/bem:
 - The test credentials are stored in the browser’s **local storage**
 - After a successful login, you will be redirected to the **home page** of the application
 
-### Testing ClickPrototype
+### Testing ClickPrototype (Lab 1, 3, 4, 5, 6, 7)
 - Make sure you are on the **`main`** branch
 - Open the folder `/web2-ws25-4EverBloom/` for frontend and `/web2-ws25-4EverBloom/Backend/4EverBloom` for backend in an IDE of your choice (preferably **VS Code** for Frontend and **IntelliJ** for backend)
 - Install the **Live Server** extension for VS Code
@@ -154,7 +154,7 @@ Branch lab2/bem:
 - Login data is stored in the browser’s **local storage**
 - After a successful login, you will be redirected to the appropriate **home page** depending on your role
 
-### Testing Vue-based Frontend
+### Testing Vue-based Frontend (Lab 8)
 - Make sure you are on the **`main`** branch
 - Open the folder `/web2-ws25-4EverBloom/Frontend/flower4ever` for frontend and `/web2-ws25-4EverBloom/Backend/4EverBloom` for backend in an IDE of your choice (preferably **VS Code** for Frontend and **IntelliJ** for backend)
 - Start the backend (Spring Boot). It is running on the port 8080. The entry point is: `web2-ws25-4EverBloom/Backend/4EverBloom/src/main/java/de/fhdo/project/blumeo/Application.java`
