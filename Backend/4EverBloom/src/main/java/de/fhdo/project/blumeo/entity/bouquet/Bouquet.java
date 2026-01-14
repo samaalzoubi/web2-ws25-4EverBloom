@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.entity.bouquet;
 
+import de.fhdo.project.blumeo.entity.order.OrderLine;
 import de.fhdo.project.blumeo.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,6 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 //Lab3
 @Entity
@@ -42,5 +45,8 @@ public abstract class Bouquet {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "bouquet", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<OrderLine> orderLines = new ArrayList<>();
 }
 

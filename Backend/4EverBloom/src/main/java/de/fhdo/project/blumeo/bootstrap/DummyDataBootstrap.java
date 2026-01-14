@@ -119,7 +119,7 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         User owner2 = new User();
         owner2.setUsername("petals_paradise");
         owner2.setEmail("petals.paradise@blumeo.test");
-        owner2.setPassword("petalsparadise123"); // in echt: gehasht speichern
+        owner2.setPassword("petalsparadise123");
         owner2.setRole(Role.OWNER);
 
         owner2.setShopName("Franc & Eli");
@@ -308,15 +308,6 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         order.setStatus(OrderStatus.CREATED);
 
         order = orderRepository.save(order);
-
-        //Create test Rating
-        Rating rating = new Rating();
-        rating.setOrder(order);
-        rating.setCustomer(customer);
-        rating.setRatingScore(5);
-        rating.setReview("Beautiful bouquet and fast delivery!");
-
-        ratingRepository.save(rating);
 
         OrderLine line1 = new OrderLine();
         line1.setOrder(order);

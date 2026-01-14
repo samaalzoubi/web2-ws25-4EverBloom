@@ -1,14 +1,15 @@
 package de.fhdo.project.blumeo.services;
 
-import de.fhdo.project.blumeo.entity.bouquet.CustomBouquetRepository;
 import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.user.Role;
 import de.fhdo.project.blumeo.exception.EmailAlreadyExistsException;
+import de.fhdo.project.blumeo.repository.cart.CartRepository;
 import de.fhdo.project.blumeo.utils.mapper.user.UserMapper;
 import de.fhdo.project.blumeo.dto.user.RegisterRequest;
 import de.fhdo.project.blumeo.dto.user.UserDTO;
 import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.user.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,12 +22,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userConverter;
-    private final CustomBouquetRepository customBouquetRepository;
+    private final CartRepository cartRepository;
 
-    public UserService(UserRepository userRepository, UserMapper userConverter, CustomBouquetRepository customBouquetRepository) {
+    public UserService(UserRepository userRepository, UserMapper userConverter, CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
-        this.customBouquetRepository = customBouquetRepository;
+        this.cartRepository = cartRepository;
     }
 
     public List<UserDTO> getAllOwners() {
@@ -122,10 +123,23 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found: " + userId));
 
-        customBouquetRepository.deleteByDesignedByCustomer_Id(id);
+        switch (user.getRole()) {
+            case CUSTOMER -> deleteCustomerAccount(user);
+            default -> throw new IllegalStateException(
+                    "Account deletion is not allowed for role: " + user.getRole()
+            );
+        }
+    }
 
-        userRepository.deleteById(id);
+    @Transactional
+    public void deleteCustomerAccount(User user) {
+        Long userId = user.getId();
+
+        cartRepository.deleteByUserId(userId);
+
+        userRepository.delete(user);
     }
-    }
+}
