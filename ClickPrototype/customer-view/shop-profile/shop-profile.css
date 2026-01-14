@@ -129,6 +129,21 @@ main {
   color: var(--color-hover);
 }
 
+.shop-tabs a.disabled {
+  color: #aaa;
+  pointer-events: none;
+  cursor: default;
+  border-bottom: none;
+  opacity: 0.6;
+  text-decoration: none;
+}
+
+.shop-tabs a.disabled:hover {
+  color: #aaa;
+  border-bottom: none;
+}
+
+
 
 .bouquet-section {
   padding: 2.5rem;

@@ -20,23 +20,22 @@ By combining **technology, creativity and community**, BLÜMEO supports both cus
 
 ## 4. Benefits of the Project
 ### For Customers:
-- Design personalized bouquets in 3D using the website and order from local florists.  
 - Place orders independently of their location with just a few clicks.  
-- Explore unique floral combinations visually before purchasing. (?) 
+- Explore unique floral combinations visually before purchasing.
 - Enjoy a fast, convenient, and interactive online experience.  
+- Design personalized bouquets in 3D using the website and order from local florists (coming soon).  
 
 ### For Local Florists:
 - Gain digital presence **without needing their own website**.  
 - Manage inventory, pricing, and product listings online with an easy-to-use interface.  
 - Reach new customers and expand their market without technical knowledge or effort.  
 - Access insights and analytics to track performance and improve services.  
-- Benefit from new advertising and marketing opportunities on the platform.  
+- Benefit from new advertising and marketing opportunities on the platform (coming soon).  
 - Simplify product and order management, saving time and effort.
 
 ## 5. Target Groups
 - **Private Customers:** Individuals who want to buy or design personalized bouquets for any occasion.  
 - **Local Flower Shops:** Small and medium-sized florists looking to digitize their business.   
-- **Administrators:** Manage users, shops, orders, and system integrity.
 
 ## 6. Team Members
 All team members contributed to both frontend and backend development.
@@ -136,7 +135,7 @@ Branch lab2/bem:
 - The test credentials are stored in the browser’s **local storage**
 - After a successful login, you will be redirected to the **home page** of the application
 
-### Testing ClickPrototype
+### Testing ClickPrototype (Lab 1, 3, 4, 5, 6, 7)
 - Make sure you are on the **`main`** branch
 - Open the folder `/web2-ws25-4EverBloom/` for frontend and `/web2-ws25-4EverBloom/Backend/4EverBloom` for backend in an IDE of your choice (preferably **VS Code** for Frontend and **IntelliJ** for backend)
 - Install the **Live Server** extension for VS Code
@@ -155,7 +154,7 @@ Branch lab2/bem:
 - Login data is stored in the browser’s **local storage**
 - After a successful login, you will be redirected to the appropriate **home page** depending on your role
 
-### Testing Vue-based Frontend
+### Testing Vue-based Frontend (Lab 8)
 - Make sure you are on the **`main`** branch
 - Open the folder `/web2-ws25-4EverBloom/Frontend/flower4ever` for frontend and `/web2-ws25-4EverBloom/Backend/4EverBloom` for backend in an IDE of your choice (preferably **VS Code** for Frontend and **IntelliJ** for backend)
 - Start the backend (Spring Boot). It is running on the port 8080. The entry point is: `web2-ws25-4EverBloom/Backend/4EverBloom/src/main/java/de/fhdo/project/blumeo/Application.java`

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
 :root {
   /* Colors */
@@ -35,6 +35,10 @@ header {
   box-shadow: 0 4px 10px var(--color-box-shadows);
 }
 
+.login-btn {
+  margin-left: auto;
+  display: block;
+}
 header .logo {
   display: flex;
   align-items: center;
@@ -56,7 +60,7 @@ nav a {
   color: var(--color-accent-dark);
   font-weight: 500;
   transition: color 0.3s;
-  display: inline-flex; 
+  display: inline-flex;
 }
 
 nav a:hover {
@@ -72,30 +76,33 @@ nav {
   border: 3px solid transparent;
   border-radius: 1em;
   background: linear-gradient(white, white) padding-box,
-              linear-gradient(to left, var(--color-accent-light), rgb(241, 194, 236)) border-box;
+    linear-gradient(to left, var(--color-accent-light), rgb(241, 194, 236))
+      border-box;
   margin-right: 20px;
 }
 
 .design-bouquet:hover {
-  background: linear-gradient(var(--color-background-secondary), var(--color-background-secondary)) padding-box,
-              linear-gradient(to left, var(--color-accent-light), rgb(241, 194, 236)) border-box;
+  background: linear-gradient(
+        var(--color-background-secondary),
+        var(--color-background-secondary)
+      )
+      padding-box,
+    linear-gradient(to left, var(--color-accent-light), rgb(241, 194, 236))
+      border-box;
 }
 
 .design-bouquet a:hover {
   color: var(--color-accent-dark);
 }
 
-.fx-3d{
+.fx-3d {
   font-weight: 400;
-  letter-spacing: .05em;
+  letter-spacing: 0.05em;
   background: linear-gradient(180deg, #fff, #f7f1ff 90%, #d2c6ff);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow:
-    1px 1px 0 #7265b3,
-    2px 2px 0 #4735a3,
-    3px 3px 0 #8985a6;  
+  text-shadow: 1px 1px 0 #7265b3, 2px 2px 0 #4735a3, 3px 3px 0 #8985a6;
 }
 
 .logo img {
@@ -135,13 +142,11 @@ nav {
   display: none !important;
 }
 
-
 .material-symbols-outlined {
   font-size: 32px;
   cursor: pointer;
   user-select: none;
 }
-
 
 /* Dropdown Box */
 .dropdown {
@@ -179,7 +184,7 @@ nav {
   align-items: center;
 }
 
-.dropdown-content .option-btn{
+.dropdown-content .option-btn {
   background: var(--color-background-secondary);
 }
 
@@ -205,11 +210,11 @@ nav {
 }
 
 .dropdown-content a:first-child {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .dropdown-content a:last-child {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .cart {
@@ -227,7 +232,7 @@ nav {
   color: white;
 }
 
-.cart .list-cart{
+.cart .list-cart {
   overflow: auto;
   padding: 20px;
 }
@@ -242,7 +247,8 @@ nav {
   color: rgb(255, 255, 255);
 }
 
-.cart .list-cart .item .name, .cart .list-cart .item .price {
+.cart .list-cart .item .name,
+.cart .list-cart .item .price {
   font-weight: bold;
 }
 
@@ -258,7 +264,6 @@ nav {
   width: 50px;
   text-align: center;
 }
-
 
 .cart .list-cart .item {
   display: grid;

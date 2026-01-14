@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.services;
 
 import de.fhdo.project.blumeo.entity.bouquet.CustomBouquetRepository;
+import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.user.Role;
 import de.fhdo.project.blumeo.exception.EmailAlreadyExistsException;
 import de.fhdo.project.blumeo.utils.mapper.user.UserMapper;
@@ -58,6 +59,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // BASIC FIELDS
         if (dto.getUsername() != null && !dto.getUsername().isBlank()) {
             user.setUsername(dto.getUsername());
         }
@@ -68,6 +70,36 @@ public class UserService {
 
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             user.setPassword(dto.getPassword());
+        }
+
+        if (dto.getOpeningTime() != null) {
+            user.setOpeningTime(dto.getOpeningTime());
+        }
+
+        if (dto.getClosingTime() != null) {
+            user.setClosingTime(dto.getClosingTime());
+        }
+
+        if (dto.getAddress() != null) {
+
+            if (user.getAddress() == null) {
+                user.setAddress(new Address());
+            }
+
+            Address old = user.getAddress();
+            Address neu = dto.getAddress();
+
+            if (neu.getStreetAddress() != null)
+                old.setStreetAddress(neu.getStreetAddress());
+
+            if (neu.getCity() != null)
+                old.setCity(neu.getCity());
+
+            if (neu.getState() != null)
+                old.setState(neu.getState());
+
+            if (neu.getZipCode() != null)
+                old.setZipCode(neu.getZipCode());
         }
 
         User saved = userRepository.save(user);
