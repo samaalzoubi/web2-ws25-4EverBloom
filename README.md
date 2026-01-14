@@ -70,8 +70,8 @@ Responsibilities were divided by features, pages, classes, and services.
 - **Shopping Cart:** Add items to the cart, remove individual items, or clear the entire cart.
 - **Checkout:** Proceed with the order process and provide additional details such as delivery information.
 - **Order History:** View past orders and track their current status.
-- **Chat Function (mock):** Communicate with flower shops or interact with a chatbot for basic support.
-- **User Profile:** Manage personal information, change the password, or delete the account (available in the Vue integration only).
+- **Chat Function (mock):** Interact with a chatbot for basic support.
+- **User Profile:** Manage personal information, change the password, or delete the account.
 
 ### 🌼 Flower Shops
 
@@ -79,8 +79,8 @@ Responsibilities were divided by features, pages, classes, and services.
 - **Inventory Management:** Digitally manage floral products with prices and stock.
 - **Bouquet Management:** Manage your premade bouquets.
 - **Order Overview:** Track new, pending, and completed orders with action controls.
-- **Chat Function (mock):** Communicate with flower shops or interact with a chatbot for basic support.
-- **User Profile:** Manage personal information, change the password, or delete the account (available in the Vue integration only).
+- **Chat Function (mock):** Interact with a chatbot for basic support.
+- **User Profile:** Manage personal information or change the password.
 
 ![UML Diagram](ClickPrototype/assets/use%20case%20diagram.png)
 
