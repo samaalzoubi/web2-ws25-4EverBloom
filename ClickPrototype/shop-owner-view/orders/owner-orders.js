@@ -22,7 +22,6 @@ const OrderStatus = {
 
 // State Management
 let currentOrders = [];
-let searchTerm = "";
 let selectedStatus = "all";
 let showEdit = false;
 let editOrder = null;
@@ -85,32 +84,16 @@ async function loadOrders() {
 }
 
 /**
- * Filter orders based on search and status
+ * Filter orders based on status
  */
 const filterOrders = () => {
   let filtered = [...currentOrders];
-  
-  if (searchTerm) {
-    filtered = filtered.filter(o => 
-      o.orderId.toString().includes(searchTerm) ||
-      (o.customer?.username || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (o.customer?.email || '').toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
   
   if (selectedStatus !== "all") {
     filtered = filtered.filter(o => o.status === selectedStatus);
   }
   
   renderOrders(filtered);
-};
-
-/**
- * Search handler
- */
-const handleSearch = (e) => {
-  searchTerm = e.target.value;
-  filterOrders();
 };
 
 /**
@@ -362,11 +345,6 @@ function renderOrders(orders) {
       ${renderStats(stats)}
       
       <div class="controls-bar">
-        <input 
-          class="search-input" 
-          placeholder="Search orders by ID, customer name, or email..." 
-          value="${searchTerm}"
-        />
         <select class="filter-select">
           <option value="all" ${selectedStatus === 'all' ? 'selected' : ''}>All Statuses</option>
           <option value="PENDING" ${selectedStatus === 'PENDING' ? 'selected' : ''}>Pending</option>
@@ -388,10 +366,8 @@ function renderOrders(orders) {
   `;
   
   // Add event listeners
-  const searchInput = appContainer.querySelector('.search-input');
   const filterSelect = appContainer.querySelector('.filter-select');
   
-  if (searchInput) searchInput.addEventListener('input', handleSearch);
   if (filterSelect) filterSelect.addEventListener('change', handleFilter);
 }
 
