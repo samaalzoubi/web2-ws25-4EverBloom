@@ -114,7 +114,63 @@ Branch lab2/bem:
 - Visual Studio Code (frontend development)
 - Maven (build and dependency management)
 
-## 10. User Flow / Module Description
-_(Explain how users interact with the app step-by-step)_
+## 10. Where to Find the Project Components
+- **Lab 2** is located on the dedicated branch lab2/bem. This branch contains the BEM and SCSS implementation in the folder: web2-ws25-4EverBloom/...
+> **Note:** 
+> The Click Prototype in this branch differs from the final version, as BEM and SCSS were not used in the subsequent labs.
+- The **Click Prototype** can be found on the main branch in the folder: web2-ws25-4EverBloom/ClickPrototype/
+- The **Frontend (Vue.js)** application is also located on the main branch in the folder: web2-ws25-4EverBloom/Frontend/flower4ever/
+- **Backend** could be found on the main branch as well in the folder: web2-ws25-4EverBloom/Backend/4EverBloom
 
+## 11. How to Start
+### Testing Lab 2
+- Make sure you are on the **`lab2/bem`** branch
+- Open the folder `web2-ws25-4EverBloom/...` in an IDE of your choice (preferably **VS Code**)
+- Install the **Live Server** extension for VS Code
+- Start the application using Live Server. The entry point of the application is the **Login page (Login.html)**
+- Register as a customer using the following test data:
+  - **Username:** Test  
+  - **Email:** test@gmail.com  
+  - **Password:** 123
+- After registration, you can log in with the same credentials
+- The test credentials are stored in the browser’s **local storage**
+- After a successful login, you will be redirected to the **home page** of the application
 
+### Testing ClickPrototype
+- Make sure you are on the **`main`** branch
+- Open the folder `/web2-ws25-4EverBloom/` for frontend and `/web2-ws25-4EverBloom/Backend/4EverBloom` for backend in an IDE of your choice (preferably **VS Code** for Frontend and **IntelliJ** for backend)
+- Install the **Live Server** extension for VS Code
+- Start the backend (Spring Boot). It is running on the port 8080. The entry point is: `/web2-ws25-4EverBloom/Backend/4EverBloom/src/main/java/de/fhdo/project/blumeo/Application.java`
+- Before starting the frontend, select the API style (**REST** or **GraphQL**) used to communicate with the backend
+  You can configure this here: `/web2-ws25-4EverBloom/ClickPrototype/config/api.config.js`
+- Start the frontend using **Live Server**. The entry point is the **login page**: `/web2-ws25-4EverBloom/ClickPrototype/common-view/login/login.html`
+- There are two login types: **private customer** or **flower shop**
+- Log in as a customer using the following test data:
+  - **Email:** `alice@blumeo.test`
+  - **Password:** `customerpassword`
+- Log in as a flower shop using the following test data:
+  - **Email:** `blossoms@outlook.com`
+  - **Password:** `blossomsflowers`
+- You can also create your own account and log in either as a customer or as a business account
+- Login data is stored in the browser’s **local storage**
+- After a successful login, you will be redirected to the appropriate **home page** depending on your role
+
+### Testing Vue-based Frontend
+- Make sure you are on the **`main`** branch
+- Open the folder `/web2-ws25-4EverBloom/Frontend/flower4ever` for frontend and `/web2-ws25-4EverBloom/Backend/4EverBloom` for backend in an IDE of your choice (preferably **VS Code** for Frontend and **IntelliJ** for backend)
+- Start the backend (Spring Boot). It is running on the port 8080. The entry point is: `web2-ws25-4EverBloom/Backend/4EverBloom/src/main/java/de/fhdo/project/blumeo/Application.java`
+- Since the frontend is a **Vue-based application**, **Node.js** and **npm** must be installed on the system
+  - Make sure **Node.js (including npm)** is installed
+  - Install the required dependencies: **npm install**
+  - Start the development server: **npm run serve**
+  - The application is running on the http://localhost:3000/ 
+- There are two login types: **private customer** or **flower shop**
+- Log in as a customer using the following test data:
+  - **Email:** `alice@blumeo.test`
+  - **Password:** `customerpassword`
+- Log in as a flower shop using the following test data:
+  - **Email:** `blossoms@outlook.com`
+  - **Password:** `blossomsflowers`
+- You can also create your own account and log in either as a customer or as a business account
+- Login data is stored in the browser’s **local storage**
+- After a successful login, you will be redirected to the appropriate **home page** depending on your role

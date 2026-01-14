@@ -58,8 +58,6 @@
       </div>
 
       <div class="card">
-        <h4>Delete Account</h4>
-        <p>Warning: This action cannot be undone!</p>
         <button type="button" class="danger-btn" @click="deleteAccount">
           Delete Account
         </button>
@@ -274,14 +272,14 @@ textarea:focus {
 }
 
 .danger-btn {
-  background-color: #e74c3c;
+  background: #e57373;
   color: black;
-  max-width: 25%;
+  width: 200px;
   align-self: center;
 }
 
 .danger-btn:hover {
-  background-color: #c0392b;
+  background: #d32f2f;
 }
 
 .form-message {
