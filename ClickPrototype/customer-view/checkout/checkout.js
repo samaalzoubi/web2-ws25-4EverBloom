@@ -13,21 +13,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderCheckoutCart(cartState);
   renderTotals(cartState);
 
-  placeOrderButton.addEventListener("click", async () => {
+  const checkoutForm = document.getElementById('checkout-form');
+  checkoutForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
     await handlePlaceOrder(cartState);
   });
 });
 
 async function handlePlaceOrder(cartState) {
   // Get form data
+  const fullName = document.getElementById('fullName').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
   const street = document.getElementById('street').value;
   const city = document.getElementById('city').value;
   const state = document.getElementById('state').value;
   const zipCode = document.getElementById('zipCode').value;
 
+  // Additional email validation
+  if (!email.includes('@')) {
+    alert('Please enter a valid email address with @');
+    return;
+  }
+
   // Validate form
-  if (!street || !city || !state || !zipCode) {
-    alert('Please fill in all delivery information fields');
+  if (!fullName || !email || !phone || !street || !city || !state || !zipCode) {
+    alert('Please fill in all required fields');
     return;
   }
 

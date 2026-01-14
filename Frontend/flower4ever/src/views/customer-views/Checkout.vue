@@ -156,7 +156,7 @@ async function placeOrder() {
                             <div class="group">
                                 <label>
                                     Phone Number
-                                    <input v-model="form.phone" type="tel">
+                                    <input v-model="form.phone" type="tel" pattern="[0-9]+" title="Please enter only numbers">
                                 </label>
                             </div>
                         </div>
