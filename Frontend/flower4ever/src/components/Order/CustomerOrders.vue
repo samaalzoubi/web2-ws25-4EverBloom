@@ -32,12 +32,6 @@
 
       <!-- Controls -->
       <div class="controls-bar">
-        <input
-          v-model="searchTerm"
-          class="search-input"
-          placeholder="Search orders..."
-          @input="filterOrders"
-        />
         <select v-model="selectedStatus" class="filter-select" @change="filterOrders">
           <option value="all">All Statuses</option>
           <option value="CREATED">Created</option>
@@ -242,7 +236,6 @@ export default {
     return {
       orders: [],
       filteredOrders: [],
-      searchTerm: '',
       selectedStatus: 'all',
       showEditModal: false,
       editingOrder: null,
@@ -317,14 +310,6 @@ export default {
 
     filterOrders() {
       let filtered = [...this.orders];
-
-      if (this.searchTerm) {
-        const term = this.searchTerm.toLowerCase();
-        filtered = filtered.filter(order =>
-          order.id.toLowerCase().includes(term) ||
-          order.items.some(item => item.name.toLowerCase().includes(term))
-        );
-      }
 
       if (this.selectedStatus !== 'all') {
         filtered = filtered.filter(order => order.status === this.selectedStatus);

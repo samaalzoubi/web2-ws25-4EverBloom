@@ -34,12 +34,6 @@
 
       <!-- Controls -->
       <div class="controls-bar">
-        <input
-          v-model="searchTerm"
-          class="search-input"
-          placeholder="Search orders..."
-          @input="filterOrders"
-        />
         <select v-model="selectedStatus" class="filter-select" @change="filterOrders">
           <option value="all">All Statuses</option>
           <option v-for="status in allStatuses" :key="status" :value="status">
@@ -250,7 +244,6 @@ export default {
       filteredOrders: [],
       loading: false,
       error: null,
-      searchTerm: '',
       selectedStatus: 'all',
       showEdit: false,
       editOrder: null,
@@ -323,15 +316,6 @@ export default {
 
     filterOrders() {
       let filtered = [...this.orders];
-
-      if (this.searchTerm) {
-        filtered = filtered.filter(
-          (o) =>
-            o.customer.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-            o.id.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-            o.customer.email.toLowerCase().includes(this.searchTerm.toLowerCase())
-        );
-      }
 
       if (this.selectedStatus !== "all") {
         filtered = filtered.filter((o) => o.status === this.selectedStatus);
