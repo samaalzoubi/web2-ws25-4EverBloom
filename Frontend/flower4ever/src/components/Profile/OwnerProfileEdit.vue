@@ -158,7 +158,6 @@ export default {
           closingTime: data.closingTime || "",
         };
 
-        // Falls schon ein Logo existiert
         if (data.logoUrl) {
           logoPreview.value = data.logoUrl;
         }

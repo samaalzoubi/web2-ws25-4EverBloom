@@ -1,69 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Page</title>
-  <link rel="stylesheet" href="/ClickPrototype/style.css">
-  <link rel="stylesheet" href="profile.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="/ClickPrototype/style.css" />
+    <link rel="stylesheet" href="profile.css" />
+  </head>
 
-<body>
+  <body>
+    <div id="header"></div>
 
-  <div id="header"></div>
+    <div class="container">
+      <!-- Back Button -->
+      <a
+        href="/ClickPrototype/customer-view/home-page/home-page.html"
+        class="back-btn"
+        >Back</a
+      >
 
-  <div class="container">
-    <!-- Back Button -->
-    <a href="/ClickPrototype/customer-view/home-page/home-page.html" class="back-btn">Back</a>
+      <h1 class="profile-settings-title">Profile Settings</h1>
 
-    <h1 class="profile-settings-title">Profile Settings</h1>
+      <!-- Change Password -->
+      <div class="card">
+        <h2>Change Password</h2>
+        <label for="current-password">Current Password</label>
+        <input type="password" id="current-password" />
+        <label for="new-password">New Password</label>
+        <input type="password" id="new-password" />
+        <label for="confirm-password">Confirm New Password</label>
+        <input type="password" id="confirm-password" />
+        <button id="change-password-btn">Change Password</button>
 
-    <!-- Change Profile Picture -->
-    <div class="card">
-      <h2>Change Profile Picture</h2>
-      <label for="profile-pic">Upload New Picture</label>
-      <input type="file" id="profile-pic" accept="image/*">
-      <button id="update-picture-btn" class="main-btn">
-        Update Picture
-      </button>
+        <div id="password-message" class="form-message"></div>
+      </div>
 
-      <p id="picture-message" class="form-message"></p>
+      <!-- Delete Account -->
+      <div class="card">
+        <h2>Delete Account</h2>
+        <p style="color: var(--color-subtitle)">
+          Warning: This action cannot be undone.
+        </p>
+        <button id="delete-account-btn" class="danger-btn">
+          Delete Account
+        </button>
+      </div>
     </div>
 
-    <!-- Change Password -->
-    <div class="card">
-      <h2>Change Password</h2>
-      <label for="current-password">Current Password</label>
-      <input type="password" id="current-password">
-      <label for="new-password">New Password</label>
-      <input type="password" id="new-password">
-      <label for="confirm-password">Confirm New Password</label>
-      <input type="password" id="confirm-password">
-      <button id="change-password-btn">Change Password</button>
+    <div id="footer"></div>
+    <script type="module">
+      import { loadLayout } from "/ClickPrototype/layout/layout.js";
 
-      <div id="password-message" class="form-message"></div>
-    </div>
+      document.addEventListener("DOMContentLoaded", async () => {
+        await loadLayout();
+      });
+    </script>
 
-    <!-- Delete Account -->
-    <div class="card">
-      <h2>Delete Account</h2>
-      <p style="color: var(--color-subtitle);">Warning: This action cannot be undone.</p>
-      <button id="delete-account-btn" class="danger-btn">Delete Account</button>
-
-      <div id="delete-message" class="form-message"></div>
-    </div>
-
-  </div>
-
-<div id="footer"></div>
-<script type="module"> 
-import { loadLayout } from '/ClickPrototype/layout/layout.js'
-
-document.addEventListener('DOMContentLoaded', async() => {
-    await loadLayout(); 
-});
-</script>
-
-<script type="module" src="./profile.js"></script>
-</body>
+    <script type="module" src="./profile.js"></script>
+  </body>
 </html>
