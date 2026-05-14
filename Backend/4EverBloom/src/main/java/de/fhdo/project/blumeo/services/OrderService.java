@@ -16,6 +16,7 @@ import de.fhdo.project.blumeo.utils.mapper.order.OrderMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 //Lab3
@@ -50,7 +51,7 @@ public class OrderService {
         order.setCustomer(customer);
         order.setDeliveryAddress(address);
         order.setStatus(OrderStatus.CREATED);
-        double total = 0;
+        BigDecimal total = null;
         User shop = null;
 
         for (int i = 0; i < bouquetIds.size(); i++) {
@@ -73,7 +74,7 @@ public class OrderService {
 
             order.addOrderLine(line);
 
-            total += bouquet.getPrice().doubleValue() * qty;
+            total = total.add(bouquet.getPrice().multiply(BigDecimal.valueOf(qty)));
         }
 
         order.setTotalAmount(total);
@@ -177,9 +178,9 @@ public class OrderService {
             }
             
             // Recalculate total amount based on order lines
-            double newTotal = order.getOrderLines().stream()
-                    .mapToDouble(ol -> ol.getPrice().doubleValue() * ol.getQuantity())
-                    .sum();
+            BigDecimal newTotal = order.getOrderLines().stream()
+                    .map(ol -> ol.getLineTotal())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
             order.setTotalAmount(newTotal);
         }
         

@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.bootstrap;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -300,23 +301,25 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
 
         cartRepository.save(cart);
 
-        //Create test Order
-        Order order = new Order();
-        order.setCustomer(customer);
-        order.setShop(owner);
-        order.setDeliveryAddress(customer.getAddress());
-        order.setStatus(OrderStatus.DELIVERED);
+        // =======================
+        // Test Order 1
+        // =======================
+        Order order1 = new Order();
+        order1.setCustomer(customer);
+        order1.setShop(owner);
+        order1.setDeliveryAddress(customer.getAddress());
+        order1.setStatus(OrderStatus.DELIVERED);
 
-        order = orderRepository.save(order);
+        order1 = orderRepository.save(order1);
 
         OrderLine line1 = new OrderLine();
-        line1.setOrder(order);
+        line1.setOrder(order1);
         line1.setBouquet(romanticRoses);
         line1.setQuantity(1);
         line1.setPrice(romanticRoses.getPrice());
 
         OrderLine line2 = new OrderLine();
-        line2.setOrder(order);
+        line2.setOrder(order1);
         line2.setBouquet(customSpring);
         line2.setQuantity(2);
         line2.setPrice(customSpring.getPrice());
@@ -324,12 +327,119 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         orderLineRepository.save(line1);
         orderLineRepository.save(line2);
 
-        double total =
-                romanticRoses.getPrice().doubleValue() * line1.getQuantity() +
-                customSpring.getPrice().doubleValue() * line2.getQuantity();
+        BigDecimal total = line1.getLineTotal().add(line2.getLineTotal());
 
-        order.setTotalAmount(total);
-        orderRepository.save(order);
+        order1.setTotalAmount(total);
+        orderRepository.save(order1);
+
+        // =======================
+        // Test Order 2
+        // =======================
+
+        Order order2 = new Order();
+        order2.setCustomer(customer);
+        order2.setShop(owner);
+        order2.setDeliveryAddress(customer.getAddress());
+        order2.setStatus(OrderStatus.DELIVERED);
+
+        order2 = orderRepository.save(order2);
+
+        OrderLine order2Line1 = new OrderLine();
+        order2Line1.setOrder(order2);
+        order2Line1.setBouquet(candyBouquet);
+        order2Line1.setQuantity(3);
+        order2Line1.setPrice(candyBouquet.getPrice());
+
+        order2Line1 = orderLineRepository.save(order2Line1);
+
+        BigDecimal order2Total = order2Line1.getLineTotal();
+
+        order2.setTotalAmount(order2Total);
+        orderRepository.save(order2);
+
+        // =======================
+        // Test Order 3
+        // =======================
+
+        Order order3 = new Order();
+        order3.setCustomer(customer);
+        order3.setShop(owner);
+        order3.setDeliveryAddress(customer.getAddress());
+        order3.setOrderDate(LocalDateTime.of(2026, 3, 15, 10, 30));
+        order3.setStatus(OrderStatus.DELIVERED);
+
+        order3 = orderRepository.save(order3);
+
+        OrderLine order3Line1 = new OrderLine();
+        order3Line1.setOrder(order3);
+        order3Line1.setBouquet(lilacBouquet);
+        order3Line1.setQuantity(2);
+        order3Line1.setPrice(lilacBouquet.getPrice());
+
+        order3Line1 = orderLineRepository.save(order3Line1);
+
+        BigDecimal order3Total = order3Line1.getLineTotal();
+
+        order3.setTotalAmount(order3Total);
+        orderRepository.save(order3);
+
+        // =======================
+        // Test Order 4
+        // =======================
+
+        Order order4 = new Order();
+        order4.setCustomer(customer);
+        order4.setShop(owner);
+        order4.setDeliveryAddress(customer.getAddress());
+        order4.setStatus(OrderStatus.PAID);
+
+        order4 = orderRepository.save(order4);
+
+        OrderLine order4Line1 = new OrderLine();
+        order4Line1.setOrder(order4);
+        order4Line1.setBouquet(lilacBouquet);
+        order4Line1.setQuantity(4);
+        order4Line1.setPrice(lilacBouquet.getPrice());
+
+        order4Line1 = orderLineRepository.save(order4Line1);
+
+        BigDecimal order4Total = order4Line1.getLineTotal();
+
+        order4.setTotalAmount(order4Total);
+        orderRepository.save(order4);
+
+        // =======================
+        // Test Order 5
+        // =======================
+
+        Order order5 = new Order();
+        order5.setCustomer(customer);
+        order5.setShop(owner);
+        order5.setDeliveryAddress(customer.getAddress());
+        order5.setOrderDate(LocalDateTime.of(2026, 5, 10, 10, 30));
+        order5.setStatus(OrderStatus.DELIVERED);
+
+        order5 = orderRepository.save(order5);
+
+        OrderLine order5Line1 = new OrderLine();
+        order5Line1.setOrder(order5);
+        order5Line1.setBouquet(pastelSkyBouquet);
+        order5Line1.setQuantity(1);
+        order5Line1.setPrice(pastelSkyBouquet.getPrice());
+
+        OrderLine order5Line2 = new OrderLine();
+        order5Line2.setOrder(order5);
+        order5Line2.setBouquet(romanticRoses);
+        order5Line2.setQuantity(3);
+        order5Line2.setPrice(romanticRoses.getPrice());
+
+        order5Line1 = orderLineRepository.save(order5Line1);
+        order5Line2 = orderLineRepository.save(order5Line2);
+
+        BigDecimal order5Total = order5Line1.getLineTotal().add(order5Line2.getLineTotal());
+
+        order5.setTotalAmount(order5Total);
+        orderRepository.save(order5);
     }
 }
 

@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.dto.order;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import de.fhdo.project.blumeo.entity.order.Address;
@@ -18,7 +19,7 @@ public class OrderDTO {
 
     private Address address;
 
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
     private List<OrderLineDTO> orderLines;
 

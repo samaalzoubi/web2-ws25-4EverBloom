@@ -1,5 +1,6 @@
 package de.fhdo.project.blumeo.controller.rating;
 
+import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,6 +82,6 @@ public class RatingGraphQLController {
 
     public record RatingInput(Long orderId, Long customerId, Integer ratingScore, String review) {}
     public record RatingGraphQL(Long id, Integer ratingScore, String review, Long orderId, Long customerId) {}
-    public record OrderGraphQL(Long id, String status, String orderDate, String deliveryAddress, Double totalAmount, List<OrderLineGraphQL> items) {}
+    public record OrderGraphQL(Long id, String status, String orderDate, String deliveryAddress, BigDecimal totalAmount, List<OrderLineGraphQL> items) {}
     public record OrderLineGraphQL(String bouquetName, Integer quantity, Double price) {}
 }

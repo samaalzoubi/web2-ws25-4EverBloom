@@ -28,5 +28,23 @@ public class OrderLine {
 
     private int quantity;
 
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;  // price per unit
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal lineTotal;
+
+    @PrePersist
+    @PreUpdate
+    public void calculateLineTotal() {
+        if (price == null) {
+            throw new IllegalStateException("OrderLine price must not be null");
+        }
+
+        if (quantity <= 0) {
+            throw new IllegalStateException("OrderLine quantity must be greater than 0");
+        }
+
+        this.lineTotal = price.multiply(BigDecimal.valueOf(quantity));
+    }
 }
