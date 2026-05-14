@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted } from 'vue'
 import { useBouquetStore } from '@/stores/bouquetStore.js'
 import { useShopStore } from '@/stores/flowerShopStore.js'
 import ShopCarousel from '@/components/ShopCarousel.vue'

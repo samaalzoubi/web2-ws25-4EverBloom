@@ -12,6 +12,7 @@ import CustomerShopProfile from "@/views/customer-views/ShopProfile.vue";
 import ManageBouquets from "@/views/shop-owner-view/ManageBouquets.vue";
 import ManageInventory from "@/views/shop-owner-view/ManageInventory.vue";
 import ShopOwnerHome from '@/views/shop-owner-view/ShopOwnerHome.vue'
+import Dashboard from "@/views/shop-owner-view/Dashboard.vue";
 
 const routes = [
   {
@@ -75,7 +76,12 @@ const routes = [
   path: '/shop-owner-home', 
   name: 'OwnerHome',
   component: ShopOwnerHome
-}
+},
+{
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
+  }
 
 ]
 
