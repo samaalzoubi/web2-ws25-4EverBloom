@@ -242,10 +242,6 @@ onMounted(() => {
   color: var(--color-text-dark);
 }
 
-/* =======================
-   TOPBAR / HEADER
-======================= */
-
 .dashboard-topbar {
   width: 100%;
   border-radius: 26px;
@@ -295,10 +291,6 @@ onMounted(() => {
   color: var(--color-text-dark);
   opacity: 0.75;
 }
-
-/* =======================
-   FILTER PANEL
-======================= */
 
 .filter-panel {
   width: 100%;
@@ -396,10 +388,6 @@ onMounted(() => {
   transform: translateY(-1px);
 }
 
-/* =======================
-   KPI CARDS
-======================= */
-
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -452,10 +440,6 @@ onMounted(() => {
   opacity: 0.75;
 }
 
-/* =======================
-   DASHBOARD CARDS
-======================= */
-
 .dashboard-card {
   padding: 30px;
   border-radius: 30px;
@@ -500,10 +484,6 @@ onMounted(() => {
   border: 1px solid #f5c2c2;
 }
 
-/* =======================
-   TABLE
-======================= */
-
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -541,10 +521,6 @@ tbody tr {
 tbody tr:hover {
   background: rgba(245, 236, 255, 0.65);
 }
-
-/* =======================
-   RESPONSIVE
-======================= */
 
 @media (max-width: 1000px) {
   .dashboard-container {
