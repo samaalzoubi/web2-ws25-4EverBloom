@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.services;
 
 import de.fhdo.project.blumeo.dto.dashboard.TopProductDTO;
+import de.fhdo.project.blumeo.dto.dashboard.TopProductSorting;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
 import de.fhdo.project.blumeo.entity.user.Role;
 import de.fhdo.project.blumeo.entity.user.User;
@@ -29,7 +30,7 @@ public class DashboardService {
     public List<TopProductDTO> getTopProducts(Long shopId, String sortBy, LocalDate startDate, LocalDate endDate) {
         User shop = userRepository.findByIdAndRole(shopId, Role.OWNER).orElseThrow(() -> new IllegalArgumentException("Shop not found: " + shopId));
 
-        String normalizedSortBy = normalizeSortBy(sortBy);
+        TopProductSorting sorting = TopProductSorting.fromRequestParam(sortBy);
 
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("Start date must not be after end date");
@@ -38,7 +39,7 @@ public class DashboardService {
         LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
         LocalDateTime endDateTime = endDate != null ? endDate.plusDays(1).atStartOfDay() : null;
 
-        if (normalizedSortBy.equals("revenue")) {
+        if (sorting == TopProductSorting.REVENUE) {
             return orderLineRepository.findTopProductsByRevenue(
                     shop,
                     OrderStatus.DELIVERED,
@@ -55,19 +56,5 @@ public class DashboardService {
                 endDateTime,
                 PageRequest.of(0, 3)
         );
-    }
-
-    private String normalizeSortBy(String sortBy) {
-        if (sortBy == null || sortBy.isBlank()) {
-            return "quantity";
-        }
-
-        String normalized = sortBy.toLowerCase();
-
-        if (!normalized.equals("quantity") && !normalized.equals("revenue")) {
-            throw new IllegalArgumentException("Select appropriate sorting mechanism: either 'quantity' or 'revenue'");
-        }
-
-        return normalized;
     }
 }
