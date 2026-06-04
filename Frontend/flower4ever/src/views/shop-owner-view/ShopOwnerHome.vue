@@ -9,8 +9,7 @@
 
     <main class="owner-home-container">
       <section class="feature-grid">
-
-        <RouterLink 
+        <RouterLink
           class="feature-card"
           :to="{ path: '/dashboard', query: { shopId: shopId } }"
         >
@@ -73,13 +72,16 @@
           <p>Edit shop information</p>
         </RouterLink>
 
-        <div class="feature-card disabled">
+        <RouterLink
+          class="feature-card"
+          :to="{ path: '/shop-comments', query: { shopId: shopId } }"
+        >
           <div class="icon-box">
-            <span class="material-symbols-outlined">credit_card</span>
+            <span class="material-symbols-outlined">chat</span>
           </div>
-          <h3>Subscription</h3>
-          <p>Coming soon</p>
-        </div>
+          <h3>Comments</h3>
+          <p>Customer comments</p>
+        </RouterLink>
 
         <div class="feature-card disabled">
           <div class="icon-box">
@@ -102,7 +104,7 @@ const shopId = ref(null);
 
 onMounted(() => {
   const urlShopId = route.query.shopId;
-  const storedUser = JSON.parse(localStorage.getItem('user'))?.id
+  const storedUser = JSON.parse(localStorage.getItem("user"))?.id;
 
   shopId.value = urlShopId || storedUser || 1;
 

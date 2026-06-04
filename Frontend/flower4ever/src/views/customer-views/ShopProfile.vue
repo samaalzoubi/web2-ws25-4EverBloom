@@ -1,29 +1,59 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { fetchShopByIdGraphQL } from '@/services/api/userGraphqlService.js'
-import { fetchShopBouquetsGraphQL } from '@/services/api/bouquetGraphqlService.js'
-import BouquetCard from '@/components/BouquetCard.vue'
-import { useCartStore } from '@/stores/cartStore'
+import { ref, onMounted, computed } from "vue";
+import { useRoute } from "vue-router";
+import { fetchShopByIdGraphQL } from "@/services/api/userGraphqlService.js";
+import { fetchShopBouquetsGraphQL } from "@/services/api/bouquetGraphqlService.js";
+import BouquetCard from "@/components/BouquetCard.vue";
+import { useCartStore } from "@/stores/cartStore";
 
-const route = useRoute()
-const cartStore = useCartStore()
-const shopId = route.query.shopId || ''
+const route = useRoute();
+const cartStore = useCartStore();
 
-const shop = ref(null)
-const bouquets = ref([])
+const shopId = route.query.shopId || "";
+
+const shop = ref(null);
+const bouquets = ref([]);
+const activeTab = ref("catalog");
+
+/* ===== REVIEWS ===== */
+const reviews = ref([
+  {
+    name: "Sarah M.",
+    rating: 5,
+    comment: "The bouquet was very beautiful and fresh.",
+  },
+  {
+    name: "Daniel K.",
+    rating: 4,
+    comment: "Very good service and fast delivery.",
+  },
+  {
+    name: "Emma L.",
+    rating: 5,
+    comment: "Amazing flowers and nice packaging.",
+  },
+]);
+
+/* ===== AVERAGE RATING ===== */
+const averageRating = computed(() => {
+  if (!reviews.value.length) return 0;
+
+  const total = reviews.value.reduce((sum, review) => sum + review.rating, 0);
+
+  return (total / reviews.value.length).toFixed(1);
+});
 
 onMounted(async () => {
   try {
-    shop.value = await fetchShopByIdGraphQL(shopId)
-    bouquets.value = await fetchShopBouquetsGraphQL(shopId)
+    shop.value = await fetchShopByIdGraphQL(shopId);
+    bouquets.value = await fetchShopBouquetsGraphQL(shopId);
   } catch (error) {
-    console.error('Failed to load shop profile:', error)
+    console.error("Failed to load shop profile:", error);
   }
-})
+});
 
 function handleAddToCart(bouquet) {
-  cartStore.addBouquet(bouquet.id)
+  cartStore.addBouquet(bouquet.id);
 }
 </script>
 
@@ -34,6 +64,7 @@ function handleAddToCart(bouquet) {
       <div class="shop-title">
         <div class="shop-name-with-logo">
           <img :src="shop.logo" alt="Shop Logo" class="shop-logo" />
+
           <div>
             <h2>{{ shop.shopName }}</h2>
             <p class="tagline">{{ shop.description }}</p>
@@ -43,30 +74,66 @@ function handleAddToCart(bouquet) {
 
       <div class="shop-details">
         <p>
-          <strong>Phone:</strong> {{ shop.phoneNumber }}<br />
-          <strong>Website:</strong>
-          <a :href="shop.link" target="_blank">{{ shop.link }}</a><br />
-          <strong>Address:</strong>
-          {{ shop.address?.streetAddress }},
-          {{ shop.address?.city }},
+          <strong>Phone: </strong> {{ shop.phoneNumber }}
+          <br />
+
+          <strong>Website: </strong>
+          <a :href="shop.link" target="_blank">
+            {{ shop.link }}
+          </a>
+          <br />
+
+          <strong>Address: </strong>
+          {{ shop.address?.streetAddress }}, {{ shop.address?.city }},
           {{ shop.address?.zipCode }}
+          <br />
+
+          <strong>Rating: </strong>
+          <span> {{ averageRating }}/5 ⭐ </span>
         </p>
       </div>
     </section>
 
-    <!-- ===== NAVIGATION TABS (STATIC) ===== -->
+    <!-- ===== NAVIGATION TABS ===== -->
     <nav class="shop-tabs">
-      <span class="tab active">Catalog</span>
-      <span class="tab disabled">About</span>
-      <span class="tab disabled">Subscriptions</span>
-      <span class="tab disabled">Reviews</span>
-      <span class="tab disabled">Delivery Info</span>
+      <span
+        class="tab"
+        :class="{ active: activeTab === 'catalog' }"
+        @click="activeTab = 'catalog'"
+      >
+        Catalog
+      </span>
+
+      <span
+        class="tab"
+        :class="{ active: activeTab === 'about' }"
+        @click="activeTab = 'about'"
+      >
+        About
+      </span>
+
+      <span
+        class="tab"
+        :class="{ active: activeTab === 'reviews' }"
+        @click="activeTab = 'reviews'"
+      >
+        Reviews
+      </span>
+
+      <span
+        class="tab"
+        :class="{ active: activeTab === 'delivery' }"
+        @click="activeTab = 'delivery'"
+      >
+        Delivery Info
+      </span>
     </nav>
 
-    <!-- ===== BOUQUETS GRID ===== -->
-    <section class="bouquet-section">
+    <!-- ===== CATALOG ===== -->
+    <section class="bouquet-section" v-if="activeTab === 'catalog'">
       <h2>Catalog</h2>
-      <div class="bouquet-grid">
+
+      <div class="bouquet-grid" v-if="bouquets.length">
         <BouquetCard
           v-for="b in bouquets"
           :key="b.id"
@@ -74,6 +141,72 @@ function handleAddToCart(bouquet) {
           @add-to-cart="handleAddToCart"
         />
       </div>
+
+      <p v-else>No bouquets available at the moment.</p>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section class="tab-section" v-if="activeTab === 'about' && shop">
+      <h2>About</h2>
+
+      <p>
+        {{ shop.shopName }} is a flower shop that offers beautiful and fresh
+        bouquets for birthdays, weddings, anniversaries and special events.
+      </p>
+
+      <p>
+        {{ shop.description || "No additional description is available." }}
+      </p>
+
+      <p>
+        The shop is located in
+        {{ shop.address?.city || "the local area" }}
+        and focuses on quality, creativity and customer satisfaction.
+      </p>
+    </section>
+
+    <!-- ===== REVIEWS ===== -->
+    <section class="tab-section" v-if="activeTab === 'reviews'">
+      <h2>Customer Reviews</h2>
+
+      <div class="review-card" v-for="(review, index) in reviews" :key="index">
+        <h3>{{ review.name }}</h3>
+
+        <p class="stars">
+          {{ "⭐".repeat(review.rating) }}
+        </p>
+
+        <p>{{ review.comment }}</p>
+      </div>
+    </section>
+
+    <!-- ===== DELIVERY INFO ===== -->
+    <section class="tab-section" v-if="activeTab === 'delivery'">
+      <h2>Delivery Information</h2>
+
+      <p>
+        This shop offers local delivery for customers in the surrounding area.
+      </p>
+
+      <p><strong>Delivery available:</strong> Yes</p>
+
+      <p><strong>Delivery time:</strong> Usually within 1–2 business days.</p>
+
+      <p>
+        <strong>Same-day delivery:</strong>
+        Possible depending on availability.
+      </p>
+
+      <p>
+        <strong>Delivery area:</strong>
+        {{ shop?.address?.city || "Local city area" }}
+        and nearby locations.
+      </p>
+
+      <p>
+        <strong>Note:</strong>
+        Delivery details may depend on the selected bouquet and order time.
+      </p>
     </section>
   </main>
 </template>
@@ -148,36 +281,24 @@ main {
 .shop-tabs .tab {
   font-weight: 500;
   padding-bottom: 0.3rem;
+  cursor: pointer;
 }
 
-/* ACTIVE TAB (Catalog only) */
 .shop-tabs .tab.active {
   color: var(--color-hover);
   border-bottom: 2px solid var(--color-hover);
-  cursor: default;
 }
 
-/* DISABLED TABS */
-.shop-tabs .tab.disabled {
-  color: #9ca3af;        /* light grey */
-  opacity: 0.6;
-  cursor: default;
-  pointer-events: none; /* disables hover + click */
-  border-bottom: none;
-}
-/* Prevent hover highlighting on disabled tabs */
-.shop-tabs .tab.disabled:hover {
-  color: #9ca3af;
-  border-bottom: none;
-}
 /* ===== BOUQUET GRID ===== */
 .bouquet-section {
   padding: 2.5rem;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
 }
 
-.bouquet-section h2 {
+.bouquet-section h2,
+.tab-section h2 {
   font-family: "Playfair Display", serif;
   font-size: 2rem;
   margin-bottom: 1.5rem;
@@ -187,5 +308,31 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
+}
+
+/* ===== TAB CONTENT ===== */
+.tab-section {
+  margin-top: 20px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* ===== REVIEWS ===== */
+.review-card {
+  border: 1px solid #e4e4e4;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+
+.review-card h3 {
+  margin: 0 0 0.3rem;
+}
+
+.stars {
+  color: #f5b301;
+  font-size: 1.2rem;
+  margin: 0.3rem 0;
 }
 </style>
