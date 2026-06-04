@@ -15,28 +15,27 @@ const shop = ref(null);
 const bouquets = ref([]);
 const activeTab = ref("catalog");
 
-/* ===== REVIEWS ===== */
-const reviews = ref([
-  {
-    name: "Sarah M.",
-    rating: 5,
-    comment: "The bouquet was very beautiful and fresh.",
-  },
-  {
-    name: "Daniel K.",
-    rating: 4,
-    comment: "Very good service and fast delivery.",
-  },
-  {
-    name: "Emma L.",
-    rating: 5,
-    comment: "Amazing flowers and nice packaging.",
-  },
-]);
+const reviews = ref([]);
+const showReviewForm = ref(false);
+const newRating = ref(5);
+const newReview = ref("");
+const eligibleOrder = ref(null);
 
-/* ===== AVERAGE RATING ===== */
+const currentUser = JSON.parse(localStorage.getItem("user"));
+const customerId = currentUser?.id;
+
+const successMessage = ref("");
+
+const alreadyReviewed = computed(() => {
+  if (!eligibleOrder.value) return false;
+
+  return reviews.value.some(
+    (review) => Number(review.orderId) === Number(eligibleOrder.value.id),
+  );
+});
+
 const averageRating = computed(() => {
-  if (!reviews.value.length) return 0;
+  if (!reviews.value.length) return "0.0";
 
   const total = reviews.value.reduce((sum, review) => sum + review.rating, 0);
 
@@ -47,6 +46,9 @@ onMounted(async () => {
   try {
     shop.value = await fetchShopByIdGraphQL(shopId);
     bouquets.value = await fetchShopBouquetsGraphQL(shopId);
+
+    await checkIfCustomerOrderedFromShop();
+    await loadReviewsFromCustomerOrders();
   } catch (error) {
     console.error("Failed to load shop profile:", error);
   }
@@ -55,11 +57,173 @@ onMounted(async () => {
 function handleAddToCart(bouquet) {
   cartStore.addBouquet(bouquet.id);
 }
+
+async function checkIfCustomerOrderedFromShop() {
+  if (!customerId) return;
+
+  const query = `
+    query OrdersByCustomer($customerId: Int!) {
+      ordersByCustomer(customerId: $customerId) {
+        id
+        status
+        orderDate
+        items {
+          bouquetName
+          quantity
+          price
+        }
+      }
+    }
+  `;
+
+  const response = await fetch("http://localhost:8080/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query,
+      variables: {
+        customerId: Number(customerId),
+      },
+    }),
+  });
+
+  const result = await response.json();
+  const orders = result.data?.ordersByCustomer || [];
+
+  eligibleOrder.value = orders.find((order) => order.status === "DELIVERED");
+}
+
+async function loadReviewsFromCustomerOrders() {
+  if (!customerId) return;
+
+  const ordersQuery = `
+    query OrdersByCustomer($customerId: Int!) {
+      ordersByCustomer(customerId: $customerId) {
+        id
+        status
+      }
+    }
+  `;
+
+  const ordersResponse = await fetch("http://localhost:8080/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: ordersQuery,
+      variables: {
+        customerId: Number(customerId),
+      },
+    }),
+  });
+
+  const ordersResult = await ordersResponse.json();
+  const orders = ordersResult.data?.ordersByCustomer || [];
+
+  const ratingLists = await Promise.all(
+    orders.map((order) => fetchRatingsByOrder(order.id)),
+  );
+
+  reviews.value = ratingLists.flat().map((rating) => ({
+    id: rating.id,
+    name: currentUser?.username
+      ? currentUser.username
+      : `Customer #${rating.customerId}`,
+    rating: rating.ratingScore,
+    comment: rating.review,
+    orderId: rating.orderId,
+    customerId: rating.customerId,
+  }));
+}
+
+async function fetchRatingsByOrder(orderId) {
+  const query = `
+    query RatingsByOrder($orderId: Int!) {
+      ratingsByOrder(orderId: $orderId) {
+        id
+        ratingScore
+        review
+        orderId
+        customerId
+      }
+    }
+  `;
+
+  const response = await fetch("http://localhost:8080/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query,
+      variables: {
+        orderId: Number(orderId),
+      },
+    }),
+  });
+
+  const result = await response.json();
+
+  return result.data?.ratingsByOrder || [];
+}
+
+async function submitNewReview() {
+  if (!eligibleOrder.value || !customerId) return;
+
+  successMessage.value = "Your review has been submitted successfully.";
+
+  setTimeout(() => {
+    successMessage.value = "";
+  }, 3000);
+
+  const mutation = `
+    mutation SubmitRating($input: RatingInput!) {
+      submitRating(input: $input) {
+        id
+        ratingScore
+        review
+        orderId
+        customerId
+      }
+    }
+  `;
+
+  const response = await fetch("http://localhost:8080/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query: mutation,
+      variables: {
+        input: {
+          orderId: Number(eligibleOrder.value.id),
+          customerId: Number(customerId),
+          ratingScore: Number(newRating.value),
+          review: newReview.value,
+        },
+      },
+    }),
+  });
+
+  const result = await response.json();
+
+  const savedReview = result.data?.submitRating;
+
+  if (!savedReview) return;
+
+  reviews.value.push({
+    id: savedReview.id,
+    name: "You",
+    rating: savedReview.ratingScore,
+    comment: savedReview.review,
+    orderId: savedReview.orderId,
+    customerId: savedReview.customerId,
+  });
+
+  newRating.value = 5;
+  newReview.value = "";
+  showReviewForm.value = false;
+}
 </script>
 
 <template>
   <main>
-    <!-- ===== SHOP INFO ===== -->
     <section class="shop-info" v-if="shop">
       <div class="shop-title">
         <div class="shop-name-with-logo">
@@ -94,7 +258,6 @@ function handleAddToCart(bouquet) {
       </div>
     </section>
 
-    <!-- ===== NAVIGATION TABS ===== -->
     <nav class="shop-tabs">
       <span
         class="tab"
@@ -129,7 +292,6 @@ function handleAddToCart(bouquet) {
       </span>
     </nav>
 
-    <!-- ===== CATALOG ===== -->
     <section class="bouquet-section" v-if="activeTab === 'catalog'">
       <h2>Catalog</h2>
 
@@ -145,7 +307,6 @@ function handleAddToCart(bouquet) {
       <p v-else>No bouquets available at the moment.</p>
     </section>
 
-    <!-- ===== ABOUT ===== -->
     <section class="tab-section" v-if="activeTab === 'about' && shop">
       <h2>About</h2>
 
@@ -165,22 +326,63 @@ function handleAddToCart(bouquet) {
       </p>
     </section>
 
-    <!-- ===== REVIEWS ===== -->
     <section class="tab-section" v-if="activeTab === 'reviews'">
-      <h2>Customer Reviews</h2>
+      <div class="reviews-header">
+        <h2>Customer Reviews</h2>
 
-      <div class="review-card" v-for="(review, index) in reviews" :key="index">
-        <h3>{{ review.name }}</h3>
-
-        <p class="stars">
-          {{ "⭐".repeat(review.rating) }}
-        </p>
-
-        <p>{{ review.comment }}</p>
+        <button
+          v-if="eligibleOrder"
+          class="add-review-btn"
+          :disabled="alreadyReviewed"
+          @click="!alreadyReviewed && (showReviewForm = !showReviewForm)"
+        >
+          +
+        </button>
       </div>
+      <p v-if="alreadyReviewed" class="already-reviewed-message">
+        You have already submitted a review for this order.
+      </p>
+
+      <div v-if="showReviewForm && !alreadyReviewed" class="review-form">
+        <label>Rating</label>
+
+        <select v-model="newRating">
+          <option :value="5">5 ⭐</option>
+          <option :value="4">4 ⭐</option>
+          <option :value="3">3 ⭐</option>
+          <option :value="2">2 ⭐</option>
+          <option :value="1">1 ⭐</option>
+        </select>
+
+        <label>Comment</label>
+
+        <textarea
+          v-model="newReview"
+          placeholder="Write your comment..."
+        ></textarea>
+
+        <button @click="submitNewReview">Submit Review</button>
+      </div>
+
+      <p v-if="!eligibleOrder" class="info-text">
+        You can only add a review after ordering from this shop.
+      </p>
+
+      <div v-if="reviews.length">
+        <div class="review-card" v-for="review in reviews" :key="review.id">
+          <h3>{{ review.name }}</h3>
+
+          <p class="stars">
+            {{ "⭐".repeat(review.rating) }}
+          </p>
+
+          <p>{{ review.comment || "No comment text." }}</p>
+        </div>
+      </div>
+
+      <p v-else>No reviews available yet.</p>
     </section>
 
-    <!-- ===== DELIVERY INFO ===== -->
     <section class="tab-section" v-if="activeTab === 'delivery'">
       <h2>Delivery Information</h2>
 
@@ -212,7 +414,6 @@ function handleAddToCart(bouquet) {
 </template>
 
 <style scoped>
-/* ===== PAGE LAYOUT ===== */
 main {
   flex: 1;
   display: flex;
@@ -221,7 +422,6 @@ main {
   margin-top: 67px;
 }
 
-/* ===== SHOP HEADER ===== */
 .shop-info {
   display: flex;
   justify-content: space-between;
@@ -261,13 +461,24 @@ main {
   border-radius: 8px;
 }
 
+.add-review-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.already-reviewed-message {
+  margin-top: 10px;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
 .shop-details {
   min-width: 300px;
   line-height: 1.8;
   text-align: right;
 }
 
-/* ===== TABS ===== */
 .shop-tabs {
   display: flex;
   justify-content: center;
@@ -289,7 +500,6 @@ main {
   border-bottom: 2px solid var(--color-hover);
 }
 
-/* ===== BOUQUET GRID ===== */
 .bouquet-section {
   padding: 2.5rem;
   max-width: 1200px;
@@ -310,14 +520,66 @@ main {
   gap: 1.5rem;
 }
 
-/* ===== TAB CONTENT ===== */
 .tab-section {
   margin-top: 20px;
   padding: 20px;
   width: 100%;
 }
 
-/* ===== REVIEWS ===== */
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-review-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-hover);
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.review-form {
+  border: 1px solid #e4e4e4;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.review-form select,
+.review-form textarea {
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.review-form textarea {
+  min-height: 100px;
+}
+
+.review-form button {
+  align-self: flex-start;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-hover);
+  color: white;
+  cursor: pointer;
+}
+
+.info-text {
+  color: #777;
+  margin-bottom: 1rem;
+}
+
 .review-card {
   border: 1px solid #e4e4e4;
   border-radius: 12px;

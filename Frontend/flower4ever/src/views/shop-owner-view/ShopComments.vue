@@ -5,43 +5,105 @@ import { fetchShopByIdGraphQL } from "@/services/api/userGraphqlService.js";
 
 const route = useRoute();
 const shopId = route.query.shopId || "";
-const shop = ref(null);
 
-const reviews = ref([
-  {
-    name: "Sarah M.",
-    rating: 5,
-    comment: "The bouquet was very beautiful and fresh.",
-  },
-  {
-    name: "Daniel K.",
-    rating: 4,
-    comment: "Very good service and fast delivery.",
-  },
-  {
-    name: "Emma L.",
-    rating: 5,
-    comment: "Amazing flowers and nice packaging.",
-  },
-]);
+const shop = ref(null);
+const reviews = ref([]);
+
+const currentUser = JSON.parse(localStorage.getItem("user"));
 
 const averageRating = computed(() => {
   if (!reviews.value.length) return "0.0";
 
-  const total = reviews.value.reduce((sum, review) => {
-    return sum + review.rating;
-  }, 0);
-
+  const total = reviews.value.reduce((sum, review) => sum + review.rating, 0);
   return (total / reviews.value.length).toFixed(1);
 });
 
 onMounted(async () => {
   try {
     shop.value = await fetchShopByIdGraphQL(shopId);
+
+    const orders = await fetchOrdersByShop(shopId);
+    console.log("shopId:", shopId);
+    console.log("ordersByShop:", orders);
+
+    const ratingLists = await Promise.all(
+      orders.map((order) => fetchRatingsByOrder(order.orderId)),
+    );
+
+    reviews.value = ratingLists.flat().map((rating) => {
+      const matchingOrder = orders.find(
+        (order) => Number(order.orderId) === Number(rating.orderId),
+      );
+
+      return {
+        id: rating.id,
+        name: `Customer #${matchingOrder?.customerId || rating.customerId}`,
+        rating: rating.ratingScore,
+        comment: rating.review,
+        orderId: rating.orderId,
+        customerId: matchingOrder?.customerId || rating.customerId,
+      };
+    });
   } catch (error) {
     console.error("Failed to load comments:", error);
   }
 });
+
+async function fetchOrdersByShop(shopId) {
+  const query = `
+    query OrdersByShop($shopId: ID!) {
+      ordersByShop(shopId: $shopId) {
+        orderId
+        customerId
+        status
+        orderDate
+      }
+    }
+  `;
+
+  const response = await fetch("http://localhost:8080/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query,
+      variables: {
+        shopId: String(shopId),
+      },
+    }),
+  });
+
+  const result = await response.json();
+
+  return result.data?.ordersByShop || [];
+}
+
+async function fetchRatingsByOrder(orderId) {
+  const query = `
+    query RatingsByOrder($orderId: Int!) {
+      ratingsByOrder(orderId: $orderId) {
+        id
+        ratingScore
+        review
+        orderId
+        customerId
+      }
+    }
+  `;
+
+  const response = await fetch("http://localhost:8080/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query,
+      variables: {
+        orderId: Number(orderId),
+      },
+    }),
+  });
+
+  const result = await response.json();
+  return result.data?.ratingsByOrder || [];
+}
 </script>
 
 <template>
@@ -56,13 +118,12 @@ onMounted(async () => {
 
     <div class="title-block">
       <h2>Customer Comments</h2>
-      <p>Here you can view and manage customer feedback about your bouquets.</p>
+      <p>Here you can view customer feedback about your bouquets.</p>
       <p>Average Rating: {{ averageRating }}/5 ⭐</p>
     </div>
 
     <div class="comments-page">
       <div v-if="reviews.length">
-        <h2>Customer Reviews</h2>
         <div class="comment-card" v-for="review in reviews" :key="review.id">
           <h3>{{ review.name }}</h3>
 
@@ -70,7 +131,7 @@ onMounted(async () => {
             {{ "⭐".repeat(review.rating) }}
           </p>
 
-          <p>{{ review.comment }}</p>
+          <p>{{ review.comment || "No comment text." }}</p>
         </div>
       </div>
 
