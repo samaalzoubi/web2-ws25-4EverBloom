@@ -14,6 +14,7 @@ import ManageInventory from "@/views/shop-owner-view/ManageInventory.vue";
 import ShopOwnerHome from "@/views/shop-owner-view/ShopOwnerHome.vue";
 import Dashboard from "@/views/shop-owner-view/Dashboard.vue";
 import ShopComments from "@/views/shop-owner-view/ShopComments.vue";
+import ShopSettings from "@/views/shop-owner-view/ShopSettings.vue";
 
 const routes = [
   {
@@ -87,6 +88,12 @@ const routes = [
     path: "/shop-comments",
     name: "ShopComments",
     component: ShopComments,
+  },
+
+  {
+    path: "/shop-settings",
+    name: "ShopSettings",
+    component: ShopSettings,
   },
 ];
 

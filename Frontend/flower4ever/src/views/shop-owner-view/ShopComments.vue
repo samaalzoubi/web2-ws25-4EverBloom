@@ -9,8 +9,6 @@ const shopId = route.query.shopId || "";
 const shop = ref(null);
 const reviews = ref([]);
 
-const currentUser = JSON.parse(localStorage.getItem("user"));
-
 const averageRating = computed(() => {
   if (!reviews.value.length) return "0.0";
 

@@ -83,13 +83,16 @@
           <p>Customer comments</p>
         </RouterLink>
 
-        <div class="feature-card disabled">
+        <RouterLink
+          class="feature-card"
+          :to="{ path: '/shop-settings', query: { shopId: shopId } }"
+        >
           <div class="icon-box">
             <span class="material-symbols-outlined">settings</span>
           </div>
           <h3>Settings</h3>
-          <p>Coming soon</p>
-        </div>
+          <p>General shop settings & Information</p>
+        </RouterLink>
       </section>
     </main>
   </div>
