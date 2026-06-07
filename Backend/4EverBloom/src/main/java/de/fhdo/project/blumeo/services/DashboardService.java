@@ -28,6 +28,8 @@ public class DashboardService {
 
     @Transactional(readOnly = true)
     public List<TopProductDTO> getTopProducts(Long shopId, String sortBy, LocalDate startDate, LocalDate endDate) {
+        long startTime = System.nanoTime();
+
         User shop = userRepository.findByIdAndRole(shopId, Role.OWNER).orElseThrow(() -> new IllegalArgumentException("Shop not found: " + shopId));
 
         TopProductSorting sorting = TopProductSorting.fromRequestParam(sortBy);
@@ -39,8 +41,18 @@ public class DashboardService {
         LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
         LocalDateTime endDateTime = endDate != null ? endDate.plusDays(1).atStartOfDay() : null;
 
+        List<TopProductDTO> result;
+
         if (sorting == TopProductSorting.REVENUE) {
-            return orderLineRepository.findTopProductsByRevenue(
+            result = orderLineRepository.findTopProductsByRevenue(
+                    shop,
+                    OrderStatus.DELIVERED,
+                    startDateTime,
+                    endDateTime,
+                    PageRequest.of(0, 3)
+            );
+        } else {
+            result = orderLineRepository.findTopProductsByQuantity(
                     shop,
                     OrderStatus.DELIVERED,
                     startDateTime,
@@ -49,12 +61,11 @@ public class DashboardService {
             );
         }
 
-        return orderLineRepository.findTopProductsByQuantity(
-                shop,
-                OrderStatus.DELIVERED,
-                startDateTime,
-                endDateTime,
-                PageRequest.of(0, 3)
-        );
+        long endTime = System.nanoTime();
+        long durationMs = (endTime - startTime) / 1000000;
+
+        System.out.println("TopProducts calculation duration: " + durationMs + " ms");
+
+        return result;
     }
 }

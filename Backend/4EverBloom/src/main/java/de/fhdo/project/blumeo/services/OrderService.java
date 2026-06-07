@@ -51,7 +51,7 @@ public class OrderService {
         order.setCustomer(customer);
         order.setDeliveryAddress(address);
         order.setStatus(OrderStatus.CREATED);
-        BigDecimal total = null;
+        BigDecimal total = BigDecimal.ZERO;
         User shop = null;
 
         for (int i = 0; i < bouquetIds.size(); i++) {
