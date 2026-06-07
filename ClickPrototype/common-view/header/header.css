@@ -75,14 +75,16 @@ nav {
 .design-bouquet {
   border: 3px solid transparent;
   border-radius: 1em;
-  background: linear-gradient(white, white) padding-box,
+  background:
+    linear-gradient(white, white) padding-box,
     linear-gradient(to left, var(--color-accent-light), rgb(241, 194, 236))
       border-box;
   margin-right: 20px;
 }
 
 .design-bouquet:hover {
-  background: linear-gradient(
+  background:
+    linear-gradient(
         var(--color-background-secondary),
         var(--color-background-secondary)
       )
@@ -102,7 +104,10 @@ nav {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 1px 1px 0 #7265b3, 2px 2px 0 #4735a3, 3px 3px 0 #8985a6;
+  text-shadow:
+    1px 1px 0 #7265b3,
+    2px 2px 0 #4735a3,
+    3px 3px 0 #8985a6;
 }
 
 .logo img {
@@ -199,7 +204,9 @@ nav {
   color: var(--color-text-dark);
   border-radius: 8px;
   font-weight: 500;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
   align-items: center;
   margin-bottom: 20px;
 }

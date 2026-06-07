@@ -32,7 +32,11 @@
 
       <!-- Controls -->
       <div class="controls-bar">
-        <select v-model="selectedStatus" class="filter-select" @change="filterOrders">
+        <select
+          v-model="selectedStatus"
+          class="filter-select"
+          @change="filterOrders"
+        >
           <option value="all">All Statuses</option>
           <option value="CREATED">Created</option>
           <option value="CONFIRMED">Confirmed</option>
@@ -69,7 +73,11 @@
 
           <!-- Order Items -->
           <div class="order-items">
-            <div v-for="item in order.items" :key="item.name" class="order-item">
+            <div
+              v-for="item in order.items"
+              :key="item.name"
+              class="order-item"
+            >
               <span>{{ item.name }}</span>
               <span class="item-quantity">×{{ item.quantity }}</span>
             </div>
@@ -118,18 +126,28 @@
                 v-for="star in 5"
                 :key="star"
                 class="fas fa-star"
-                :class="{ active: star <= (order.hoverRating || order.selectedRating || 0) }"
+                :class="{
+                  active:
+                    star <= (order.hoverRating || order.selectedRating || 0),
+                }"
                 @mouseenter="order.hoverRating = star"
                 @mouseleave="order.hoverRating = 0"
                 @click="selectRating(order, star)"
               ></i>
             </div>
-            <div
-              v-if="order.selectedRating"
-              class="rating-value-display"
-            >
-              Rating: <span class="current-rating">{{ order.selectedRating }}</span>/5
+            <div v-if="order.selectedRating" class="rating-value-display">
+              Rating:
+              <span class="current-rating">{{ order.selectedRating }}</span
+              >/5
             </div>
+            <!-- COMMENT FIELD -->
+            <textarea
+              v-model="order.reviewText"
+              class="review-textarea"
+              placeholder="Write your feedback here..."
+              maxlength="500"
+            ></textarea>
+
             <div class="customer-actions">
               <button
                 class="rating-submit-btn"
@@ -142,15 +160,30 @@
           </div>
 
           <!-- Thank you message - only for DELIVERED orders -->
-          <div v-if="order.status === 'DELIVERED' && order.rated" class="rating-thank-you">
+          <div v-if="order.showSuccessMessage" class="rating-success-message">
             <i class="fas fa-check-circle"></i>
-            <span>Thank you for your rating! We appreciate your feedback.</span>
+            <span> Your rating has been submitted successfully. </span>
+          </div>
+
+          <!-- Thank You -->
+          <div
+            v-if="order.status === 'DELIVERED' && order.rated"
+            class="rating-thank-you"
+          >
+            <i class="fas fa-check-circle"></i>
+            <span>
+              Thank you for your rating! We appreciate your feedback.
+            </span>
           </div>
         </div>
       </div>
 
       <!-- Edit Modal -->
-      <div v-if="showEditModal" class="modal-overlay" @click.self="closeEditModal">
+      <div
+        v-if="showEditModal"
+        class="modal-overlay"
+        @click.self="closeEditModal"
+      >
         <div class="modal-content">
           <div class="modal-header">
             <h2>Edit Order {{ editingOrder.id }}</h2>
@@ -166,7 +199,9 @@
               >
                 <div class="item-info">
                   <span class="item-name">{{ item.name }}</span>
-                  <span class="item-price">{{ formatCurrency(item.price) }}</span>
+                  <span class="item-price">{{
+                    formatCurrency(item.price)
+                  }}</span>
                 </div>
                 <div class="item-controls">
                   <button @click="decrementQuantity(index)">
@@ -200,9 +235,7 @@
             <button class="btn-save" @click="saveChanges">
               <i class="fas fa-check"></i> Save Changes
             </button>
-            <button class="btn-cancel" @click="closeEditModal">
-              Cancel
-            </button>
+            <button class="btn-cancel" @click="closeEditModal">Cancel</button>
           </div>
         </div>
       </div>
@@ -214,9 +247,9 @@
 </template>
 
 <script>
-import Chatbot from './Chatbot.vue';
-import orderService from '@/services/orderService';
-import { useUserStore } from '@/stores/userStore';
+import Chatbot from "./Chatbot.vue";
+import orderService from "@/services/orderService";
+import { useUserStore } from "@/stores/userStore";
 
 const AVAILABLE_ITEMS = [
   { name: "Sunny Day Bouquet", price: 35.99 },
@@ -228,42 +261,47 @@ const AVAILABLE_ITEMS = [
 ];
 
 export default {
-  name: 'AdminOrders',
-  components: { 
-    Chatbot 
+  name: "AdminOrders",
+  components: {
+    Chatbot,
   },
   data() {
     return {
       orders: [],
       filteredOrders: [],
-      selectedStatus: 'all',
+      selectedStatus: "all",
       showEditModal: false,
       editingOrder: null,
       loading: false,
       error: null,
       userId: null,
       userName: null,
-      userStore: null
+      userStore: null,
     };
   },
   computed: {
     customerName() {
       const userStore = useUserStore();
-      return userStore.user?.name || userStore.user?.username || 'Customer';
+      return userStore.user?.name || userStore.user?.username || "Customer";
     },
     stats() {
       return {
         total: this.orders.length,
-        revenue: this.orders.reduce((sum, order) => sum + (order.total || 0), 0),
-        pending: this.orders.filter(o => o.status === 'CREATED' || o.status === 'CONFIRMED').length,
-        delivered: this.orders.filter(o => o.status === 'DELIVERED').length
+        revenue: this.orders.reduce(
+          (sum, order) => sum + (order.total || 0),
+          0,
+        ),
+        pending: this.orders.filter(
+          (o) => o.status === "CREATED" || o.status === "CONFIRMED",
+        ).length,
+        delivered: this.orders.filter((o) => o.status === "DELIVERED").length,
       };
-    }
+    },
   },
   async mounted() {
     const userStore = useUserStore();
     this.userId = userStore.user?.userId || userStore.user?.id || 2;
-    console.log('Customer userId:', this.userId);
+    console.log("Customer userId:", this.userId);
     await this.loadOrders();
   },
   methods: {
@@ -272,70 +310,78 @@ export default {
         this.loading = true;
         this.error = null;
         this.orders = await orderService.getCustomerOrders(this.userId);
-        console.log('Loaded orders:', this.orders);
-        console.log('Orders count:', this.orders.length);
+        console.log("Loaded orders:", this.orders);
+        console.log("Orders count:", this.orders.length);
         this.filterOrders();
       } catch (err) {
-        this.error = 'Failed to load orders';
-        console.error('Error loading orders:', err);
+        this.error = "Failed to load orders";
+        console.error("Error loading orders:", err);
       } finally {
         this.loading = false;
       }
     },
 
     formatCurrency(amount) {
-      return new Intl.NumberFormat("en-US", { style: "currency", currency: "EUR" }).format(amount);
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "EUR",
+      }).format(amount);
     },
 
     formatDate(date) {
-      return new Date(date).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
+      return new Date(date).toLocaleString("en-GB", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
     },
 
     capitalize(str) {
-      if (!str) return ''
-      return str.charAt(0).toUpperCase() + str.slice(1)
+      if (!str) return "";
+      return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
     getStatusClass(status) {
       const classes = {
-        'CREATED': 'status-pending',
-        'CONFIRMED': 'status-preparing',
-        'IN_DELIVERY': 'status-out',
-        'DELIVERED': 'status-delivered',
-        'CANCELLED': 'status-cancelled',
-        'PAID': 'status-delivered'
+        CREATED: "status-pending",
+        CONFIRMED: "status-preparing",
+        IN_DELIVERY: "status-out",
+        DELIVERED: "status-delivered",
+        CANCELLED: "status-cancelled",
+        PAID: "status-delivered",
       };
-      return classes[status] || '';
+      return classes[status] || "";
     },
 
     filterOrders() {
       let filtered = [...this.orders];
 
-      if (this.selectedStatus !== 'all') {
-        filtered = filtered.filter(order => order.status === this.selectedStatus);
+      if (this.selectedStatus !== "all") {
+        filtered = filtered.filter(
+          (order) => order.status === this.selectedStatus,
+        );
       }
 
       this.filteredOrders = filtered;
     },
 
     canCancel(order) {
-      return order.status === 'CREATED' || order.status === 'CONFIRMED';
+      return order.status === "CREATED" || order.status === "CONFIRMED";
     },
 
     async cancelOrder(orderId) {
-      if (!confirm('Are you sure you want to cancel this order?')) return;
+      if (!confirm("Are you sure you want to cancel this order?")) return;
 
       try {
         await orderService.cancelOrder(orderId);
-        const order = this.orders.find(o => o.id === orderId);
+        const order = this.orders.find((o) => o.id === orderId);
         if (order) {
-          order.status = 'CANCELLED';
+          order.status = "CANCELLED";
           this.filterOrders();
           alert(`Order ${orderId} has been cancelled.`);
         }
       } catch (error) {
-        alert('Failed to cancel order. Please try again.');
-        console.error('Cancel order error:', error);
+        alert("Failed to cancel order. Please try again.");
+        console.error("Cancel order error:", error);
       }
     },
 
@@ -363,7 +409,7 @@ export default {
 
     deleteItem(index) {
       if (this.editingOrder.items.length <= 1) {
-        alert('Cannot delete the last item.');
+        alert("Cannot delete the last item.");
         return;
       }
       this.editingOrder.items.splice(index, 1);
@@ -372,19 +418,25 @@ export default {
 
     showAddItemDialog() {
       const itemName = prompt(
-        'Enter item name:\n' +
-        AVAILABLE_ITEMS.map(i => `${i.name} - ${this.formatCurrency(i.price)}`).join('\n')
+        "Enter item name:\n" +
+          AVAILABLE_ITEMS.map(
+            (i) => `${i.name} - ${this.formatCurrency(i.price)}`,
+          ).join("\n"),
       );
 
       if (!itemName) return;
 
-      const item = AVAILABLE_ITEMS.find(i => i.name === itemName.split(' - ')[0]);
+      const item = AVAILABLE_ITEMS.find(
+        (i) => i.name === itemName.split(" - ")[0],
+      );
       if (!item) {
-        alert('Item not found.');
+        alert("Item not found.");
         return;
       }
 
-      const existing = this.editingOrder.items.find(i => i.name === item.name);
+      const existing = this.editingOrder.items.find(
+        (i) => i.name === item.name,
+      );
       if (existing) {
         existing.quantity++;
       } else {
@@ -397,7 +449,7 @@ export default {
     updateTotal() {
       this.editingOrder.total = this.editingOrder.items.reduce(
         (sum, item) => sum + item.price * item.quantity,
-        0
+        0,
       );
     },
 
@@ -405,48 +457,49 @@ export default {
       // Store orderId before potential state changes
       const orderId = this.editingOrder?.id;
       const orderData = this.editingOrder;
-      
+
       if (!orderId || !orderData) {
-        alert('Error: No order to update');
+        alert("Error: No order to update");
         return;
       }
-      
+
       try {
         // ✅ NOW USING REAL BACKEND API
-        console.log('Sending order update for:', orderId);
-        console.log('Order data:', orderData);
-        
+        console.log("Sending order update for:", orderId);
+        console.log("Order data:", orderData);
+
         const result = await orderService.updateOrder(orderId, orderData);
-        console.log('Update successful, result:', result);
-        
+        console.log("Update successful, result:", result);
+
         // Reload orders from server to ensure data consistency
         await this.loadOrders();
-        
+
         // Close modal and show success
         this.closeEditModal();
         alert(`Order ${orderId} updated successfully!`);
       } catch (error) {
-        console.error('Update order error:', error);
-        console.error('Error response:', error.response?.data);
-        console.error('Error status:', error.response?.status);
-        console.error('Full error object:', error);
-        
+        console.error("Update order error:", error);
+        console.error("Error response:", error.response?.data);
+        console.error("Error status:", error.response?.status);
+        console.error("Full error object:", error);
+
         // Check if it's actually a transformation error rather than API error
         if (error.response && error.response.status === 200) {
-          console.warn('API returned 200 but transformation failed');
+          console.warn("API returned 200 but transformation failed");
           // Reload anyway since backend succeeded
           await this.loadOrders();
           this.closeEditModal();
           alert(`Order ${orderId} updated successfully!`);
           return;
         }
-        
+
         // Show more specific error message
-        const errorMessage = error.response?.data?.message 
-          || error.response?.data?.error 
-          || error.message
-          || 'The order update endpoint may not be available. Please contact support.';
-        
+        const errorMessage =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          error.message ||
+          "The order update endpoint may not be available. Please contact support.";
+
         alert(`Failed to update order: ${errorMessage}`);
       }
     },
@@ -458,36 +511,50 @@ export default {
 
     async submitRating(order) {
       if (!order.selectedRating) {
-        alert('Please select a rating.');
+        order.ratingError = "Please select a rating.";
         return;
       }
 
       try {
-        await orderService.submitRating(order.id, this.userId, order.selectedRating);
+        await orderService.submitRating(
+          order.id,
+          this.userId,
+          order.selectedRating,
+          order.reviewText || "",
+        );
+
         order.rated = true;
+        order.ratingSuccess = "Thank you for your feedback!";
+        order.ratingError = "";
+
         this.$forceUpdate();
-        alert('Thank you for your rating!');
       } catch (error) {
-        alert('Failed to submit rating. Please try again.');
-        console.error('Submit rating error:', error);
+        order.ratingError = "Failed to submit rating. Please try again.";
+        order.ratingSuccess = "";
+
+        console.error("Submit rating error:", error);
       }
     },
 
     reorderItems(order) {
-      alert('Reorder functionality: Items will be added to cart.');
-    }
-  }
+      alert("Reorder functionality: Items will be added to cart.");
+    },
+  },
 };
 </script>
 
 <style scoped>
-@import './orders-styles.css';
+@import "./orders-styles.css";
 
 .admin-orders-page {
   min-height: 100vh;
-  background: linear-gradient(120deg, var(--color-background), var(--color-background-secondary));
+  background: linear-gradient(
+    120deg,
+    var(--color-background),
+    var(--color-background-secondary)
+  );
   padding: 2rem 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 /* No Orders Message */
@@ -515,7 +582,11 @@ export default {
 
 /* Rating Box */
 .rating-box {
-  background: linear-gradient(135deg, #f0e6f6 0%, rgba(212, 189, 240, 0.5) 100%);
+  background: linear-gradient(
+    135deg,
+    #f0e6f6 0%,
+    rgba(212, 189, 240, 0.5) 100%
+  );
   padding: 1.5rem;
   border-radius: 12px;
   text-align: center;
@@ -567,6 +638,22 @@ export default {
   font-weight: 600;
   transition: all 0.3s;
   margin-top: 1rem;
+}
+
+.review-textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  padding: 12px;
+  margin-top: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.review-textarea:focus {
+  outline: none;
+  border-color: #8e44ad;
 }
 
 .rating-submit-btn:hover:not(:disabled) {
