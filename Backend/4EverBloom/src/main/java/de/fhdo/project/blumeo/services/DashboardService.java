@@ -34,9 +34,7 @@ public class DashboardService {
 
         TopProductSorting sorting = TopProductSorting.fromRequestParam(sortBy);
 
-        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("Start date must not be after end date");
-        }
+        validateDateRange(startDate, endDate);
 
         LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
         LocalDateTime endDateTime = endDate != null ? endDate.plusDays(1).atStartOfDay() : null;
@@ -67,5 +65,21 @@ public class DashboardService {
         System.out.println("TopProducts calculation duration: " + durationMs + " ms");
 
         return result;
+    }
+
+    private void validateDateRange(LocalDate startDate, LocalDate endDate) {
+        LocalDate today = LocalDate.now();
+
+        if (startDate != null && startDate.isAfter(today)) {
+            throw new IllegalArgumentException("Start date must not be in the future");
+        }
+
+        if (endDate != null && endDate.isAfter(today)) {
+            throw new IllegalArgumentException("End date must not be in the future");
+        }
+
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Start date must not be after end date");
+        }
     }
 }
