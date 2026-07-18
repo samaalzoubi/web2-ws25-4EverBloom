@@ -1,6 +1,7 @@
 package de.fhdo.project.blumeo.bootstrap;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -23,7 +24,6 @@ import de.fhdo.project.blumeo.entity.order.Address;
 import de.fhdo.project.blumeo.entity.order.Order;
 import de.fhdo.project.blumeo.entity.order.OrderLine;
 import de.fhdo.project.blumeo.entity.order.OrderStatus;
-import de.fhdo.project.blumeo.entity.rating.Rating;
 import de.fhdo.project.blumeo.entity.user.Role;
 import de.fhdo.project.blumeo.entity.user.User;
 import de.fhdo.project.blumeo.repository.bouquet.BouquetRepository;
@@ -309,6 +309,7 @@ public class DummyDataBootstrap implements ApplicationListener<ContextRefreshedE
         order1.setShop(owner);
         order1.setDeliveryAddress(customer.getAddress());
         order1.setStatus(OrderStatus.DELIVERED);
+        order1.setOrderDate(LocalDate.of(2026, 6, 30).atStartOfDay());
 
         order1 = orderRepository.save(order1);
 
